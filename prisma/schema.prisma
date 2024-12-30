@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model RawPlayer {
+  id       String  @id @unique
+  username String  @default("Unknown")
+  banned   Boolean @default(false)
+  level    Int     @default(1)
+  xp       Int     @default(0)
+  money    Int     @default(0)
+  gems     Int     @default(0)
+  zoneId   Int     @default(1)
+
+  skills RawPlayerSkills?
+  tasks  RawPlayerTasks?
+  items  RawItem[]
+}
+
+model RawPlayerSkills {
+  playerId String @id @unique
+
+  enduranceLevel Int @default(1)
+  enduranceXp    Int @default(0)
+
+  distanceLevel Int @default(1)
+  distanceXp    Int @default(0)
+
+  meleeLevel Int @default(1)
+  meleeXp    Int @default(0)
+
+  defenseLevel Int @default(1)
+  defenseXp    Int @default(0)
+
+  woodcuttingLevel Int @default(1)
+  woodcuttingXp    Int @default(0)
+
+  miningLevel Int @default(1)
+  miningXp    Int @default(0)
+
+  smithingLevel Int @default(1)
+  smithingXp    Int @default(0)
+
+  player RawPlayer @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RawPlayerTasks {
+  playerId String @id @unique
+
+  miningNodeId        Int?
+  miningNodeStartedAt DateTime?
+
+  woodcuttingNodeId        Int?
+  woodcuttingNodeStartedAt DateTime?
+
+  player RawPlayer @relation(fields: [playerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model RawItem {
+  uuid       String        @id @unique @default(uuid())
+  playerId   String
+  itemId     Int
+  amount     Int
+  locked     Boolean       @default(false)
+  equipped   Boolean       @default(false)
+  rarity     Int
+  multiplier Float
+  stats      RawItemStat[]
+
+  player RawPlayer @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RawItemStat {
+  uuid     String @id @unique @default(uuid())
+  type     String
+  value    Float
+  itemUUID String
+
+  item RawItem @relation(fields: [itemUUID], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+}
