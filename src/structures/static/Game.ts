@@ -6,8 +6,10 @@ import { Effect } from "../resource/Effect.js";
 import { Item, ItemType } from "../resource/Item.js";
 import { Node } from "../resource/node/Node.js";
 import { Zone } from "../resource/Zone.js";
+import { Resource } from "../resource/Resource.js";
+import { Util } from "./Util.js";
 
-export type Identifiable<T = unknown> = T & { id: number, name: string }
+export type Identifiable<T = unknown> = T & { id: number }
 
 export class Game {
     public static readonly RawItems = new Array<Item>()
@@ -78,5 +80,14 @@ export class Game {
         const eff = Game.Spells.get(id)
         if (!eff) Logger.halt(`Effect with id ${id} does not exist!`)
         return eff
+    }
+
+    public static search(on: Array<Resource>, query: string) {
+        return Util.searchMany(
+            on,
+            query,
+            el => el.id,
+            el => el.name
+        )
     }
 }

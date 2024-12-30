@@ -3,6 +3,8 @@ import { Command } from "../../structures/discord/Command.js";
 import { ArgType } from "../../structures/discord/Shared.js";
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import button from "../../interactions/test/button.js";
+import { Util } from "../../structures/static/Util.js";
+import { Game } from "../../structures/static/Game.js";
 
 enum Types {
     One,
@@ -14,26 +16,13 @@ export default new Command({
     description: "Hello",
     args: [
         {
-            name: "xd",
+            name: "xd" as const,
             description: "random",
-            type: ArgType.Enum,
-            enum: Types
+            type: ArgType.InventoryItem
         }
-    ] as const,
+    ],
     async execute(input, args, extras) {
-        const row = new ActionRowBuilder<ButtonBuilder>().addComponents([
-            new ButtonBuilder({
-                custom_id: button.id(ArgType.Enum),
-                label: "Hi",
-                style: ButtonStyle.Primary
-            })
-        ])
-
-        await input.reply({
-            content: "hello",
-            components: [ row ]
-        })
-
+        console.log(args)
         return Promise.resolve(true)
     },
 })

@@ -4,66 +4,122 @@ import { Player } from "../player/Player.js"
 import { NekoClient } from "../../core/NekoClient.js"
 import { Embeds } from "../static/Embeds.js"
 import { ArgData } from "./Command.js"
+import NekoDatabase from "../../core/NekoDatabase.js"
+import { Game } from "../static/Game.js"
 
 export enum ArgType {
     Integer,
     Float,
     String,
-    Enum
+    Enum,
+    Item,
+    Player,
+    InventoryItem
 }
 
 export interface GlobalExtrasData {
-    player?: Player
+    player: Player
+}
+
+export interface ArgResolveOptions {
+    resolver: ChatInputCommandInteraction["options"] | DiscordInteractionInterface[DiscordInteractionType]
+    arg: ArgData | InteractionArgData
+    extras: GlobalExtrasData
+    value?: string
+}
+
+export interface ResolveOptions extends Omit<ArgResolveOptions, "resolver" | "value" | "arg"> {
+    resolver: BaseInteraction<'cached'>
+    args: InteractionArgData[] | ArgData[] | undefined
+    rawArgs?: string[]
 }
 
 export class Shared {
     private constructor() {}
 
-    private static async [ArgType.Enum](resolver: ChatInputCommandInteraction["options"] | DiscordInteractionInterface[DiscordInteractionType], arg: ArgData | InteractionArgData, value?: string) {
-        if (resolver instanceof BaseInteraction) {
-            return Number(value!)
+    private static async [ArgType.Enum](options: ArgResolveOptions) {
+        if (options.resolver instanceof BaseInteraction) {
+            return Number(options.value!)
         }
 
-        return resolver.getInteger(arg.name, arg.required)
+        return options.resolver.getInteger(options.arg.name, options.arg.required)
     }
 
-    private static async [ArgType.String](resolver: ChatInputCommandInteraction["options"] | DiscordInteractionInterface[DiscordInteractionType], arg: ArgData | InteractionArgData, value?: string) {
-        if (resolver instanceof BaseInteraction) {
-            return value!
+    private static async [ArgType.String](options: ArgResolveOptions) {
+        if (options.resolver instanceof BaseInteraction) {
+            return options.value!
         }
 
-        return resolver.getString(arg.name, arg.required)
+        return options.resolver.getString(options.arg.name, options.arg.required)
     }
 
-    private static async [ArgType.Integer](resolver: ChatInputCommandInteraction["options"] | DiscordInteractionInterface[DiscordInteractionType], arg: ArgData | InteractionArgData, value?: string) {
-        if (resolver instanceof BaseInteraction) {
-            return Number(value!)
+    private static async [ArgType.Integer](options: ArgResolveOptions) {
+        if (options.resolver instanceof BaseInteraction) {
+            return Number(options.value!)
         }
 
-        return resolver.getInteger(arg.name, arg.required)
+        return options.resolver.getInteger(options.arg.name, options.arg.required)
     }
 
-    private static async [ArgType.Float](resolver: ChatInputCommandInteraction["options"] | DiscordInteractionInterface[DiscordInteractionType], arg: ArgData | InteractionArgData, value?: string) {
-        if (resolver instanceof BaseInteraction) {
-            return Number(value!)
+    private static async [ArgType.Float](options: ArgResolveOptions) {
+        if (options.resolver instanceof BaseInteraction) {
+            return Number(options.value!)
         }
 
-        return resolver.getNumber(arg.name, arg.required)
+        return options.resolver.getNumber(options.arg.name, options.arg.required)
     }
 
-    public static async resolve<T>(i: BaseInteraction<'cached'>, args: InteractionArgData[] | ArgData[] | undefined, extras: GlobalExtrasData, raw?: string[]): Promise<T | null> {
+    private static async [ArgType.Item](options: ArgResolveOptions) {
+        let id;
+
+        if (options.resolver instanceof BaseInteraction) {
+            id = Number(options.value!)
+        } else {
+            id = options.resolver.getInteger(options.arg.name, options.arg.required)
+        }
+
+        return id ? Game.getItem(id) : id
+    }
+
+    private static async [ArgType.InventoryItem](options: ArgResolveOptions) {
+        let index;
+
+        if (options.resolver instanceof BaseInteraction) {
+            index = Number(options.value!)
+        } else {
+            index = options.resolver.getInteger(options.arg.name, options.arg.required)
+        }
+
+        return index !== null && index !== undefined ? options.extras.player.inventory.at(index) : index
+    }
+
+    private static async [ArgType.Player](options: ArgResolveOptions) {
+        let id;
+
+        if (options.resolver instanceof BaseInteraction) {
+            id = options.value!
+        } else {
+            id = options.resolver.getString(options.arg.name, options.arg.required)
+        }
+
+        return id ? NekoDatabase.getPlayer(id) : id
+    }
+
+    public static async resolve<T>(options: ResolveOptions): Promise<T | null> {
         const output = {} as any
 
-        if (!args?.length) return output
+        if (!options.args?.length) return output
 
-        for (let x = 0, len = args.length;x < len;x++) {
-            const arg = args[x]
-            const value = raw?.[x] === '' ? undefined : raw?.[x]
+        const resolver = options.resolver instanceof ChatInputCommandInteraction ? options.resolver.options : options.resolver
 
-            const reject = this.reject.bind(null, i, arg, i instanceof ChatInputCommandInteraction ? i.options.get(arg.name, arg.required)?.value : value)
+        for (let x = 0, len = options.args.length;x < len;x++) {
+            const arg = options.args[x]
+            const value = options.rawArgs?.[x] === '' ? undefined : options.rawArgs?.[x]
+
+            const reject = this.reject.bind(null, options.resolver, arg, options.resolver instanceof ChatInputCommandInteraction ? options.resolver.options.get(arg.name, arg.required)?.value : value)
 
             // For interaction handler, not command
-            if (raw?.length && value === undefined) {
+            if (options.rawArgs?.length && value === undefined) {
                 if (arg.required) {
                     return reject()
                 } else {
@@ -72,7 +128,12 @@ export class Shared {
                 }
             }
 
-            const resolved = await Shared[arg.type](i instanceof ChatInputCommandInteraction ? i.options : i as never, arg, value) ?? ("default" in arg ? arg.default?.call(i.client as NekoClient, i as never) : undefined)
+            const resolved = await Shared[arg.type]({
+                arg,
+                value,
+                resolver: resolver as any,
+                extras: options.extras
+            }) ?? ("default" in arg ? arg.default?.call(options.resolver.client as NekoClient, options.resolver as never) : undefined)
             if (resolved === undefined && arg.required) {
                 return reject()
             }

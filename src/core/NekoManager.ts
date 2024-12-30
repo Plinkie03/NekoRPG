@@ -1,4 +1,4 @@
-import { ApplicationCommand, ApplicationCommandData, ApplicationCommandOptionType, ApplicationCommandType, ChatInputCommandInteraction, ClientEvents, Collection, RepliableInteraction, User } from "discord.js";
+import { ApplicationCommand, ApplicationCommandData, ApplicationCommandOptionType, ApplicationCommandType, AutocompleteInteraction, ChatInputCommandInteraction, ClientEvents, Collection, RepliableInteraction, User } from "discord.js";
 import { NekoClient } from "./NekoClient.js";
 import { Command } from "../structures/discord/Command.js";
 import { readdirSync } from "fs";
@@ -101,7 +101,7 @@ export class NekoManager {
         return this.locked.has(user.id)
     }
 
-    public getCommand(from: ChatInputCommandInteraction<'cached'>) {
+    public getCommand(from: ChatInputCommandInteraction<'cached'> | AutocompleteInteraction<'cached'>) {
         const commandName = from.commandName
         const subcommandName = from.options.getSubcommand(false)
 

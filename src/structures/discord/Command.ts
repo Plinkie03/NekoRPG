@@ -1,5 +1,5 @@
 import { ApplicationCommandData, ApplicationCommandOptionChoiceData, ApplicationCommandOptionData, ApplicationCommandOptionType, ApplicationCommandType, AutocompleteInteraction, BaseInteraction, ChatInputCommandInteraction, codeBlock, CommandInteractionOptionResolver, inlineCode, InteractionContextType, PermissionResolvable } from "discord.js"
-import { Nullable } from "../resource/Item.js"
+import { Item, Nullable } from "../resource/Item.js"
 import { spawnSync } from "child_process"
 import { NekoClient } from "../../core/NekoClient.js";
 import { Logger } from "../static/Logger.js";
@@ -9,6 +9,9 @@ import { Embeds } from "../static/Embeds.js";
 import { Errors } from "../static/Errors.js";
 import { DiscordInteractionInterface, DiscordInteractionType, InteractionArgData } from "./DiscordInteractionHandler.js";
 import { ArgType, GlobalExtrasData, Shared } from "./Shared.js";
+import { Util } from "../static/Util.js";
+import { Game } from "../static/Game.js";
+import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
 
 export type EnumLike<T = any> = {
     [id: string]: T | string;
@@ -17,7 +20,7 @@ export type EnumLike<T = any> = {
 
 export type GetEnum<T extends EnumLike> = T extends EnumLike<infer P> ? P : never
 
-export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String ? string : T extends ArgType.Enum ? GetEnum<Enum> : number
+export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String ? string : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
 
 export type MarkArgNullable<T, B extends boolean> = B extends true ? T : Nullable<T>
 
@@ -34,7 +37,7 @@ export interface ArgData<Name extends string = string, Type extends ArgType = Ar
     max?: number
     default?: (this: NekoClient, input: ChatInputCommandInteraction<'cached'>) => Promise<GetRealArgType<Type, Enum>>
     min?: number
-    autocomplete?(this: NekoClient, input: AutocompleteInteraction<'cached'>, query: string): Promise<ApplicationCommandOptionChoiceData[]>
+    autocomplete?(this: NekoClient, input: AutocompleteInteraction<'cached'>, query: string, extras: CommandExtrasData): Promise<ApplicationCommandOptionChoiceData[]>
 }
 
 export interface CommandExtrasData extends GlobalExtrasData {
@@ -51,9 +54,18 @@ export interface CommandData<Args extends ArgData[] = ArgData[]> {
 }
 
 export class Command<Args extends ArgData[] = ArgData[]> {
-    public constructor(public readonly data: CommandData<Args>) {}
+    public constructor(public readonly data: CommandData<Args>) {
+        if (this.data.args?.length) {
+            for (const arg of this.data.args)
+                arg.autocomplete ??= arg.type === ArgType.InventoryItem ? 
+                    Command.inventoryItemAutocomplete : 
+                    arg.type === ArgType.Item ? 
+                        Command.itemAutocomplete : 
+                        undefined
+        }
+    }
 
-    toJSON(): ApplicationCommandData {
+    public toJSON(): ApplicationCommandData {
         return {
             name: this.data.name,
             description: this.data.description,
@@ -81,6 +93,30 @@ export class Command<Args extends ArgData[] = ArgData[]> {
         }
     }
 
+    public static async handleAutocomplete(i: AutocompleteInteraction<'cached'>) {
+        const client = NekoClient.from(i)
+        const command = client.manager.getCommand(i)
+
+        if (!command) {
+            return
+        }
+
+        const option = i.options.getFocused(true)
+        const arg = command.data.args?.find(x => x.name === option.name)
+
+        if (!arg) {
+            return
+        }
+
+        const extras = await command.getExtras(i)
+
+        try {
+            await i.respond((await arg.autocomplete!.call(client, i, option.value, extras)).slice(0, 25))
+        } catch (error) {
+            Logger.error(error)
+        }
+    }
+
     public static async handle(i: ChatInputCommandInteraction<'cached'>) {
         const client = NekoClient.from(i)
         const command = client.manager.getCommand(i)
@@ -99,16 +135,21 @@ export class Command<Args extends ArgData[] = ArgData[]> {
         try {
             const extras = await command.getExtras(i)
 
-            const args = await Shared.resolve<any>(i, command.data.args, extras)
+            const args = await Shared.resolve<any>({
+                resolver: i,
+                args: command.data.args,
+                extras
+            })
+            
             if (args === null) {
                 throw null
             }
 
-            if (command.data.defer) 
+            if (command.data.defer)
                 await i.deferReply({ ephemeral: command.data.defer })
 
             const result = await command.execute(i, args, extras)
-        } catch (error: unknown) {            
+        } catch (error: unknown) {
             await Errors.interaction(i, error)
         } finally {
             client.manager.unlock(i.user)
@@ -120,7 +161,7 @@ export class Command<Args extends ArgData[] = ArgData[]> {
         return this.data.execute.call(args[0].client as NekoClient, ...args)
     }
 
-    private async getExtras(i: ChatInputCommandInteraction<'cached'>): Promise<CommandExtrasData> {
+    private async getExtras(i: ChatInputCommandInteraction<'cached'> | AutocompleteInteraction<'cached'>): Promise<CommandExtrasData> {
         return {
             command: this,
             player: await NekoDatabase.getPlayer(i.user.id)
@@ -133,18 +174,38 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                 return ApplicationCommandOptionType.Number
             }
 
+            case ArgType.Item:
             case ArgType.Enum:
+            case ArgType.InventoryItem:
             case ArgType.Integer: {
                 return ApplicationCommandOptionType.Integer
             }
 
+            case ArgType.Player:
             case ArgType.String: {
                 return ApplicationCommandOptionType.String
             }
 
             default: {
-                throw new Error(`Unable to get real arg type for ${type}`)
+                throw new Error(`Unable to get real arg type for ${ArgType[type]}`)
             }
         }
+    }
+
+    public static async itemAutocomplete(i: AutocompleteInteraction<'cached'>, q: string) {
+        return Util.formatResourceChoices(Util.searchMany(
+            Game.RawItems,
+            q,
+            el => el.id,
+            el => el.name
+        ))
+    }
+
+    public static async inventoryItemAutocomplete(i: AutocompleteInteraction<'cached'>, q: string, extras: CommandExtrasData) {
+        return Util.formatChoices(
+            extras.player.inventory.search(q),
+            el => `[ID ${el.index!}] ${el.detailedName(false)}`,
+            el => el.index!
+        )
     }
 }

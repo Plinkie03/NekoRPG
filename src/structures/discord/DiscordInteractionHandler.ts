@@ -51,6 +51,7 @@ export interface DiscordInteractionHandlerData<T extends DiscordInteractionType 
     type: T
     id: number
     args?: [...Args]
+    ownerOnly?: boolean
     execute(this: NekoClient, i: DiscordInteractionInterface[T], args: ArgsToRecord<Args>, extras: InteractionExtrasData): Promise<boolean>
 }
 
@@ -85,10 +86,22 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
 
         try {
             const extras = await handler.getExtras(i)
-            const args = await Shared.resolve<any>(i, handler.data.args, extras, rawArgs)
+            const args = await Shared.resolve<any>({
+                args: handler.data.args,
+                extras,
+                rawArgs,
+                resolver: i
+            })
 
             if (args === null) return
             
+            if (handler.data.ownerOnly && !rawArgs.includes(i.user.id)) {
+                await i.reply({
+                    content: `You can't interact with this, sweetie.`
+                })
+                return
+            }
+
             const result = await handler.execute(i, args, extras)
         } catch (error: unknown) {
             await Errors.interaction(i, error)

@@ -6,6 +6,7 @@ import NekoDatabase, { PlayerItemData } from "../../core/NekoDatabase.js";
 import { Item, Nullable } from "../resource/Item.js";
 import { Rarity } from "../static/Rarity.js";
 import { Formulas } from "../static/Formulas.js";
+import { Util } from "../static/Util.js";
 
 export class PlayerInventory {
     public constructor(private readonly player: Player) {}
@@ -111,6 +112,15 @@ export class PlayerInventory {
 
     public count(item: Item) {
         return this.rawItems.reduce((x, y) => x + (y.itemId === item.id ? y.amount : 0), 0)
+    }
+
+    public search(q: string) {
+        return Util.searchMany(
+            this.items,
+            q,
+            el => el.index!,
+            el => el.item.name
+        )
     }
 
     [Symbol.iterator]() {

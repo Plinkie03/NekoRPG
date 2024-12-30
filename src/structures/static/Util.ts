@@ -1,5 +1,6 @@
-import { Collection } from "discord.js"
+import { ApplicationCommandOptionChoiceData, Collection } from "discord.js"
 import { Identifiable } from "./Game.js"
+import { Resource } from "../resource/Resource.js"
 
 export class Util {
     private constructor() { }
@@ -8,12 +9,11 @@ export class Util {
         return Math.random() * 100 <= ch
     }
 
-    public static searchMany<T extends Identifiable>(
+    public static searchMany<T>(
         elements: Collection<unknown, T> | T[],
         query: string,
-        key?: keyof {
-            [P in keyof T as T[P] extends string ? P : never]: never
-        }
+        id: (el: T) => number,
+        name: (el: T) => string
     ): T[] {
         query = query.toLowerCase()
 
@@ -25,7 +25,8 @@ export class Util {
         for (let i = 0, len = arr.length; i < len; i++) {
             const el = arr[i]
 
-            if (el.id === lookupId || el.name.toLowerCase().startsWith(query) || (key && (<string>el[key]).toLowerCase().startsWith(query))) {
+
+            if (id(el) === lookupId || name(el).toLowerCase().startsWith(query)) {
                 results.push(el)
             }
         }
@@ -48,5 +49,24 @@ export class Util {
     public static camelToTitle(str: string): string {
         const result = str.replace(/([A-Z])/g, ' $1');
         return result.charAt(0).toUpperCase() + result.slice(1);
+    }
+
+    public static formatChoices<T>(
+        arr: Collection<any, T> | T[],
+        key: (itm: T) => string,
+        value: (itm: T) => string | number
+    ): ApplicationCommandOptionChoiceData[] {
+        return [...arr.values()].map(x => ({
+            name: key(x),
+            value: value(x)
+        }))
+    }
+
+    public static formatResourceChoices(resources: Parameters<typeof Util.formatChoices<Resource>>[0]) {
+        return this.formatChoices(
+            resources,
+            el => el.name,
+            el => el.id
+        )
     }
 }

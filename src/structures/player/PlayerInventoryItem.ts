@@ -76,8 +76,8 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return this.amount === 1 ? "" : ` ${this.amount}x`
     }
 
-    public get detailedName() {
-        const output = new Array<string>(this.item.simpleName)
+    public detailedName(emoji = true) {
+        const output = new Array<string>(emoji ? this.item.simpleName : this.item.name)
 
         if (this.item.isEquippable()) {
             output.unshift(`[${RarityType[this.rarity.type]} (${this.multiplier.toFixed(2)}x)]`)
