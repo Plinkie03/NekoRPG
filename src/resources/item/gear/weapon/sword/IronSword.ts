@@ -1,5 +1,5 @@
-import { GearType, Item, ItemType, WeaponType } from "../../../../structures/resource/Item.js";
-import Wood from "../../material/log/BirchLog.js";
+import { GearType, Item, ItemType, WeaponType } from "../../../../../structures/resource/Item.js";
+import Wood from "../../../material/log/BirchLog.js";
 
 export default new Item({
     id: 1,
@@ -18,6 +18,11 @@ export default new Item({
                     amount: 10
                 }
             ]
+        },
+        rewards: {
+            skills: {
+                smithing: 25
+            }
         }
     },
     weaponType: WeaponType.Sword

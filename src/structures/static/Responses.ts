@@ -21,10 +21,9 @@ export class Responses {
             return false
         }
 
-        const embed = Embeds.basic(input, input.user, Colors.Aqua)
+        const embed = (await Embeds.inventoryItem(input, input.user, invItem))
             .setTitle(invItem.item.simpleName)
             .setThumbnail(invItem.item.image)
-
 
         const actionRow = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
@@ -38,6 +37,12 @@ export class Responses {
                     label: "Destroy",
                     disabled: !invItem.destroyable,
                     style: ButtonStyle.Danger
+                }),
+                new ButtonBuilder({
+                    custom_id: viewInventoryItem.id(input.user, invItem.uuid, page),
+                    label: "Refresh",
+                    emoji: "🔄",
+                    style: ButtonStyle.Primary
                 }),
                 new ButtonBuilder({
                     custom_id: lockInventoryItem.id(input.user, invItem.uuid, page),
@@ -62,7 +67,7 @@ export class Responses {
         await input.update({
             embeds: [embed],
             content: emptyString,
-            components: [actionRow ] 
+            components: [actionRow] 
         })
 
         return true

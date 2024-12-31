@@ -1,5 +1,5 @@
 import NekoDatabase from "../core/NekoDatabase.js";
-import IronSword from "../resources/item/gear/iron/IronSword.js";
+import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
 import Wood from "../resources/item/material/log/BirchLog.js";
 import { Logger } from "../structures/static/Logger.js";
 

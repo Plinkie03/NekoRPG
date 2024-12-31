@@ -6,6 +6,7 @@ import { Rarity, RarityType } from "../static/Rarity.js";
 import NekoDatabase, { PlayerItemData } from "../../core/NekoDatabase.js";
 import { PlayerSpells } from "./PlayerSpells.js";
 import { Item, ItemType, Nullable } from "../resource/Item.js";
+import { Util } from "../static/Util.js";
 
 export enum PlayerInventoryItemAmountChangeResponse {
     Destroyed,
@@ -119,11 +120,15 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return !this.destroyable ? Promise.resolve(false) : this.manager["deleteItem"](this)
     }
 
-    private getStat(stat: keyof Stats) {
-        const value = (this.item.isGear() ? this.item.getBaseStat(stat) : 0) * this.multiplier
+    public getStat(stat: keyof Stats) {
+        const value = (this.item.isGear() ? this.item.getStat(stat) : 0) * this.multiplier
         const statBoost = this.getStatBoost(stat)
 
         return Item.isPercentualStat(stat) ? value + statBoost : value * (statBoost || 1)
+    }
+
+    public getStats(): Stats {
+        return Util.getStatsFrom(this)
     }
 
     private getStatBoost(stat: keyof Stats) {

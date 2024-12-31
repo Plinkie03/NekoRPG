@@ -2,6 +2,7 @@ import { ApplicationCommandOptionChoiceData, CDNRoutes, Collection, ImageFormat,
 import { Identifiable } from "./Game.js"
 import { Resource } from "../resource/Resource.js"
 import { Nullable } from "../resource/Item.js"
+import { Stats } from "../entity/EntityBaseStats.js"
 
 export class Util {
     private constructor() { }
@@ -76,5 +77,21 @@ export class Util {
             el => el.name,
             el => el.id
         )
+    }
+
+    public static getStatsFrom(instance: unknown & { getStat(stat: keyof Stats): number }): Stats {
+        return {
+            blockRate: instance.getStat("blockRate"),
+            blockReduction: instance.getStat("blockReduction"),
+            criticalMultiplier: instance.getStat("criticalMultiplier"),
+            criticalRate: instance.getStat("criticalRate"),
+            dodgeRate: instance.getStat("dodgeRate"),
+            healRate: instance.getStat("healRate"),
+            lifesteal: instance.getStat("lifesteal"),
+            defense: Math.floor(instance.getStat("defense")),
+            agility: Math.floor(instance.getStat("agility")),
+            maxHealth: Math.floor(instance.getStat("maxHealth")),
+            strength: Math.floor(instance.getStat("strength"))
+        }
     }
 }

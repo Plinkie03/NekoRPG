@@ -4,7 +4,7 @@ import { Command } from "../structures/discord/Command.js";
 import { ArgType } from "../structures/discord/Shared.js";
 import { Embeds } from "../structures/static/Embeds.js";
 import { Responses } from "../structures/static/Responses.js";
-import IronSword from "../resources/item/gear/iron/IronSword.js";
+import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
 
 export default new Command({
     name: "inventory",

@@ -1,6 +1,6 @@
 import { setTimeout } from "timers/promises";
 import NekoDatabase from "../core/NekoDatabase.js";
-import IronSword from "../resources/item/gear/iron/IronSword.js";
+import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
 import BirchForestNode from "../resources/node/woodcutting/BirchForestNode.js";
 import { Logger } from "../structures/static/Logger.js";
 import { inspect } from "util";

@@ -32,7 +32,7 @@ export class EntityModdedStats extends EntityBaseStats {
         return this.fortifications.filter(x => x.name === name).reduce((x, y) => x + y.multiplier, 1)
     }
 
-    private getStat(stat: keyof Stats): number {
+    public getStat(stat: keyof Stats): number {
         return this.entity.baseStats[stat] * Math.max(this.getStatFortificationMultiplier(stat), 0)
     }
 

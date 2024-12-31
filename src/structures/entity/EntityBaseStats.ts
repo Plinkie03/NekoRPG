@@ -1,3 +1,4 @@
+import { Util } from "../static/Util.js";
 import { Entity } from "./Entity.js";
 
 export type Stats = Omit<{
@@ -24,19 +25,11 @@ export abstract class EntityBaseStats {
     }
 
     public get(): Stats {
-        return {
-            healRate: this.healRate,
-            agility: this.agility,
-            blockRate: this.blockRate,
-            blockReduction: this.blockReduction,
-            criticalMultiplier: this.criticalMultiplier,
-            criticalRate: this.criticalRate,
-            defense: this.defense,
-            maxHealth: this.maxHealth,
-            strength: this.strength,
-            dodgeRate: this.dodgeRate,
-            lifesteal: this.lifesteal
-        }
+        return Util.getStatsFrom(this)
+    }
+
+    public getStat(name: keyof Stats) {
+        return this[name]
     }
 
     public static createEmptyStats(): Stats {

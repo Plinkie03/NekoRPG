@@ -38,7 +38,7 @@ export interface RequirementItemData {
 export interface CraftData {
     requirements: RequirementData
     chance?: number
-    rewards?: RewardData
+    rewards: RewardData
     amount?: number
 }
 
@@ -223,8 +223,12 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         return { type: CraftItemResponseType.Success, items: results, success, failed: times - success }
     }
 
-    public getBaseStat(name: keyof Stats): number {
+    public getStat(name: keyof Stats): number {
         return this.isGear() ? this.data.stats[name] ?? 0 : 0
+    }
+
+    public getStats(): Stats {
+        return Util.getStatsFrom(this)
     }
 
     public get equippable(): boolean {

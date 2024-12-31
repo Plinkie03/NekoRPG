@@ -1,6 +1,6 @@
 import { setTimeout } from "timers/promises";
 import NekoDatabase from "../core/NekoDatabase.js";
-import IronSword from "../resources/item/gear/iron/IronSword.js";
+import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
 import ArrowRain from "../resources/item/spell/ArrowRain.js";
 import { Fight } from "../structures/battle/Fight.js";
 import { Hit } from "../structures/battle/actions/Hit.js";
