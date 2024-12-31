@@ -2,7 +2,7 @@ import { AutocompleteInteraction, BaseInteraction, ButtonInteraction, CacheType,
 import { NekoClient } from "../../core/NekoClient.js"
 import { Errors } from "../static/Errors.js"
 import NekoDatabase from "../../core/NekoDatabase.js"
-import { ArgData, ArgsToArray, ArgsToRecord, ArgType, GlobalExtrasData, Shared } from "./Shared.js"
+import { ArgData, ArgsToArray, ArgType, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js"
 
 export enum DiscordInteractionType {
     Button,
@@ -33,7 +33,7 @@ export interface DiscordInteractionHandlerData<T extends DiscordInteractionType 
     id: number
     args?: [...Args]
     ownerOnly?: boolean
-    execute(this: NekoClient, i: DiscordInteractionInterface[T], args: ArgsToRecord<Args>, extras: InteractionExtrasData): Promise<boolean>
+    execute(this: NekoClient, payload: InteractionPayload<DiscordInteractionInterface[T], InteractionExtrasData, Args>): Promise<boolean>
 }
 
 export class DiscordInteractionHandler<T extends DiscordInteractionType = DiscordInteractionType, Args extends ArgData[] = ArgData[]> {
@@ -83,17 +83,19 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
                 return
             }
 
-            const result = await handler.execute(i, args, extras)
+            const result = await handler.data.execute.call(
+                client,
+                {
+                    args,
+                    extras,
+                    instance: i
+                }
+            )
         } catch (error: unknown) {
             await Errors.interaction(i, error)
         } finally {
             client.manager.unlock(i.user)
         }
-    }
-
-    private execute(...args: Parameters<DiscordInteractionHandlerData["execute"]>) {
-        // @ts-ignore
-        return this.data.execute.call(args[0].client as NekoClient, ...args)
     }
 
     private async getExtras(i: DiscordInteractionInterface[DiscordInteractionType]): Promise<InteractionExtrasData> {

@@ -8,7 +8,7 @@ import NekoDatabase from "../../core/NekoDatabase.js";
 import { Embeds } from "../static/Embeds.js";
 import { Errors } from "../static/Errors.js";
 import { DiscordInteractionInterface, DiscordInteractionType } from "./DiscordInteractionHandler.js";
-import { ArgData, ArgsToRecord, ArgType, GlobalExtrasData, Shared } from "./Shared.js";
+import { ArgData, ArgsToArray, ArgType, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js";
 import { Util } from "../static/Util.js";
 import { Game } from "../static/Game.js";
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
@@ -22,8 +22,8 @@ export interface CommandData<Args extends ArgData[] = ArgData[]> {
     defer?: boolean
     permissions?: PermissionResolvable
     description: string
-    args?: Args
-    execute(this: NekoClient, input: ChatInputCommandInteraction<'cached'>, args: ArgsToRecord<Args>, extras: CommandExtrasData): Promise<boolean>
+    args?: [...Args]
+    execute(this: NekoClient, payload: InteractionPayload<ChatInputCommandInteraction<'cached'>, CommandExtrasData, Args>): Promise<boolean>
 }
 
 export class Command<Args extends ArgData[] = ArgData[]> {
@@ -36,6 +36,10 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                         Command.itemAutocomplete : 
                         undefined
         }
+    }
+
+    public get args(): ArgsToArray<Args> {
+        throw ""
     }
 
     public toJSON(): ApplicationCommandData {
@@ -121,17 +125,19 @@ export class Command<Args extends ArgData[] = ArgData[]> {
             if (command.data.defer)
                 await i.deferReply({ ephemeral: command.data.defer })
 
-            const result = await command.execute(i, args, extras)
+            const result = await command.data.execute.call(
+                client,
+                {
+                    args,
+                    instance: i,
+                    extras
+                }
+            )
         } catch (error: unknown) {
             await Errors.interaction(i, error)
         } finally {
             client.manager.unlock(i.user)
         }
-    }
-
-    public async execute(...args: Parameters<CommandData["execute"]>) {
-        // @ts-ignore
-        return this.data.execute.call(args[0].client as NekoClient, ...args)
     }
 
     private async getExtras(i: ChatInputCommandInteraction<'cached'> | AutocompleteInteraction<'cached'>): Promise<CommandExtrasData> {
@@ -153,14 +159,14 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                 return ApplicationCommandOptionType.Integer
             }
 
+            case ArgType.User: {
+                return ApplicationCommandOptionType.User
+            }
+
             case ArgType.InventoryItem:
             case ArgType.Player:
             case ArgType.String: {
                 return ApplicationCommandOptionType.String
-            }
-
-            default: {
-                throw new Error(`Unable to get real arg type for ${ArgType[type]}`)
             }
         }
     }

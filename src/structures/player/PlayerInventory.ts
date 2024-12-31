@@ -114,6 +114,11 @@ export class PlayerInventory {
         return this.rawItems.reduce((x, y) => x + (y.itemId === item.id ? y.amount : 0), 0)
     }
 
+    public page(n: number) {
+        const offset = n * 10 - 10
+        return this.rawItems.slice(offset, offset + 10).map(this.from.bind(this))
+    }
+
     public search(q: string) {
         return Util.searchMany(
             this.items,

@@ -1,6 +1,7 @@
 import { codeBlock, RepliableInteraction } from "discord.js";
 import { Logger } from "./Logger.js";
 import { Embeds } from "./Embeds.js";
+import { emptyString } from "../../Constants.js";
 
 export class Errors {
     private constructor() {
@@ -30,7 +31,7 @@ export class Errors {
                 embeds: [
                     embed
                 ],
-                content: "",
+                content: emptyString,
                 ephemeral: true
             })
         }

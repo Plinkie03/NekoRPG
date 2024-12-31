@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, BaseInteraction, inlineCode, ApplicationCommandOptionChoiceData, AutocompleteInteraction } from "discord.js"
+import { ChatInputCommandInteraction, BaseInteraction, inlineCode, ApplicationCommandOptionChoiceData, AutocompleteInteraction, User } from "discord.js"
 import { DiscordInteractionInterface, DiscordInteractionType, InteractionExtrasData } from "./DiscordInteractionHandler.js"
 import { Player } from "../player/Player.js"
 import { NekoClient } from "../../core/NekoClient.js"
@@ -8,6 +8,7 @@ import { Game } from "../static/Game.js"
 import { Item, Nullable } from "../resource/Item.js"
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js"
 import { CommandExtrasData } from "./Command.js"
+import { emptyString } from "../../Constants.js"
 
 export type EnumLike<T = any> = {
     [id: string]: T | string;
@@ -16,23 +17,19 @@ export type EnumLike<T = any> = {
 
 export type GetEnum<T extends EnumLike> = T extends EnumLike<infer P> ? P : never
 
-export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String ? string : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
+export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String ? string : T extends ArgType.User ? User : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
 
 export type MarkArgNullable<T, B extends boolean> = B extends true ? T : Nullable<T>
 
-export type GetArgType<T> = T extends ArgData<infer _, infer Type, infer Required, infer Enum> ? MarkArgNullable<GetRealArgType<Type, Enum>, T["default"] extends (...args: any) => any ? true : Required> : never
+export type GetArgType<T> = T extends ArgData<infer Type, infer Required, infer Enum> ? MarkArgNullable<GetRealArgType<Type, Enum>, T["default"] extends (...args: any) => any ? true : Required> : never
 
 export type ArgsToArray<T> = T extends [infer L, ...infer R] ? [
     GetArgType<L>,
     ...ArgsToArray<R>
 ] : []
 
-export type ArgsToRecord<T> = {
-    [P in keyof T as T[P] extends ArgData<infer N> ? N : never]: GetArgType<T[P]>
-}
-
-export interface ArgData<Name extends string = string, Type extends ArgType = ArgType, Required extends boolean = boolean, Enum extends EnumLike = EnumLike> {
-    name: Name
+export interface ArgData<Type extends ArgType = ArgType, Required extends boolean = boolean, Enum extends EnumLike = EnumLike> {
+    name: string
     description: string
     type: Type
     enum?: Enum
@@ -47,6 +44,7 @@ export enum ArgType {
     Integer,
     Float,
     String,
+    User,
     Enum,
     Item,
     Player,
@@ -68,6 +66,12 @@ export interface ResolveOptions extends Omit<ArgResolveOptions, "resolver" | "va
     resolver: BaseInteraction<'cached'>
     args?: ArgData[]
     rawArgs?: string[]
+}
+
+export interface InteractionPayload<Instance extends BaseInteraction<'cached'>, Extras extends GlobalExtrasData, Args extends ArgData[]> {
+    instance: Instance
+    args: ArgsToArray<Args>
+    extras: Extras
 }
 
 export class Shared {
@@ -117,6 +121,14 @@ export class Shared {
         return id ? Game.getItem(id) : id
     }
 
+    private static async [ArgType.User](options: ArgResolveOptions) {
+        if (options.resolver instanceof BaseInteraction) {
+            return options.resolver.client.users.fetch(options.value!)
+        } else {
+            return options.resolver.getUser(options.arg.name, options.arg.required)
+        }
+    }
+
     private static async [ArgType.InventoryItem](options: ArgResolveOptions) {
         let index;
 
@@ -142,9 +154,9 @@ export class Shared {
     }
 
     public static async resolve<T>(options: ResolveOptions): Promise<T | null> {
-        const output = {} as any
+        const output = new Array<any>()
 
-        if (!options.args?.length) return output
+        if (!options.args?.length) return output as T
 
         const resolver = options.resolver instanceof ChatInputCommandInteraction ? options.resolver.options : options.resolver
 
@@ -159,7 +171,7 @@ export class Shared {
                 if (arg.required) {
                     return reject()
                 } else {
-                    output[arg.name] = null
+                    output.push(null)
                     continue
                 }
             }
@@ -169,15 +181,15 @@ export class Shared {
                 value,
                 resolver: resolver as any,
                 extras: options.extras
-            }) ?? ("default" in arg ? arg.default?.call(options.resolver.client as NekoClient, options.resolver as never) : undefined)
+            }) ?? ("default" in arg ? await arg.default?.call(options.resolver.client as NekoClient, options.resolver as never) : undefined)
             if (resolved === undefined && arg.required) {
                 return reject()
             }
 
-            output[arg.name] = resolved ?? null
+            output.push(resolved ?? null)
         }
 
-        return output
+        return output as T
     }
 
     private static async reject(i: BaseInteraction<'cached'>, arg: ArgData, given?: unknown) {
@@ -212,7 +224,7 @@ export class Shared {
                 embeds: [
                     embed
                 ],
-                content: "",
+                content: emptyString,
                 ephemeral: true
             })
         }

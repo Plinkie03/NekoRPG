@@ -76,6 +76,10 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return this.amount === 1 ? "" : ` ${this.amount}x`
     }
 
+    public get destroyable() {
+        return !(this.equipped || this.locked)
+    }
+    
     public detailedName(emoji = true) {
         const output = new Array<string>(emoji ? this.item.simpleName : this.item.name)
 
@@ -112,7 +116,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public destroy() {
-        return this.equipped || this.locked ? Promise.resolve(false) : this.manager["deleteItem"](this)
+        return !this.destroyable ? Promise.resolve(false) : this.manager["deleteItem"](this)
     }
 
     private getStat(stat: keyof Stats) {
@@ -208,6 +212,10 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         }
     }
 
+    public equip() {
+        return this.item.isSpell() ? this.equipSpell() : this.equipGear()
+    }
+
     public async unequip(): Promise<boolean> {
         if (!this.equipped) return false
         await this.setEquipped(false)
@@ -224,7 +232,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         this.data.equipped = state
     }
 
-    public async setLocked(state: boolean) {
+    public async setLocked(state: boolean = !this.data.locked) {
         await NekoDatabase.updateItem({
             uuid: this.uuid,
             locked: state            
