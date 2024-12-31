@@ -2,8 +2,7 @@ import { AutocompleteInteraction, BaseInteraction, ButtonInteraction, CacheType,
 import { NekoClient } from "../../core/NekoClient.js"
 import { Errors } from "../static/Errors.js"
 import NekoDatabase from "../../core/NekoDatabase.js"
-import { ArgType, GlobalExtrasData, Shared } from "./Shared.js"
-import { MarkArgNullable, GetRealArgType, EnumLike, ArgData, ArgsToRecord, ArgsToArray } from "./Command.js"
+import { ArgData, ArgsToArray, ArgsToRecord, ArgType, GlobalExtrasData, Shared } from "./Shared.js"
 
 export enum DiscordInteractionType {
     Button,

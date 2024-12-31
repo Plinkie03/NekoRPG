@@ -8,44 +8,10 @@ import NekoDatabase from "../../core/NekoDatabase.js";
 import { Embeds } from "../static/Embeds.js";
 import { Errors } from "../static/Errors.js";
 import { DiscordInteractionInterface, DiscordInteractionType } from "./DiscordInteractionHandler.js";
-import { ArgType, GlobalExtrasData, Shared } from "./Shared.js";
+import { ArgData, ArgsToRecord, ArgType, GlobalExtrasData, Shared } from "./Shared.js";
 import { Util } from "../static/Util.js";
 import { Game } from "../static/Game.js";
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
-
-export type EnumLike<T = any> = {
-    [id: string]: T | string;
-    [nu: number]: string;
-};
-
-export type GetEnum<T extends EnumLike> = T extends EnumLike<infer P> ? P : never
-
-export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String ? string : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
-
-export type MarkArgNullable<T, B extends boolean> = B extends true ? T : Nullable<T>
-
-export type GetArgType<T> = T extends ArgData<infer _, infer Type, infer Required, infer Enum> ? MarkArgNullable<GetRealArgType<Type, Enum>, T["default"] extends (...args: any) => any ? true : Required> : never
-
-export type ArgsToArray<T> = T extends [infer L, ...infer R] ? [
-    GetArgType<L>,
-    ...ArgsToArray<R>
-] : []
-
-export type ArgsToRecord<T> = {
-    [P in keyof T as T[P] extends ArgData<infer N> ? N : never]: GetArgType<T[P]>
-}
-
-export interface ArgData<Name extends string = string, Type extends ArgType = ArgType, Required extends boolean = boolean, Enum extends EnumLike = EnumLike> {
-    name: Name
-    description: string
-    type: Type
-    enum?: Enum
-    required?: Required
-    max?: number
-    default?: (this: NekoClient, input: ChatInputCommandInteraction<'cached'>) => Promise<GetRealArgType<Type, Enum>>
-    min?: number
-    autocomplete?(this: NekoClient, input: AutocompleteInteraction<'cached'>, query: string, extras: CommandExtrasData): Promise<ApplicationCommandOptionChoiceData[]>
-}
 
 export interface CommandExtrasData extends GlobalExtrasData {
     command: Command

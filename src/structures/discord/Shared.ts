@@ -1,11 +1,47 @@
-import { ChatInputCommandInteraction, BaseInteraction, inlineCode } from "discord.js"
+import { ChatInputCommandInteraction, BaseInteraction, inlineCode, ApplicationCommandOptionChoiceData, AutocompleteInteraction } from "discord.js"
 import { DiscordInteractionInterface, DiscordInteractionType, InteractionExtrasData } from "./DiscordInteractionHandler.js"
 import { Player } from "../player/Player.js"
 import { NekoClient } from "../../core/NekoClient.js"
 import { Embeds } from "../static/Embeds.js"
-import { ArgData } from "./Command.js"
 import NekoDatabase from "../../core/NekoDatabase.js"
 import { Game } from "../static/Game.js"
+import { Item, Nullable } from "../resource/Item.js"
+import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js"
+import { CommandExtrasData } from "./Command.js"
+
+export type EnumLike<T = any> = {
+    [id: string]: T | string;
+    [nu: number]: string;
+};
+
+export type GetEnum<T extends EnumLike> = T extends EnumLike<infer P> ? P : never
+
+export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String ? string : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
+
+export type MarkArgNullable<T, B extends boolean> = B extends true ? T : Nullable<T>
+
+export type GetArgType<T> = T extends ArgData<infer _, infer Type, infer Required, infer Enum> ? MarkArgNullable<GetRealArgType<Type, Enum>, T["default"] extends (...args: any) => any ? true : Required> : never
+
+export type ArgsToArray<T> = T extends [infer L, ...infer R] ? [
+    GetArgType<L>,
+    ...ArgsToArray<R>
+] : []
+
+export type ArgsToRecord<T> = {
+    [P in keyof T as T[P] extends ArgData<infer N> ? N : never]: GetArgType<T[P]>
+}
+
+export interface ArgData<Name extends string = string, Type extends ArgType = ArgType, Required extends boolean = boolean, Enum extends EnumLike = EnumLike> {
+    name: Name
+    description: string
+    type: Type
+    enum?: Enum
+    required?: Required
+    max?: number
+    default?: (this: NekoClient, input: ChatInputCommandInteraction<'cached'>) => Promise<GetRealArgType<Type, Enum>>
+    min?: number
+    autocomplete?(this: NekoClient, input: AutocompleteInteraction<'cached'>, query: string, extras: CommandExtrasData): Promise<ApplicationCommandOptionChoiceData[]>
+}
 
 export enum ArgType {
     Integer,
