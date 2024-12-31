@@ -82,8 +82,8 @@ export class Hit extends Action {
                 this.defender.displayName
             )
 
-            if (this.spell !== true) {
-                output.push((this.entity instanceof Player ? this.entity.gear.equipped[GearType.Weapon]?.item.simpleName : null) ?? ` with the Hand`)
+            if (this.spell !== true && this.entity instanceof Player) {
+                output.push(this.entity.gear.equipped[GearType.Weapon]?.item.simpleName ?? ` with the Hand`)
             }
 
             if (this.blocked)

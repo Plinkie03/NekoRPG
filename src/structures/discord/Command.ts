@@ -176,11 +176,11 @@ export class Command<Args extends ArgData[] = ArgData[]> {
 
             case ArgType.Item:
             case ArgType.Enum:
-            case ArgType.InventoryItem:
             case ArgType.Integer: {
                 return ApplicationCommandOptionType.Integer
             }
 
+            case ArgType.InventoryItem:
             case ArgType.Player:
             case ArgType.String: {
                 return ApplicationCommandOptionType.String
@@ -204,8 +204,8 @@ export class Command<Args extends ArgData[] = ArgData[]> {
     public static async inventoryItemAutocomplete(i: AutocompleteInteraction<'cached'>, q: string, extras: CommandExtrasData) {
         return Util.formatChoices(
             extras.player.inventory.search(q),
-            el => `[ID ${el.index!}] ${el.detailedName(false)}`,
-            el => el.index!
+            el => el.detailedName(false),
+            el => el.uuid!
         )
     }
 }

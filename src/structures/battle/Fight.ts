@@ -20,7 +20,6 @@ export class Fight extends TypedEmitter<FightEvents> {
     
     public constructor(public readonly teams: [ Entity[], Entity[] ], public readonly roundDelay = 1000) {
         super()
-        this.prepare()
     }
 
     public getAllyTeam(entity: Entity) {
@@ -58,14 +57,32 @@ export class Fight extends TypedEmitter<FightEvents> {
     }
 
     private prepare() {
-        for (const team of this.teams) {
-            for (const entity of team) {
-                entity.reset()
+        for (const entity of this.getEntities()) {
+            entity.reset()
+            entity.on("dead", this.onEntityDead.bind(this))
+        }
+    }
+
+    private finish() {
+        for (const entity of this.getEntities()) {
+            entity.removeAllListeners()
+        }
+    }
+
+    private step() {
+        for (const entity of this.getEntities()) {
+            if (entity.isDead()) {
+                entity.moddedStats.reset()
+                continue
             }
+
+            entity.moddedStats.step(this)
         }
     }
 
     public async start() {
+        this.prepare()
+
         this.emit("start", this)
 
         for (;this.getWinnerTeam() === null && this.round !== this.maxRound;this.round++) {
@@ -102,28 +119,23 @@ export class Fight extends TypedEmitter<FightEvents> {
                         })
 
                         spellHit.run()
-                        log.push(spellHit)
+                        log.unshift(spellHit)
 
                         break attack
                     }
 
                     const basic = Hit.from(attacker, defender)
                     basic.run()
-                    log.push(basic)
+                    log.unshift(basic)
                 }
             }
 
-            for (const entity of this.getEntities()) {
-                if (entity.isDead()) {
-                    entity.moddedStats.reset()
-                    continue
-                }
-                
-                entity.moddedStats.step(this)
-            }
-
+            this.step()
+            
             this.emit("round", this)
         }
+
+        this.finish()
 
         this.emit("end", this)
     }
@@ -140,5 +152,9 @@ export class Fight extends TypedEmitter<FightEvents> {
 
     public get lastLog() {
         return this.getActionLog()
+    }
+
+    private onEntityDead(entity: Entity) {
+        this.lastLog.push(new Info(entity, `${entity.displayName} died...`))
     }
 }

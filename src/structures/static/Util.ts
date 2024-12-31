@@ -1,6 +1,7 @@
-import { ApplicationCommandOptionChoiceData, Collection } from "discord.js"
+import { ApplicationCommandOptionChoiceData, CDNRoutes, Collection, ImageFormat, parseEmoji, RouteBases } from "discord.js"
 import { Identifiable } from "./Game.js"
 import { Resource } from "../resource/Resource.js"
+import { Nullable } from "../resource/Item.js"
 
 export class Util {
     private constructor() { }
@@ -36,6 +37,13 @@ export class Util {
 
     public static searchOne<T extends Identifiable>(...params: Parameters<typeof this.searchMany<T>>) {
         return Util.searchMany(...params)
+    }
+
+    public static getEmojiUrl(emoji?: Nullable<string>) {
+        if (!emoji) return null
+        const em = parseEmoji(emoji)!
+
+        return RouteBases.cdn + CDNRoutes.emoji(em.id!, em.animated ? ImageFormat.GIF : ImageFormat.PNG) + "?size=1024"
     }
 
     public static plural(of: string, n: number, add?: string) {

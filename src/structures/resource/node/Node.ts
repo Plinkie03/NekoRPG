@@ -75,7 +75,7 @@ export interface ResourceStatsData {
     failed: number
 }
 
-export type SkipFirstArrayArg<T> = T extends [ infer _, ... infer A ] ? A : []
+export type SkipFirstArrayArg<T> = T extends [ infer _, ...infer A ] ? A : []
 
 export abstract class Node extends Resource<NodeData> {
     public abstract get type(): keyof Tasks

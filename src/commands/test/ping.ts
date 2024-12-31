@@ -5,6 +5,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import button from "../../interactions/test/button.js";
 import { Util } from "../../structures/static/Util.js";
 import { Game } from "../../structures/static/Game.js";
+import SlimeField from "../../resources/zone/SlimeField.js";
 
 enum Types {
     One,
@@ -22,7 +23,7 @@ export default new Command({
         }
     ],
     async execute(input, args, extras) {
-        console.log(args)
+        await input.reply(SlimeField.emoji!)
         return Promise.resolve(true)
     },
 })

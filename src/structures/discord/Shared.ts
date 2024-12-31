@@ -85,12 +85,12 @@ export class Shared {
         let index;
 
         if (options.resolver instanceof BaseInteraction) {
-            index = Number(options.value!)
+            index = options.value!
         } else {
-            index = options.resolver.getInteger(options.arg.name, options.arg.required)
+            index = options.resolver.getString(options.arg.name, options.arg.required)
         }
 
-        return index !== null && index !== undefined ? options.extras.player.inventory.at(index) : index
+        return index !== null && index !== undefined ? options.extras.player.inventory.at(Number(index)) ?? options.extras.player.inventory.getItemByUUID(index) : index
     }
 
     private static async [ArgType.Player](options: ArgResolveOptions) {
@@ -146,8 +146,7 @@ export class Shared {
 
     private static async reject(i: BaseInteraction<'cached'>, arg: ArgData | InteractionArgData, given?: unknown) {
         const embed = Embeds.basic(i, i.user, "Red")
-
-        embed.setTitle("Argument Error")
+            .setTitle("Argument Error")
             .setDescription(`The argument ${inlineCode(arg.name)} is absent or did not match the type.`)
             .addFields([
                 {

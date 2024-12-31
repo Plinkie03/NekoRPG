@@ -26,6 +26,7 @@ model RawPlayer {
   skills RawPlayerSkills?
   tasks  RawPlayerTasks?
   items  RawItem[]
+  quests RawPlayerQuest[]
 }
 
 model RawPlayerSkills {
@@ -77,6 +78,16 @@ model RawItem {
   rarity     Int
   multiplier Float
   stats      RawItemStat[]
+
+  player RawPlayer @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RawPlayerQuest {
+  uuid     String  @id @unique @default(uuid())
+  playerId String
+  questId  Int
+  count    Int     @default(0)
+  started  Boolean @default(false)
 
   player RawPlayer @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

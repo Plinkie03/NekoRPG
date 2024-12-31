@@ -13,6 +13,7 @@ import { RewardData, Rewards } from "../static/Rewards.js";
 import { Item } from "../resource/Item.js";
 import { PlayerTasks } from "./PlayerTasks.js";
 import { Game } from "../static/Game.js";
+import { PlayerQuests } from "./PlayerQuests.js";
 
 export class Player extends Entity<PlayerData, PlayerBaseStats> {
     public static DefaultXpReq = 100
@@ -22,6 +23,7 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
     public readonly inventory = new PlayerInventory(this)
     public readonly spells = new PlayerSpells(this)
     public readonly skills = new PlayerSkills(this)
+    public readonly quests = new PlayerQuests(this)
     public readonly tasks = new PlayerTasks(this)
     public readonly gear = new PlayerGear(this)
 

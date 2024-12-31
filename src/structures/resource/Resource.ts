@@ -1,3 +1,4 @@
+import { Util } from "../static/Util.js"
 import { Nullable } from "./Item.js"
 
 export interface ResourceData {
@@ -24,5 +25,9 @@ export class Resource<Data extends ResourceData = ResourceData> {
 
     public get simpleName() {
         return `${this.emoji && `${this.emoji} ` || ''}${this.name}`
+    }
+
+    public get image() {
+        return Util.getEmojiUrl(this.emoji)
     }
 }

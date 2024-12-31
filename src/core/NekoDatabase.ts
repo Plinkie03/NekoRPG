@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, RawPlayerSkills, RawPlayerTasks } from "@prisma/client";
+import { Prisma, PrismaClient, RawPlayerQuest, RawPlayerSkills, RawPlayerTasks } from "@prisma/client";
 import { Collection } from "discord.js";
 import { Player } from "../structures/player/Player.js"
 import { Logger } from "../structures/static/Logger.js";
@@ -10,7 +10,8 @@ const PlayerIncludes = {
         }
     },
     tasks: true,
-    skills: true
+    skills: true,
+    quests: true
 } as const
 
 export type PlayerData = Exclude<Awaited<ReturnType<NekoDB["getRawPlayer"]>>, null>
@@ -104,6 +105,21 @@ class NekoDB extends PrismaClient {
             where: {
                 playerId: data.playerId
             }
+        })
+    }
+
+    public updateQuest(data: Partial<RawPlayerQuest> & { uuid: string }) {
+        return this.rawPlayerQuest.update({
+            data,
+            where: {
+                uuid: data.uuid
+            }
+        })
+    }
+
+    public createQuest(data: Prisma.RawPlayerQuestUncheckedCreateInput) {
+        return this.rawPlayerQuest.create({
+            data
         })
     }
 }

@@ -1,5 +1,32 @@
-export interface MonsterData {}
+import { Entity, IEntity } from "../entity/Entity.js";
+import { EntityBaseStats, Stats } from "../entity/EntityBaseStats.js";
+import { EntitySpell } from "../entity/EntitySpell.js";
+import { SpellItem } from "../resource/Item.js";
+import { ResourceData } from "../resource/Resource.js";
+import { RewardData } from "../static/Rewards.js";
+import { MonsterBaseStats } from "./MonsterBaseStats.js";
 
-export class Monster {
-    public constructor(public readonly data: MonsterData) {}
+export interface MonsterData extends IEntity<number>, ResourceData {
+    spells?: SpellItem[]
+    stats: Partial<Stats> & {
+        maxHealth: number
+        strength: number
+    }
+    rewards: RewardData
+}
+
+export class Monster extends Entity<MonsterData> {
+    public readonly baseStats: MonsterBaseStats = new MonsterBaseStats(this)
+
+    public getSpells(): EntitySpell[] {
+        return this.data.spells?.map(x => new EntitySpell(this, x.id, 1)) ?? []
+    }
+
+    public get displayName(): string {
+        return this.data.name
+    }
+
+    public clone() {
+        return new Monster(this.data)
+    }
 }

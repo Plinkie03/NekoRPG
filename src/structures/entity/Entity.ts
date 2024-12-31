@@ -1,3 +1,4 @@
+import { TypedEmitter } from "tiny-typed-emitter"
 import { EntityBaseStats } from "./EntityBaseStats.js"
 import { EntityModdedStats } from "./EntityModdedStats.js"
 import { EntitySpell } from "./EntitySpell.js"
@@ -7,7 +8,11 @@ export interface IEntity<Id> {
     level: number
 }
 
-export abstract class Entity<Data extends IEntity<any> = IEntity<any>, Stats extends EntityBaseStats = EntityBaseStats> {
+export interface EntityEvents {
+    dead(entity: Entity): any
+}
+
+export abstract class Entity<Data extends IEntity<any> = IEntity<any>, Stats extends EntityBaseStats = EntityBaseStats> extends TypedEmitter<EntityEvents> {
     /**
      * These stats are the base used for a fight, they do not change by effects
      */
@@ -23,7 +28,9 @@ export abstract class Entity<Data extends IEntity<any> = IEntity<any>, Stats ext
      */
     public hp: number = 0
 
-    public constructor(public readonly data: Data) {}
+    public constructor(public readonly data: Data) {
+        super()
+    }
     
     public get id() {
         return this.data.id
@@ -45,6 +52,10 @@ export abstract class Entity<Data extends IEntity<any> = IEntity<any>, Stats ext
             this.hp = 0
         else if (this.hp >= this.moddedStats.maxHealth)
             this.hp = this.moddedStats.maxHealth
+
+        if (this.hp === 0) {
+            this.emit("dead", this)
+        }
     }
 
     public damage(by: number) {

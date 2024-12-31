@@ -8,18 +8,26 @@ import { Node } from "../resource/node/Node.js";
 import { Zone } from "../resource/Zone.js";
 import { Resource } from "../resource/Resource.js";
 import { Util } from "./Util.js";
+import { Quest } from "../resource/Quest.js";
+import { Monster } from "../monster/Monster.js";
 
 export type Identifiable<T = unknown> = T & { id: number }
 
 export class Game {
     public static readonly RawItems = new Array<Item>()
     public static readonly Items = new Collection<number, Item>()
+    
+    public static readonly RawMonsters = new Array<Monster>()
+    public static readonly Monsters = new Collection<number, Monster>()
 
     public static readonly RawNodes = new Array<Node>()
     public static readonly Nodes = new Collection<number, Node>()
 
     public static readonly RawZones = new Array<Zone>()
     public static readonly Zones = new Collection<number, Zone>()
+    
+    public static readonly RawQuests = new Array<Quest>()
+    public static readonly Quests = new Collection<number, Quest>()
     
     public static readonly RawSpells = new Array<Effect>()
     public static readonly Spells = new Collection<number, Effect>()
@@ -29,6 +37,8 @@ export class Game {
     private static readonly ZonePath = join(this.ResourcePath, "zone")
     private static readonly NodePath = join(this.ResourcePath, "node")
     private static readonly EffectPath = join(this.ResourcePath, "effect")
+    private static readonly QuestPath = join(this.ResourcePath, "quest")
+    private static readonly MonsterPath = join(this.ResourcePath, "monster")
 
     private constructor() {}
 
@@ -37,6 +47,8 @@ export class Game {
         await Game.load(Game.NodePath, Game.RawNodes, Game.Nodes)
         await Game.load(Game.EffectPath, Game.RawSpells, Game.Spells)
         await Game.load(Game.ZonePath, Game.RawZones, Game.Zones)
+        await Game.load(Game.MonsterPath, Game.RawMonsters, Game.Monsters)
+        await Game.load(Game.QuestPath, Game.RawQuests, Game.Quests)
     }
 
     private static async load<T extends Identifiable>(path: string, rawRef: Array<T>, ref: Collection<number, T>) {
@@ -80,6 +92,18 @@ export class Game {
         const eff = Game.Spells.get(id)
         if (!eff) Logger.halt(`Effect with id ${id} does not exist!`)
         return eff
+    }
+
+    public static getQuest(id: number) {
+        const quest = Game.Quests.get(id)
+        if (!quest) Logger.halt(`Quest with id ${id} does not exist!`)
+        return quest
+    }
+
+    public static getMonster(id: number) {
+        const mob = Game.Monsters.get(id)
+        if (!mob) Logger.halt(`Monster with id ${id} does not exist!`)
+        return mob
     }
 
     public static search(on: Array<Resource>, query: string) {
