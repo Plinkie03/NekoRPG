@@ -7,7 +7,7 @@ import { Player } from "../player/Player.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
 import { Embeds } from "../static/Embeds.js";
 import { Errors } from "../static/Errors.js";
-import { DiscordInteractionInterface, DiscordInteractionType, InteractionArgData } from "./DiscordInteractionHandler.js";
+import { DiscordInteractionInterface, DiscordInteractionType } from "./DiscordInteractionHandler.js";
 import { ArgType, GlobalExtrasData, Shared } from "./Shared.js";
 import { Util } from "../static/Util.js";
 import { Game } from "../static/Game.js";
@@ -24,8 +24,15 @@ export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String 
 
 export type MarkArgNullable<T, B extends boolean> = B extends true ? T : Nullable<T>
 
+export type GetArgType<T> = T extends ArgData<infer _, infer Type, infer Required, infer Enum> ? MarkArgNullable<GetRealArgType<Type, Enum>, T["default"] extends (...args: any) => any ? true : Required> : never
+
+export type ArgsToArray<T> = T extends [infer L, ...infer R] ? [
+    GetArgType<L>,
+    ...ArgsToArray<R>
+] : []
+
 export type ArgsToRecord<T> = {
-    [P in keyof T as T[P] extends ArgData<infer N> ? N : never]: T[P] extends ArgData<infer _, infer Type, infer Required, infer Enum> ? MarkArgNullable<GetRealArgType<Type, Enum>, T[P]["default"] extends (...args: any) => any ? true : Required> : never
+    [P in keyof T as T[P] extends ArgData<infer N> ? N : never]: GetArgType<T[P]>
 }
 
 export interface ArgData<Name extends string = string, Type extends ArgType = ArgType, Required extends boolean = boolean, Enum extends EnumLike = EnumLike> {

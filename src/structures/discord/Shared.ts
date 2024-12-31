@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, BaseInteraction, inlineCode } from "discord.js"
-import { DiscordInteractionInterface, DiscordInteractionType, InteractionArgData, InteractionExtrasData } from "./DiscordInteractionHandler.js"
+import { DiscordInteractionInterface, DiscordInteractionType, InteractionExtrasData } from "./DiscordInteractionHandler.js"
 import { Player } from "../player/Player.js"
 import { NekoClient } from "../../core/NekoClient.js"
 import { Embeds } from "../static/Embeds.js"
@@ -23,14 +23,14 @@ export interface GlobalExtrasData {
 
 export interface ArgResolveOptions {
     resolver: ChatInputCommandInteraction["options"] | DiscordInteractionInterface[DiscordInteractionType]
-    arg: ArgData | InteractionArgData
+    arg: ArgData
     extras: GlobalExtrasData
     value?: string
 }
 
 export interface ResolveOptions extends Omit<ArgResolveOptions, "resolver" | "value" | "arg"> {
     resolver: BaseInteraction<'cached'>
-    args: InteractionArgData[] | ArgData[] | undefined
+    args?: ArgData[]
     rawArgs?: string[]
 }
 
@@ -144,7 +144,7 @@ export class Shared {
         return output
     }
 
-    private static async reject(i: BaseInteraction<'cached'>, arg: ArgData | InteractionArgData, given?: unknown) {
+    private static async reject(i: BaseInteraction<'cached'>, arg: ArgData, given?: unknown) {
         const embed = Embeds.basic(i, i.user, "Red")
             .setTitle("Argument Error")
             .setDescription(`The argument ${inlineCode(arg.name)} is absent or did not match the type.`)

@@ -3,7 +3,7 @@ import { NekoClient } from "../../core/NekoClient.js"
 import { Errors } from "../static/Errors.js"
 import NekoDatabase from "../../core/NekoDatabase.js"
 import { ArgType, GlobalExtrasData, Shared } from "./Shared.js"
-import { MarkArgNullable, GetRealArgType, EnumLike } from "./Command.js"
+import { MarkArgNullable, GetRealArgType, EnumLike, ArgData, ArgsToRecord, ArgsToArray } from "./Command.js"
 
 export enum DiscordInteractionType {
     Button,
@@ -29,25 +29,7 @@ export interface InteractionExtrasData extends GlobalExtrasData {
     handler: DiscordInteractionHandler
 }
 
-export interface InteractionArgData<Name extends string = string, Type extends ArgType = ArgType, Required extends boolean = boolean, Enum extends EnumLike = EnumLike> {
-    name: Name
-    type: Type
-    enum?: Enum
-    required?: Required
-}
-
-type GetArgType<A> = A extends InteractionArgData<infer _, infer T, infer B, infer E> ? MarkArgNullable<GetRealArgType<T, E>, B> : never
-
-type ArgsToRecord<T> = {
-    [P in keyof T as T[P] extends InteractionArgData<infer N> ? N : never]: GetArgType<T[P]>
-}
-
-type ArgsToArray<T> = T extends [ infer L, ...infer R ] ? [
-    GetArgType<L>,
-    ...ArgsToArray<R>
-] : []
-
-export interface DiscordInteractionHandlerData<T extends DiscordInteractionType = DiscordInteractionType, Args extends InteractionArgData[] = InteractionArgData[]>  {
+export interface DiscordInteractionHandlerData<T extends DiscordInteractionType = DiscordInteractionType, Args extends ArgData[] = ArgData[]>  {
     type: T
     id: number
     args?: [...Args]
@@ -55,7 +37,7 @@ export interface DiscordInteractionHandlerData<T extends DiscordInteractionType 
     execute(this: NekoClient, i: DiscordInteractionInterface[T], args: ArgsToRecord<Args>, extras: InteractionExtrasData): Promise<boolean>
 }
 
-export class DiscordInteractionHandler<T extends DiscordInteractionType = DiscordInteractionType, Args extends InteractionArgData[] = InteractionArgData[]> {
+export class DiscordInteractionHandler<T extends DiscordInteractionType = DiscordInteractionType, Args extends ArgData[] = ArgData[]> {
     public static readonly CustomIdSplitter = /_/g
 
     public constructor(private readonly data: DiscordInteractionHandlerData<T, Args>) {}
