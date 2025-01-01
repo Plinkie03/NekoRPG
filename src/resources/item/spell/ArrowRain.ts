@@ -3,6 +3,7 @@ import { Hit } from "../../../structures/battle/actions/Hit.js";
 import { EntitySpell } from "../../../structures/entity/EntitySpell.js";
 import { Item, ItemType } from "../../../structures/resource/Item.js";
 import { Util } from "../../../structures/static/Util.js";
+import Poison from "../../effect/Poison.js";
 
 function arrowCount(spell: EntitySpell) {
     return Math.floor(3 * spell.multiplier)
@@ -12,11 +13,11 @@ function arrowMultiplier(spell: EntitySpell) {
     return 0.5 * spell.multiplier
 }
 
-const stunTime = 5
+const stunTime = 2
 const fortificationTime = 5
 const fortificationMultiplier = 0.25
 
-export default new Item({
+export default new Item<ItemType.Spell>({
     id: 2,
     type: ItemType.Spell,
     name: "Arrow Rain",
@@ -30,7 +31,7 @@ export default new Item({
         }
 
         payload.hit.addMany(
-            payload.target.moddedStats.stun(stunTime),
+            payload.target.moddedStats.inflict(Poison, 3),
             payload.target.moddedStats.addFortification({
                 duration: fortificationTime,
                 multiplier: -fortificationMultiplier,

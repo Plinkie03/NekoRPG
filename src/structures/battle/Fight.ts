@@ -115,8 +115,12 @@ export class Fight {
             entity.moddedStats.step(this)
         }
 
-        if (!this.ended)
-            await this.emit("round", this)
+        if (!this.ended) {
+            if (this.round % this.options.roundTimes === 0) {
+                await this.emit("round", this)
+                await setTimeout(this.options.roundDelay)
+            }
+        }
     }
 
     public get ended() {
@@ -168,10 +172,7 @@ export class Fight {
                 }
             }
 
-            if (this.round % this.options.roundTimes === 0) {
-                await this.step()
-                await setTimeout(this.options.roundDelay)
-            }
+            await this.step()
 
             this.round++
         } while (!this.ended)

@@ -157,7 +157,7 @@ const NekoDatabase = new NekoDB({
         { level: 'warn', emit: 'event' },
         { level: 'info', emit: 'event' },
         { level: 'error', emit: 'event' },
-        { level: 'query', emit: 'event' }
+        // { level: 'query', emit: 'event' }
     ],
 })
 

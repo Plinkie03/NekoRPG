@@ -115,8 +115,8 @@ export class Embeds {
 
         const embed = Embeds.basic(i, user, isWinner === true ? Colors.Green : isWinner === false ? Colors.Red : Colors.Blue)
             .setThumbnail(Util.getEmojiUrl(mob?.data.emoji) ?? null)
-            .setDescription(logs.map((x, i) => `## Round ${Util.formatInt(fight.round - (logs.length - i))}\n${Action.format(x)}`).join("\n"))
-        
+            .setDescription(logs.map((x, i) => `## Round ${Util.formatInt(fight.round - (logs.length - i) + 1)}\n${Action.format(x)}`).join("\n"))
+
         if (isWinner === null) {
             for (let i = 0, len = fight.teams.length;i < len;i++) {
                 const team = fight.teams[i]
@@ -125,7 +125,7 @@ export class Embeds {
                     inline: false,
                     name: `Team ${i + 1}`,
                     value: team.map(
-                        x => `- ${x.displayName}: ${x.isDead() ? "☠️" : `${Util.formatInt(x.hp)} / ${Util.formatInt(x.moddedStats.maxHealth)} (${Util.formatFloat(x.hp / x.moddedStats.maxHealth * 100)}%)`}`
+                        x => `- ${x.displayName}${x.moddedStats.ailments.length ? ` ${x.moddedStats.ailments.map(x => x.effect.emoji).filter(Boolean).join(" ")}` : ""}: ${x.isDead() ? "☠️" : `${Util.formatInt(x.hp)} / ${Util.formatInt(x.moddedStats.maxHealth)} (${Util.formatFloat(x.hp / x.moddedStats.maxHealth * 100)}%)`}`
                     ).join("\n")
                 })
             }
