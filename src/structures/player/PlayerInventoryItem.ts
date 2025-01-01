@@ -85,7 +85,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         const output = new Array<string>(emoji ? this.item.simpleName : this.item.name)
 
         if (this.item.isEquippable()) {
-            output.push(`[${RarityType[this.rarity.type]} (${this.multiplier.toFixed(2)}x)]`)
+            output.push(`[${RarityType[this.rarity.type]} (${Util.formatFloat(this.multiplier)}x)]`)
         }
 
         return output.join(" ")

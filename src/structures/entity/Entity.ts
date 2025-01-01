@@ -40,6 +40,10 @@ export abstract class Entity<Data extends IEntity<any> = IEntity<any>, Stats ext
         return this.data.level
     }
 
+    public get displayLevel() {
+        return ` [${this.level}]`
+    }
+
     public isDead() {
         return this.hp === 0
     }

@@ -9,6 +9,8 @@ import { Item, Nullable } from "../resource/Item.js"
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js"
 import { CommandExtrasData } from "./Command.js"
 import { emptyString } from "../../Constants.js"
+import { Monster } from "../monster/Monster.js"
+import { Node } from "../resource/node/Node.js"
 
 export type EnumLike<T = any> = {
     [id: string]: T | string;
@@ -17,7 +19,7 @@ export type EnumLike<T = any> = {
 
 export type GetEnum<T extends EnumLike> = T extends EnumLike<infer P> ? P : never
 
-export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.String ? string : T extends ArgType.User ? User : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
+export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.ZoneMonster ? Monster : T extends ArgType.Monster ? Monster : T extends ArgType.Node ? Node : T extends ArgType.ZoneMonster ? Node : T extends ArgType.String ? string : T extends ArgType.User ? User : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
 
 export type MarkArgNullable<T, B extends boolean> = B extends true ? T : Nullable<T>
 
@@ -28,6 +30,12 @@ export type ArgsToArray<T> = T extends [infer L, ...infer R] ? [
     ...ArgsToArray<R>
 ] : []
 
+export interface AutocompletePayload {
+    instance: AutocompleteInteraction<'cached'>
+    query: string
+    extras: GlobalExtrasData
+}
+
 export interface ArgData<Type extends ArgType = ArgType, Required extends boolean = boolean, Enum extends EnumLike = EnumLike> {
     name: string
     description: string
@@ -37,11 +45,15 @@ export interface ArgData<Type extends ArgType = ArgType, Required extends boolea
     max?: number
     default?: (this: NekoClient, input: ChatInputCommandInteraction<'cached'>) => Promise<GetRealArgType<Type, Enum>>
     min?: number
-    autocomplete?(this: NekoClient, input: AutocompleteInteraction<'cached'>, query: string, extras: CommandExtrasData): Promise<ApplicationCommandOptionChoiceData[]>
+    autocomplete?(options: AutocompletePayload): Promise<ApplicationCommandOptionChoiceData[]>
 }
 
 export enum ArgType {
     Integer,
+    Monster,
+    ZoneMonster,
+    Node,
+    ZoneNode,
     Float,
     String,
     User,
@@ -119,6 +131,54 @@ export class Shared {
         }
 
         return id ? Game.getItem(id) : id
+    }
+
+    private static async [ArgType.Monster](options: ArgResolveOptions) {
+        let id;
+
+        if (options.resolver instanceof BaseInteraction) {
+            id = Number(options.value!)
+        } else {
+            id = options.resolver.getInteger(options.arg.name, options.arg.required)
+        }
+
+        return id ? Game.getMonster(id) : id
+    }
+
+    private static async [ArgType.ZoneMonster](options: ArgResolveOptions) {
+        let id;
+
+        if (options.resolver instanceof BaseInteraction) {
+            id = Number(options.value!)
+        } else {
+            id = options.resolver.getInteger(options.arg.name, options.arg.required)
+        }
+
+        return id ? options.extras.player.zone.data.monsters?.find(x => x.id === id) : id
+    }
+
+    private static async [ArgType.ZoneNode](options: ArgResolveOptions) {
+        let id;
+
+        if (options.resolver instanceof BaseInteraction) {
+            id = Number(options.value!)
+        } else {
+            id = options.resolver.getInteger(options.arg.name, options.arg.required)
+        }
+
+        return id ? options.extras.player.zone.data.nodes?.find(x => x.id === id) : id
+    }
+
+    private static async [ArgType.Node](options: ArgResolveOptions) {
+        let id;
+
+        if (options.resolver instanceof BaseInteraction) {
+            id = Number(options.value!)
+        } else {
+            id = options.resolver.getInteger(options.arg.name, options.arg.required)
+        }
+
+        return id ? Game.getNode(id) : id
     }
 
     private static async [ArgType.User](options: ArgResolveOptions) {

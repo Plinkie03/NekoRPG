@@ -28,7 +28,7 @@ export default new DiscordInteractionHandler({
     ],
     ownerOnly: true,
     async execute(payload) {
-        payload.extras.player.inventory.getItemByUUID(payload.args[1])?.destroy()
+        await payload.extras.player.inventory.getItemByUUID(payload.args[1])?.destroy()
         return Responses.displayInventory(payload.instance, payload.extras, payload.args[2])
     },    
 })

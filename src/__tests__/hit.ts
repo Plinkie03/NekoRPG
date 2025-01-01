@@ -41,7 +41,7 @@ NekoDatabase.getPlayer("123").then(async p1 => {
     const fight = new Fight([
         [ p1 ],
         [ p2, p3 ]
-    ], 2500)
+    ])
 
     fight.on("round", async () => {
         const log = fight.getActionLog()
@@ -49,13 +49,7 @@ NekoDatabase.getPlayer("123").then(async p1 => {
         await send(`\n\nROUND ${fight.round}\n${Action.format(log)}`)
     })
 
-    fight.on("start", function () {
-        console.log("START")
-    })
-
     await fight.start()
-
-    fight.removeAllListeners()
 
     console.log("END")
     console.log("WINNER TEAM: ", fight.getWinnerTeam()?.map(x => x.displayName) ?? "NOBODY")

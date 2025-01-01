@@ -5,6 +5,9 @@ import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js"
 import { Util } from "./Util.js"
 import { emptyString } from "../../Constants.js"
 import { Rewards } from "./Rewards.js"
+import { Fight } from "../battle/Fight.js"
+import { Monster } from "../monster/Monster.js"
+import { Action } from "../battle/actions/Action.js"
 
 /**
  * Some pre-built embeds
@@ -36,7 +39,7 @@ export class Embeds {
 
         const embed = Embeds.basic(i, to, Colors.Aqua)
             .setTitle(item.simpleName)
-            .setThumbnail(item.emoji)
+            .setThumbnail(item.image)
 
         const fields = new Array<Omit<APIEmbedField, "inline">>()
 
@@ -86,7 +89,7 @@ export class Embeds {
             if (value === 0) continue
             fields.push({
                 name: Util.camelToTitle(stat),
-                value: value.toString() + (Item.isPercentualStat(stat) ? "%" : emptyString)
+                value: (Item.isPercentualStat(stat) ? Util.formatFloat(value) : Util.formatInt(value)) + (Item.isPercentualStat(stat) ? "%" : emptyString)
             })
         }
 
@@ -103,6 +106,39 @@ export class Embeds {
 
         const embed = await Embeds.item(i, to, invItem.item, invItem.getStats())
 
+        return embed
+    }
+
+    public static fight(i: Base, user: User, fight: Fight, mob?: Monster) {
+        const isWinner = fight.getWinnerTeam()?.some(x => x.id === user.id) ?? null
+        const logs = fight.lastLogs
+
+        const embed = Embeds.basic(i, user, isWinner === true ? Colors.Green : isWinner === false ? Colors.Red : Colors.Blue)
+            .setThumbnail(Util.getEmojiUrl(mob?.data.emoji) ?? null)
+            .setDescription(logs.map((x, i) => `## Round ${Util.formatInt(fight.round - (logs.length - i))}\n${Action.format(x)}`).join("\n"))
+        
+        if (isWinner === null) {
+            for (let i = 0, len = fight.teams.length;i < len;i++) {
+                const team = fight.teams[i]
+
+                embed.addFields({
+                    inline: false,
+                    name: `Team ${i + 1}`,
+                    value: team.map(
+                        x => `- ${x.displayName}: ${x.isDead() ? "☠️" : `${Util.formatInt(x.hp)} / ${Util.formatInt(x.moddedStats.maxHealth)} (${Util.formatFloat(x.hp / x.moddedStats.maxHealth * 100)}%)`}`
+                    ).join("\n")
+                })
+            }
+        } else if (fight.rewards.size) {
+            for (const [ player, rewards ] of fight.rewards) {
+                embed.addFields({
+                    inline: true,
+                    value: rewards.map(Util.addPoint).join("\n"),
+                    name: `${player.displayName} - Rewards`
+                })
+            }
+        }
+        
         return embed
     }
 }

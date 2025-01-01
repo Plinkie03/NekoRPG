@@ -84,7 +84,7 @@ export class Rewards {
                 if (player) {
                     if (!rewardItem.chance || Util.isChance(rewardItem.chance)) {
                         const result = await player.inventory.addItem({ itemId: rewardItem.item.id, amount })
-                        push(result.detailedName + amountDisplay, false)
+                        push(result.detailedName() + amountDisplay, false)
                     }
                 } else {
                     push(`${rewardItem.item.simpleName}${amountDisplay}${rewardItem.chance ? ` (${rewardItem.chance}%)` : ""}`, false)

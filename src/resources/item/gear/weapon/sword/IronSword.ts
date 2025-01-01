@@ -6,6 +6,7 @@ export default new Item({
     type: ItemType.Gear,
     gearType: GearType.Weapon,
     name: "Iron Sword",
+    emoji: "<:ironsword:1324072952379084840>",
     description: "A cute sword",
     stats: {
         strength: 10

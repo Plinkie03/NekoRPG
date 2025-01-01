@@ -12,15 +12,18 @@ export class Util {
     }
 
     public static searchMany<T>(
-        elements: Collection<unknown, T> | T[],
+        elements: undefined | Collection<unknown, T> | T[],
         query: string,
         id: (el: T) => number,
         name: (el: T) => string
     ): T[] {
+        const results = new Array<T>()
+        
+        if (!elements) return results
+
         query = query.toLowerCase()
 
         const arr = elements instanceof Map ? Array.from(elements.values()) : elements
-        const results = new Array<T>()
 
         const lookupId = Number(query)
 
@@ -38,6 +41,18 @@ export class Util {
 
     public static searchOne<T extends Identifiable>(...params: Parameters<typeof this.searchMany<T>>) {
         return Util.searchMany(...params)
+    }
+
+    public static addPoint(str: string) {
+        return `- ${str}`
+    }
+
+    public static formatInt(n: number) {
+        return Math.floor(n).toLocaleString()
+    }
+
+    public static formatFloat(n: number) {
+        return n.toFixed(2).replace(/.00$/, "")
     }
 
     public static getEmojiUrl(emoji?: Nullable<string>) {

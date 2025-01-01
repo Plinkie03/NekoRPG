@@ -8,7 +8,7 @@ import NekoDatabase from "../../core/NekoDatabase.js";
 import { Embeds } from "../static/Embeds.js";
 import { Errors } from "../static/Errors.js";
 import { DiscordInteractionInterface, DiscordInteractionType } from "./DiscordInteractionHandler.js";
-import { ArgData, ArgsToArray, ArgType, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js";
+import { ArgData, ArgsToArray, ArgType, AutocompletePayload, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js";
 import { Util } from "../static/Util.js";
 import { Game } from "../static/Game.js";
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
@@ -34,7 +34,15 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                     Command.inventoryItemAutocomplete : 
                     arg.type === ArgType.Item ? 
                         Command.itemAutocomplete : 
-                        undefined
+                        arg.type === ArgType.Node ?
+                            Command.nodeAutocomplete :
+                            arg.type === ArgType.Monster ?
+                                Command.monsterAutocomplete :
+                                arg.type === ArgType.ZoneMonster ?
+                                    Command.zoneMonsterAutocomplete :
+                                    arg.type === ArgType.ZoneNode ?
+                                        Command.zoneNodeAutocomplete :
+                                        undefined
         }
     }
 
@@ -88,7 +96,11 @@ export class Command<Args extends ArgData[] = ArgData[]> {
         const extras = await command.getExtras(i)
 
         try {
-            await i.respond((await arg.autocomplete!.call(client, i, option.value, extras)).slice(0, 25))
+            await i.respond((await arg.autocomplete!({
+                extras,
+                query: option.value,
+                instance: i
+            })).slice(0, 25))
         } catch (error) {
             Logger.error(error)
         }
@@ -152,7 +164,11 @@ export class Command<Args extends ArgData[] = ArgData[]> {
             case ArgType.Float: {
                 return ApplicationCommandOptionType.Number
             }
-
+            
+            case ArgType.Node:
+            case ArgType.ZoneNode:
+            case ArgType.Monster:
+            case ArgType.ZoneMonster:
             case ArgType.Item:
             case ArgType.Enum:
             case ArgType.Integer: {
@@ -171,18 +187,62 @@ export class Command<Args extends ArgData[] = ArgData[]> {
         }
     }
 
-    public static async itemAutocomplete(i: AutocompleteInteraction<'cached'>, q: string) {
+    public static async itemAutocomplete(payload: AutocompletePayload) {
         return Util.formatResourceChoices(Util.searchMany(
             Game.RawItems,
-            q,
+            payload.query,
             el => el.id,
             el => el.name
         ))
     }
 
-    public static async inventoryItemAutocomplete(i: AutocompleteInteraction<'cached'>, q: string, extras: CommandExtrasData) {
+    public static async nodeAutocomplete(payload: AutocompletePayload) {
+        return Util.formatResourceChoices(Util.searchMany(
+            Game.RawNodes,
+            payload.query,
+            el => el.id,
+            el => el.name
+        ))
+    }
+
+    public static async monsterAutocomplete(payload: AutocompletePayload) {
         return Util.formatChoices(
-            extras.player.inventory.search(q),
+            Util.searchMany(
+                Game.RawMonsters,
+                payload.query,
+                el => el.id,
+                el => el.displayName + el.displayLevel
+            ),
+            el => el.displayName + el.displayLevel,
+            el => el.id
+        )
+    }
+
+    public static async zoneMonsterAutocomplete(payload: AutocompletePayload) {
+        return Util.formatChoices(
+            Util.searchMany(
+                payload.extras.player.zone.monsters,
+                payload.query,
+                el => el.id,
+                el => el.displayName + el.displayLevel
+            ),
+            el => el.displayName + el.displayLevel,
+            el => el.id
+        )
+    }
+
+    public static async zoneNodeAutocomplete(payload: AutocompletePayload) {
+        return Util.formatResourceChoices(Util.searchMany(
+            payload.extras.player.zone.nodes,
+            payload.query,
+            el => el.id,
+            el => el.name
+        ))
+    }
+
+    public static async inventoryItemAutocomplete(payload: AutocompletePayload) {
+        return Util.formatChoices(
+            payload.extras.player.inventory.search(payload.query),
             el => el.detailedName(false),
             el => el.uuid!
         )

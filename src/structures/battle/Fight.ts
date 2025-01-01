@@ -10,21 +10,45 @@ import { Player } from "../player/Player.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
 import { Collection } from "discord.js";
 
+type FightFunction = (fight: Fight) => any
+
 export interface FightEvents {
-    start(fight: Fight): any
-    end(fight: Fight): any
-    round(fight: Fight): any
+    round: FightFunction[]
 }
 
-export class Fight extends TypedEmitter<FightEvents> {
+export interface FightOptions {
+    roundDelay: number
+    roundTimes: number
+    maxRound: number
+}
+
+export class Fight {
     public round = 1
-    public maxRound = 100
     public readonly logs: Action[][] = new Array()
     public readonly rewards = new Collection<Player, string[]>()
     private teamIndex = -1
+    public readonly options: FightOptions
+    private readonly events: FightEvents = {
+        round: []
+    }
+
+    public constructor(public readonly teams: [Entity[], Entity[]], options: Partial<FightOptions> = {}) {
+        this.options = {
+            maxRound: 100,
+            roundDelay: 2500,
+            roundTimes: 2,
+            ...options
+        }
+    }
     
-    public constructor(public readonly teams: [ Entity[], Entity[] ], public readonly roundDelay = 1000) {
-        super()
+    public on(name: keyof FightEvents, listener: FightFunction) {
+        this.events[name].push(listener)
+    }
+
+    public async emit(name: keyof FightEvents, ...params: Parameters<FightFunction>) {
+        for (const event of this.events[name]) {
+            await event(...params)
+        }
     }
 
     public getAllyTeam(entity: Entity) {
@@ -77,6 +101,8 @@ export class Fight extends TypedEmitter<FightEvents> {
             if (entity instanceof Player)
                 await entity.save()
         }
+
+        Reflect.deleteProperty(this, "events")
     }
 
     private async step() {
@@ -88,17 +114,19 @@ export class Fight extends TypedEmitter<FightEvents> {
 
             entity.moddedStats.step(this)
         }
+
+        if (!this.ended)
+            await this.emit("round", this)
+    }
+
+    public get ended() {
+        return !(this.getWinnerTeam() === null && this.round !== this.options.maxRound)
     }
 
     public async start() {
         this.prepare()
 
-        this.emit("start", this)
-
-        for (;this.getWinnerTeam() === null && this.round !== this.maxRound;this.round++) {
-            if (this.round !== 1)
-                await setTimeout(this.roundDelay)
-
+        do {
             const log = this.newActionLog()
 
             const attackers = this.getNextTeam()
@@ -107,13 +135,13 @@ export class Fight extends TypedEmitter<FightEvents> {
             for (const attacker of this.getAliveEntities(attackers)) {
                 const aliveDefenders = this.getAliveEntities(defenders)
                 const defender = aliveDefenders[Math.floor(Math.random() * aliveDefenders.length)]
-                
+
                 // If there is no defender, why are we here?
                 if (!defender) break
 
                 attack: {
                     if (attacker.moddedStats.isStunned()) {
-                        log.push(new Info(attacker, `${attacker.displayName} is stunned! They can't do anything.`))    
+                        log.push(new Info(attacker, `${attacker.displayName} is stunned! They can't do anything.`))
                         break attack
                     }
 
@@ -140,14 +168,15 @@ export class Fight extends TypedEmitter<FightEvents> {
                 }
             }
 
-            await this.step()
-            
-            this.emit("round", this)
-        }
+            if (this.round % this.options.roundTimes === 0) {
+                await this.step()
+                await setTimeout(this.options.roundDelay)
+            }
+
+            this.round++
+        } while (!this.ended)
 
         await this.finish()
-
-        this.emit("end", this)
     }
 
     private newActionLog() {
@@ -174,6 +203,10 @@ export class Fight extends TypedEmitter<FightEvents> {
 
     public getEntities() {
         return this.teams.flat()
+    }
+
+    public get lastLogs() {
+        return this.logs.slice(-this.options.roundTimes)
     }
 
     public get lastLog() {

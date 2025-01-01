@@ -16,7 +16,7 @@ export class Zone extends Resource<ZoneData> {
     }
 
     public get monsters() {
-        return this.data.nodes
+        return this.data.monsters
     }
     
     public hasRequirements(...args: SkipFirstArrayArg<Parameters<typeof Requirements.has>>) {

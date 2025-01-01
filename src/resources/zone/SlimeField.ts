@@ -1,4 +1,5 @@
 import { Zone } from "../../structures/resource/Zone.js";
+import Slime from "../monster/Slime.js";
 import BirchForestNode from "../node/woodcutting/BirchForestNode.js";
 
 export default new Zone({
@@ -8,5 +9,8 @@ export default new Zone({
     description: "The field were beginners are born",
     nodes: [
         BirchForestNode
+    ],
+    monsters: [
+        Slime
     ]
 })
