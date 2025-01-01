@@ -8,6 +8,7 @@ import { Rewards } from "./Rewards.js"
 
 /**
  * Some pre-built embeds
+ * TODO: Migrate each method to its own class in /embeds/
  */
 export class Embeds {
     private constructor() { }

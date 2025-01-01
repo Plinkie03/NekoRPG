@@ -3,6 +3,9 @@ import { Logger } from "./Logger.js";
 import { Embeds } from "./Embeds.js";
 import { emptyString } from "../../Constants.js";
 
+/**
+ * TODO: Migrate each method to its own class in /errors/
+ */
 export class Errors {
     private constructor() {
 

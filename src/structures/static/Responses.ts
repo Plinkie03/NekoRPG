@@ -8,6 +8,9 @@ import destroyInventoryItem from "../../interactions/button/inventory/destroy.js
 import lockInventoryItem from "../../interactions/button/inventory/lock.js";
 import equipInventoryItem from "../../interactions/button/inventory/equip.js";
 
+/**
+ * TODO: Migrate each method to its own class in /responses/
+ */
 export class Responses {
     private constructor() {}
 
