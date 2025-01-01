@@ -53,7 +53,7 @@ export type CraftItemResponse = {
     type: CraftItemResponseType.Success,
     failed: number,
     success: number,
-    items: PlayerInventoryItem[]
+    rewards: string[]
 } | {
     type: CraftItemResponseType.MissingRequirements,
     errors: string[]
@@ -186,8 +186,6 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         const errors = this.hasCraftRequirements(player, times)
         if (errors !== true) return { type: CraftItemResponseType.MissingRequirements, errors }
 
-        const results = new Array<PlayerInventoryItem>()
-
         await Requirements.consume(player, this.data.craft.requirements.items!, times)
 
         let success = 0
@@ -201,29 +199,35 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
 
         if (success === 0) return { type: CraftItemResponseType.Failure }
 
-        if (this.isStackable()) {
-            const result = await player.inventory.addItem({
-                itemId: this.id
-            })
+        const rewards = new Array<string>()
 
-            results.push(result)
+        const add = async () => {
+            rewards.push(...(await player.give({
+                rewards: {
+                    items: [
+                        {
+                            item: this
+                        }
+                    ]
+                }
+            })))
+        }
+
+        if (this.isStackable()) {
+            await add()
         } else {
             for (let i = 0;i < success;i++) {
                 // TODO: Try to use transactions
-                const result = await player.inventory.addItem({
-                    itemId: this.id
-                })
-
-                results.push(result)
+                await add()
             }
         }
         
-        await player.give({
+        rewards.push(...(await player.give({
             rewards: this.data.craft.rewards,
             times: success
-        })
+        })))
 
-        return { type: CraftItemResponseType.Success, items: results, success, failed: times - success }
+        return { type: CraftItemResponseType.Success, rewards, success, failed: times - success }
     }
 
     public getStat(name: keyof Stats): number {

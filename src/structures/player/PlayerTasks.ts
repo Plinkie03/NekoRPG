@@ -76,6 +76,6 @@ export class PlayerTasks {
      */
     public finish(type: keyof Tasks) {
         const task = this.get(type)
-        return task ? task.node.finish(this.player, task) : Promise.resolve(false)
+        return task ? task.node.finish(this.player, task) : Promise.resolve(false as const)
     }
 }

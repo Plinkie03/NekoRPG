@@ -19,7 +19,7 @@ export type EnumLike<T = any> = {
 
 export type GetEnum<T extends EnumLike> = T extends EnumLike<infer P> ? P : never
 
-export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.ZoneMonster ? Monster : T extends ArgType.Monster ? Monster : T extends ArgType.Node ? Node : T extends ArgType.ZoneMonster ? Node : T extends ArgType.String ? string : T extends ArgType.User ? User : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
+export type GetRealArgType<T, Enum extends EnumLike> = T extends ArgType.ZoneMonster ? Monster : T extends ArgType.ZoneNode ? Node : T extends ArgType.Monster ? Monster : T extends ArgType.Node ? Node : T extends ArgType.ZoneMonster ? Node : T extends ArgType.String ? string : T extends ArgType.User ? User : T extends ArgType.InventoryItem ? PlayerInventoryItem : T extends ArgType.Player ? Player : T extends ArgType.Item ? Item : T extends ArgType.Enum ? GetEnum<Enum> : number
 
 export type MarkArgNullable<T, B extends boolean> = B extends true ? T : Nullable<T>
 

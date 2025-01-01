@@ -79,7 +79,7 @@ export class Rewards {
         if (rewards.items?.length) {
             for (const rewardItem of rewards.items) {
                 const amount = rewardItem.amount ?? 1
-                const amountDisplay = amount && amount > 1 ? ` (${amount}x)` : ""
+                const amountDisplay = Util.formatItemAmount(amount) && ` (${Util.formatItemAmount(amount)})` || ""
 
                 if (player) {
                     if (!rewardItem.chance || Util.isChance(rewardItem.chance)) {

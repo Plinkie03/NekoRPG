@@ -62,6 +62,10 @@ export class Util {
         return RouteBases.cdn + CDNRoutes.emoji(em.id!, em.animated ? ImageFormat.GIF : ImageFormat.PNG) + "?size=1024"
     }
 
+    public static formatItemAmount(n: number) {
+        return n === 1 ? "" : `${Util.formatInt(n)}x`
+    }
+
     public static plural(of: string, n: number, add?: string) {
         return `${n} ${n === 1 ? of : of + (add ?? "s")}`
     }

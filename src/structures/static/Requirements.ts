@@ -13,7 +13,7 @@ export class Requirements {
         const errors = new Array<string>()
 
         if (requirements.level && (!player || player.data.level < requirements.level)) {
-            errors.push(`Player Level (${requirements.level})`)
+            errors.push(`Player Level (${Util.formatInt(requirements.level)})`)
         }
 
         if (requirements.items?.length) {
@@ -21,7 +21,7 @@ export class Requirements {
                 const quantity = player?.inventory.count(reqItem.item) ?? 0
                 const required = reqItem.amount * times
                 if (quantity < required)
-                    errors.push(`${reqItem.item.simpleName}${required === 1 ? "" : ` (${required}x)`}`)
+                    errors.push(`${reqItem.item.simpleName}${required === 1 ? "" : ` (${Util.formatInt(required)}x)`}`)
             }
         }
 
@@ -31,7 +31,7 @@ export class Requirements {
                 const current = player?.baseStats[stat] ?? 0
 
                 if (current < required) 
-                    errors.push(`${Util.camelToTitle(stat)} Stat (${required})`)
+                    errors.push(`${Util.camelToTitle(stat)} Stat (${Util.formatInt(required)})`)
             }
         }
 
@@ -41,7 +41,7 @@ export class Requirements {
                 const current = player?.skills.getLevel(skill) ?? 0
 
                 if (current < required)
-                    errors.push(`${Util.camelToTitle(skill)} Skill (${required})`)
+                    errors.push(`${Util.camelToTitle(skill)} Skill (${Util.formatInt(required)})`)
             }
         }
 

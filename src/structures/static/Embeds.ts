@@ -134,7 +134,7 @@ export class Embeds {
                 embed.addFields({
                     inline: true,
                     value: rewards.map(Util.addPoint).join("\n"),
-                    name: `${player.displayName} - Rewards`
+                    name: fight.rewards.size === 1 ? "Rewards" : `${player.displayName} - Rewards`
                 })
             }
         }

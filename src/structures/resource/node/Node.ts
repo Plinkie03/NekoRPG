@@ -54,12 +54,10 @@ export type NodeStartCollectResponse = {
 
 export enum NodeFinishCollectResponseType {
     Success,
-    NotBusy,
     Failed
 }
 
 export interface ResourceCollectionResultData extends ResourceStatsData {
-    item: PlayerInventoryItem
     rewards: string[]
 }
 
@@ -102,17 +100,19 @@ export abstract class Node extends Resource<NodeData> {
             
             if (stats.success === 0) continue
 
-            const result = await player.inventory.addItem({
-                itemId: resource.item.id,
-                amount: stats.success
-            })
-
             results.push({
                 ...stats,
-                item: result,
                 rewards: await Rewards.give({
                     player,
-                    rewards: resource.rewards,
+                    rewards: {
+                        ...resource.rewards,
+                        items: [
+                            {
+                                item: resource.item,
+                                amount: stats.success
+                            }
+                        ]
+                    },
                     times: stats.success
                 })
             })

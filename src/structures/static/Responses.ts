@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Colors } from "discord.js";
+import { ActionRowBuilder, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Colors, ModalSubmitInteraction } from "discord.js";
 import { GlobalExtrasData } from "../discord/Shared.js";
 import { Embeds } from "./Embeds.js";
 import manageInventoryPage, { ActionType } from "../../interactions/button/inventory/page.js";
@@ -11,12 +11,101 @@ import { Monster } from "../monster/Monster.js";
 import { Fight } from "../battle/Fight.js";
 import { Player } from "../player/Player.js";
 import retry from "../../interactions/button/fight/retry.js";
+import { CraftItemResponseType, Item } from "../resource/Item.js";
+import craftItem from "../../interactions/button/info/item/craft.js";
+import { Util } from "./Util.js";
+import bulkCraftItem from "../../interactions/button/info/item/bulkCraft.js";
+import viewItem from "../../interactions/button/info/item/view.js";
 
 /**
  * TODO: Migrate each method to its own class in /responses/
  */
 export class Responses {
     private constructor() {}
+
+    public static async bulkCraftItem(input: ChatInputCommandInteraction<'cached'> | ButtonInteraction<'cached'> | ModalSubmitInteraction<'cached'>, player: Player, item: Item, times: number, disableButtons = false) {
+        times = Math.max(times || 1, 1)
+
+        const response = await item.craft(player, times)
+
+        const embed = Embeds.basic(input, input.user, Colors.Red)
+        
+        switch (response.type) {
+            case CraftItemResponseType.Failure: {
+                embed.setTitle("Failed")
+                    .setDescription(`You tried to craft ${item.simpleName} ${Util.plural("time", times)} but all failed miserably`)
+                break
+            }
+
+            case CraftItemResponseType.MissingRequirements: {
+                embed.setTitle("Missing Requirements")
+                    .setDescription(`You missing the following requirements:\n${response.errors.map(Util.addPoint).join("\n")}`)
+                break
+            }
+
+            case CraftItemResponseType.NotCraftable: {
+                embed.setTitle("Not Craftable")
+                    .setDescription("The item has no crafting recipe!")
+                break
+            }
+
+            case CraftItemResponseType.Success: {
+                embed.setColor(Colors.Green)
+                    .setTitle("Success")
+                    .setDescription(`You've successfully crafted the following item ${item.simpleName} ${Util.plural("time", response.success)}:\n${response.rewards.map(Util.addPoint).join("\n")}`)
+                break
+            }
+        }
+
+        const row = new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(
+                new ButtonBuilder({
+                    custom_id: viewItem.id(input.user, item),
+                    label: "Back",
+                    style: ButtonStyle.Primary
+                })
+            )
+
+        await input[(input.isChatInputCommand() ? "reply" : "update") as "reply"]({
+            ephemeral: true,
+            embeds: [
+                embed
+            ],
+            components: disableButtons ? [] : [
+                row
+            ]
+        })
+
+        return response.type === CraftItemResponseType.Success 
+    }
+
+    public static async displayItem(input: ButtonInteraction<'cached'> | ChatInputCommandInteraction<'cached'>, player: Player, item: Item) {
+        const embed = await Embeds.item(input, input.user, item)
+
+        const row = new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(
+                new ButtonBuilder({
+                    label: "Craft",
+                    disabled: !item.isCraftable() || item.hasCraftRequirements(player) !== true,
+                    style: ButtonStyle.Primary,
+                    custom_id: craftItem.id(input.user, item)
+                }),
+                new ButtonBuilder({
+                    label: "Bulk Craft",
+                    disabled: !item.isCraftable() || item.hasCraftRequirements(player) !== true,
+                    style: ButtonStyle.Primary,
+                    custom_id: bulkCraftItem.id(input.user, item)
+                })
+            )
+
+        await input[(input.isButton() ? "update" : "reply") as "reply"]({
+            ephemeral: true,
+            embeds: [embed],
+            components: [row]
+        })
+
+        return true
+    }
 
     public static async fightMonster(input: ButtonInteraction<'cached'> | ChatInputCommandInteraction<'cached'>, player: Player, mob: Monster) {
         mob = mob.clone()

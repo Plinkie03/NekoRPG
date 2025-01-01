@@ -74,7 +74,8 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public get detailedAmount() {
-        return this.amount === 1 ? "" : ` ${this.amount}x`
+        const display = Util.formatItemAmount(this.amount)
+        return display && ` ${display}` || display
     }
 
     public get destroyable() {
