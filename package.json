@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/clone-deep": "^4.0.4",
     "@types/node": "^22.7.7",
     "@types/ws": "^8.5.12",
     "prisma": "^6.1.0",
@@ -21,6 +22,7 @@
   "dependencies": {
     "@prisma/client": "^6.1.0",
     "chalk": "^5.3.0",
+    "clone-deep": "^4.0.1",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7",
     "tiny-typed-emitter": "^2.1.0",

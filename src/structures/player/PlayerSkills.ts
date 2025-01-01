@@ -71,19 +71,6 @@ export class PlayerSkills {
         return this.getLevel(skill) !== oldLv
     }
 
-    public save(props: Array<keyof RawPlayerSkills>) {
-        const obj = {
-            playerId: this.player.id
-        } as RawPlayerSkills
-
-        for (const prop of props) {
-            // @ts-ignore
-            obj[prop] = this.player.data.skills[prop]
-        }
-
-        return NekoDatabase.updateSkill(obj)
-    }
-
     public static formatSkillXp(skill: keyof Skills) {
         return `${skill}Xp` as const
     }

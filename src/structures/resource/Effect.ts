@@ -12,11 +12,11 @@ export interface EffectTickPayload {
 
 export interface EffectData extends ResourceData {
     description: string
-    tick(payload: EffectTickPayload): void
+    tick(payload: EffectTickPayload): Promise<void>
 }
 
 export class Effect extends Resource<EffectData> {
-    public tick(payload: EffectTickPayload) {
+    public async tick(payload: EffectTickPayload) {
         return this.data.tick(payload)
     }
 }

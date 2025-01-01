@@ -19,42 +19,61 @@ export interface RewardItemData {
     amount?: number
 }
 
+export interface RewardOptions {
+    rewards?: RewardData
+    player?: Player
+    times?: number
+    hideIrrelevant?: boolean
+    doNotSave?: boolean
+}
+
 export class Rewards {
     private constructor() {}
 
-    public static async give(rewards?: RewardData, player?: Player, times = 1): Promise<string[]> {
+    public static async give({ hideIrrelevant = false, player, rewards, doNotSave = false, times = 1 }: RewardOptions): Promise<string[]> {
         const output = new Array<string>()
 
         if (!rewards || !times) return output
 
-        const saves = new Array<keyof RawPlayer>()
-        const skillSaves = new Array<keyof RawPlayerSkills>()
+        let save = false
+
+        function push(msg: string, relevant: boolean) {
+            if (hideIrrelevant && !relevant)
+                return
+            output.push(msg)
+        }
 
         if (rewards.xp) {
             const xp = rewards.xp * times
             const result = player?.addXp(xp)
-            output.push(`${xp} XP`)
+            
+            push(`${xp} XP`, false)
+
             if (result === true)
-                output.push(`${player!.displayName} is now level ${player!.level}!`)
+                push(`${player!.displayName} is now level ${player!.level}!`, true)
 
             if (player) 
-                saves.push("xp", "level")
+                save = true
         }
 
         if (rewards.money) {
             const money = rewards.money * times
-            output.push(`$${money}`)
             player?.addMoney(money)
+
+            push(`$${money}`, false)
+
             if (player)
-                saves.push("money")
+                save = true
         }
 
         if (rewards.gems) {
             const gems = rewards.gems * times
-            output.push(`💎${gems}`)
             player?.addGems(gems)
+
+            push(`💎${gems}`, false)
+
             if (player)
-                saves.push("gems")
+                save = true
         }
 
         if (rewards.items?.length) {
@@ -65,34 +84,31 @@ export class Rewards {
                 if (player) {
                     if (!rewardItem.chance || Util.isChance(rewardItem.chance)) {
                         const result = await player.inventory.addItem({ itemId: rewardItem.item.id, amount })
-                        output.push(result.detailedName + amountDisplay)
+                        push(result.detailedName + amountDisplay, false)
                     }
                 } else {
-                    output.push(`${rewardItem.item.simpleName}${amountDisplay}${rewardItem.chance ? ` (${rewardItem.chance}%)` : ""}`)
+                    push(`${rewardItem.item.simpleName}${amountDisplay}${rewardItem.chance ? ` (${rewardItem.chance}%)` : ""}`, false)
                 }
             }
         }
 
         if (rewards.skills) {
             for (const skillName of Util.objectKeys(rewards.skills)) {
-                const skillXp = rewards.skills[skillName]! * times
+                const skillXp = Math.floor(rewards.skills[skillName]! * times)
                 const result = player?.skills.addXp(skillName, skillXp)
-                output.push(`${skillXp} ${Util.camelToTitle(skillName)} XP`)
+
+                push(`${skillXp} ${Util.camelToTitle(skillName)} XP`, false)
                 
                 if (result === true)
-                    output.push(`${player!.displayName}'s ${Util.camelToTitle(skillName)} is now level ${player!.skills.getLevel(skillName)}!`)
+                    push(`${player!.displayName}'s ${Util.camelToTitle(skillName)} is now level ${player!.skills.getLevel(skillName)}!`, true)
 
                 if (player)
-                    skillSaves.push(PlayerSkills.formatSkillLevel(skillName), PlayerSkills.formatSkillXp(skillName))
+                    save = true
             }
         }
 
-        if (player && (saves.length || skillSaves.length)) {
-            // TODO: AVOID EMPTY TRANSACTIONS
-            await NekoDatabase.$transaction([
-                player.save(saves),
-                player.skills.save(skillSaves)
-            ])
+        if (save && !doNotSave) {
+            await player!.save()
         }
         
         return output

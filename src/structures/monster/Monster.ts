@@ -1,9 +1,10 @@
 import { Entity, IEntity } from "../entity/Entity.js";
 import { EntityBaseStats, Stats } from "../entity/EntityBaseStats.js";
 import { EntitySpell } from "../entity/EntitySpell.js";
+import { Player } from "../player/Player.js";
 import { SpellItem } from "../resource/Item.js";
 import { ResourceData } from "../resource/Resource.js";
-import { RewardData } from "../static/Rewards.js";
+import { RewardData, RewardOptions, Rewards } from "../static/Rewards.js";
 import { MonsterBaseStats } from "./MonsterBaseStats.js";
 
 export interface MonsterData extends IEntity<number>, ResourceData {
@@ -28,5 +29,12 @@ export class Monster extends Entity<MonsterData> {
 
     public clone() {
         return new Monster(this.data)
+    }
+
+    public give(options: Omit<RewardOptions, "rewards">) {
+        return Rewards.give({
+            rewards: this.data.rewards,
+            ...options
+        })
     }
 }

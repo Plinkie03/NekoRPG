@@ -217,8 +217,11 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
                 results.push(result)
             }
         }
-
-        await Rewards.give(this.data.craft.rewards, player, success)
+        
+        await player.give({
+            rewards: this.data.craft.rewards,
+            times: success
+        })
 
         return { type: CraftItemResponseType.Success, items: results, success, failed: times - success }
     }

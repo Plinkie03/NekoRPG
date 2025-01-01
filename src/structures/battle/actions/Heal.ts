@@ -13,7 +13,7 @@ export class Heal extends Action {
         return `${this.entity.displayName} has healed by ${this.quantity}!`
     }
 
-    protected execute(): void {
+    protected async execute() {
         this.entity.heal(this.quantity)
     }
 }

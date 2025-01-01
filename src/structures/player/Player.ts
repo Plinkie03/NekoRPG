@@ -9,7 +9,7 @@ import { PlayerGear } from "./PlayerGear.js";
 import { PlayerInventory } from "./PlayerInventory.js";
 import { PlayerSkills } from "./PlayerSkills.js";
 import { PlayerSpells } from "./PlayerSpells.js";
-import { RewardData, Rewards } from "../static/Rewards.js";
+import { RewardData, RewardOptions, Rewards } from "../static/Rewards.js";
 import { Item } from "../resource/Item.js";
 import { PlayerTasks } from "./PlayerTasks.js";
 import { Game } from "../static/Game.js";
@@ -85,21 +85,15 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
         this.gear["clearCache"]()
     }
 
-    public save(props: Array<keyof RawPlayer>) {
-        const obj = {
-            id: this.id
-        } as RawPlayer
-
-        for (const prop of props) {
-            // @ts-ignore
-            obj[prop] = this.data[prop]
-        }
-
-        return NekoDatabase.updatePlayer(obj)
+    public save() {
+        return NekoDatabase.saveFullPlayer(this.data)
     }
 
-    public async give(rewards: RewardData) {
-        return Rewards.give(rewards, this)
+    public async give(options: Omit<RewardOptions, "player">) {
+        return Rewards.give({
+            ...options,
+            player: this
+        })
     }
 
     public async craft(item: Item, times?: number) {

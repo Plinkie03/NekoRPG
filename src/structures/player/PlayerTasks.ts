@@ -50,19 +50,6 @@ export class PlayerTasks {
         return `${type}NodeStartedAt` as const
     }
 
-    public save(props: Array<keyof RawPlayerTasks>) {
-        const obj = {
-            playerId: this.player.id
-        } as RawPlayerTasks
-
-        for (const prop of props) {
-            // @ts-ignore
-            obj[prop] = this.raw[prop]
-        }
-
-        return NekoDatabase.updatePlayerTasks(obj)
-    }
-
     public set(type: keyof Tasks, id?: Nullable<number>) {
         const nodeStartedStr = PlayerTasks.formatNodeStartedAt(type)
         const nodeIdStr = PlayerTasks.formatNodeId(type)
@@ -70,7 +57,7 @@ export class PlayerTasks {
         this.raw[nodeIdStr] = id ?? null
         this.raw[nodeStartedStr] = id ? new Date() : null
 
-        return this.save([nodeIdStr, nodeStartedStr])
+        return this.player.save()
     }
 
     /**

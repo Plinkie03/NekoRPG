@@ -6,7 +6,7 @@ export abstract class Action {
     public constructor(public readonly entity: Entity) {}
 
     protected abstract get message(): string
-    protected abstract execute(): void
+    protected abstract execute(): Promise<void>
 
     public static format(actions: Action[], spacing = 1): string {
         return actions.map(
@@ -30,8 +30,8 @@ export abstract class Action {
         return this
     }
 
-    public run() {
-        this.execute()
+    public async run() {
+        await this.execute()
         this.actions.forEach(x => x.execute())
     }
 }

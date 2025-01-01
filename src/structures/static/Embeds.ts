@@ -77,7 +77,7 @@ export class Embeds {
                 value: `${item.data.craft!.chance ?? 100}% (${Util.plural("unit", item.data.craft!.amount ?? 1)})`
             }, {
                 name: "Craft Rewards",
-                value: (await Rewards.give(item.data.craft!.rewards)).join("\n")
+                value: (await Rewards.give({ rewards: item.data.craft!.rewards  })).join("\n")
             })
         }
         

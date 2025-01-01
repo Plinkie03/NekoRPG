@@ -13,7 +13,13 @@ export class Info extends Action {
         return this.msg
     }
 
-    protected execute(): void {
+    public static fromMany(entity: Entity, messages: string[]) {
+        return messages.map(
+            x => new Info(entity, x)
+        )
+    }
+
+    protected async execute() {
         
     }
 }

@@ -110,7 +110,11 @@ export abstract class Node extends Resource<NodeData> {
             results.push({
                 ...stats,
                 item: result,
-                rewards: await Rewards.give(resource.rewards, player, stats.success)
+                rewards: await Rewards.give({
+                    player,
+                    rewards: resource.rewards,
+                    times: stats.success
+                })
             })
         }
         

@@ -116,7 +116,7 @@ export class EntityModdedStats extends EntityBaseStats {
         return new Info(this.entity, `${this.entity.displayName} has been inflicted ${effect.simpleName} for ${Util.plural("round", duration)}!`)
     }
 
-    public step(fight: Fight) {
+    public async step(fight: Fight) {
         for (let i = 0;i < this.fortifications.length;i++) {
             const fort = this.fortifications[i]
             if (--fort.duration === 0) {
@@ -136,7 +136,7 @@ export class EntityModdedStats extends EntityBaseStats {
         for (let i = 0;i < this.ailments.length;i++) {
             const eff = this.ailments[i]
             
-            eff.effect.tick({
+            await eff.effect.tick({
                 entity: this.entity,
                 fight,
                 effect: eff.effect

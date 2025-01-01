@@ -45,4 +45,8 @@ export class MonsterBaseStats extends EntityBaseStats {
     public get lifesteal(): number {
         return this.getStat("lifesteal")
     }
+
+    public getStat(name: keyof Stats): number {
+        return this.monster.data.stats[name]!
+    }
 }

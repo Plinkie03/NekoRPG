@@ -5,6 +5,10 @@ import { Hit } from "./actions/Hit.js";
 import { setTimeout } from "timers/promises";
 import { Action } from "./actions/Action.js";
 import { Info } from "./actions/Info.js";
+import { Monster } from "../monster/Monster.js";
+import { Player } from "../player/Player.js";
+import NekoDatabase from "../../core/NekoDatabase.js";
+import { Collection } from "discord.js";
 
 export interface FightEvents {
     start(fight: Fight): any
@@ -16,6 +20,7 @@ export class Fight extends TypedEmitter<FightEvents> {
     public round = 1
     public maxRound = 100
     public readonly logs: Action[][] = new Array()
+    public readonly rewards = new Collection<Player, string[]>()
     private teamIndex = -1
     
     public constructor(public readonly teams: [ Entity[], Entity[] ], public readonly roundDelay = 1000) {
@@ -63,13 +68,18 @@ export class Fight extends TypedEmitter<FightEvents> {
         }
     }
 
-    private finish() {
+    private async finish() {
+        await this.addWinnerRewards()
+
         for (const entity of this.getEntities()) {
             entity.removeAllListeners()
+
+            if (entity instanceof Player)
+                await entity.save()
         }
     }
 
-    private step() {
+    private async step() {
         for (const entity of this.getEntities()) {
             if (entity.isDead()) {
                 entity.moddedStats.reset()
@@ -118,24 +128,24 @@ export class Fight extends TypedEmitter<FightEvents> {
                             target: defender
                         })
 
-                        spellHit.run()
+                        await spellHit.run()
                         log.unshift(spellHit)
 
                         break attack
                     }
 
                     const basic = Hit.from(attacker, defender)
-                    basic.run()
+                    await basic.run()
                     log.unshift(basic)
                 }
             }
 
-            this.step()
+            await this.step()
             
             this.emit("round", this)
         }
 
-        this.finish()
+        await this.finish()
 
         this.emit("end", this)
     }
@@ -144,6 +154,22 @@ export class Fight extends TypedEmitter<FightEvents> {
         const log = new Array<Action>()
         this.logs.push(log)
         return log
+    }
+
+    public getPlayersInTeam(team: Nullable<Entity[]>) {
+        return team ? team.filter(x => x instanceof Player) : null
+    }
+
+    public getMonstersInTeam(team: Nullable<Entity[]>) {
+        return team ? team.filter(x => x instanceof Monster) : null
+    }
+
+    public getPlayers() {
+        return this.getEntities().filter(x => x instanceof Player)
+    }
+
+    public getMonsters() {
+        return this.getEntities().filter(x => x instanceof Monster)
     }
 
     public getEntities() {
@@ -156,5 +182,23 @@ export class Fight extends TypedEmitter<FightEvents> {
 
     private onEntityDead(entity: Entity) {
         this.lastLog.push(new Info(entity, `${entity.displayName} died...`))
+    }
+
+    /**
+     * DOES NOT SAVE TO DB
+     * @returns 
+     */
+    private async addWinnerRewards() {
+        const winners = this.getPlayersInTeam(this.getWinnerTeam())
+        if (!winners?.length) return
+
+        const losers = this.getMonstersInTeam(this.getEnemyTeam(winners[0]))
+        if (!losers?.length) return
+
+        for (const player of winners) {
+            for (const monster of losers) {
+                this.rewards.ensure(player, () => []).push(...(await monster.give({ player, doNotSave: true })))
+            }
+        }
     }
 }

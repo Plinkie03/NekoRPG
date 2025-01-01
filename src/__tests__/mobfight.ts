@@ -4,7 +4,7 @@ import { Action } from "../structures/battle/actions/Action.js"
 import { Fight } from "../structures/battle/Fight.js"
 
 NekoDatabase.getPlayer("123").then(async p1 => {
-    const mobs = Array.from({ length: 3 }, _ => Slime.clone())
+    const mobs = Array.from({ length: 1 }, _ => Slime.clone())
 
     const fight = new Fight([
         [ p1 ],
@@ -19,4 +19,11 @@ NekoDatabase.getPlayer("123").then(async p1 => {
     await fight.start()
 
     console.log(`Winners:`, fight.getWinnerTeam()?.map(x => x.displayName).join(", "))
+
+    console.log(`\n\nRewards:`)
+    
+    fight.rewards.forEach((rewards, player) => {
+        console.log(`\n\n${player.displayName}:`)
+        rewards.forEach(msg => console.log(msg))
+    })
 })

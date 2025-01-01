@@ -14,9 +14,9 @@ export class Ailment extends Action {
         this.damage = Math.floor(damage)
     }
 
-    public static run(...params: ConstructorParameters<typeof Ailment>) {
+    public static async run(...params: ConstructorParameters<typeof Ailment>) {
         const ailment = new Ailment(...params)
-        ailment.run()
+        await ailment.run()
         return ailment
     }
 
@@ -24,7 +24,7 @@ export class Ailment extends Action {
         return `${this.entity.displayName} has been damaged by ${this.effect.simpleName} (-${this.damage})!`
     }
 
-    protected execute(): void {
+    protected async execute() {
         this.entity.damage(this.damage)
     }
 }

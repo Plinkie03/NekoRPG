@@ -2,6 +2,7 @@ import { Prisma, PrismaClient, RawPlayerQuest, RawPlayerSkills, RawPlayerTasks }
 import { Collection } from "discord.js";
 import { Player } from "../structures/player/Player.js"
 import { Logger } from "../structures/static/Logger.js";
+import cloneDeep from "clone-deep"
 
 const PlayerIncludes = {
     items: {
@@ -122,6 +123,33 @@ class NekoDB extends PrismaClient {
             data
         })
     }
+
+    public saveFullPlayer(data: PlayerData) {
+        data = cloneDeep(data)
+        
+        // @ts-ignore
+        delete data.tasks!.playerId
+        
+        // @ts-ignore
+        delete data.skills!.playerId
+
+        return this.rawPlayer.update({
+            data: {
+                ...data,
+                skills: {
+                    update: data.skills!
+                },
+                tasks: {
+                    update: data.tasks!
+                },
+                quests: undefined,
+                items: undefined
+            },
+            where: {
+                id: data.id
+            }
+        })
+    }
 }
 
 const NekoDatabase = new NekoDB({
@@ -129,11 +157,13 @@ const NekoDatabase = new NekoDB({
         { level: 'warn', emit: 'event' },
         { level: 'info', emit: 'event' },
         { level: 'error', emit: 'event' },
+        { level: 'query', emit: 'event' }
     ],
 })
 
 NekoDatabase.$on("error" as never, Logger.error)
 NekoDatabase.$on("warn" as never, Logger.warn)
 NekoDatabase.$on("info" as never, Logger.info)
+NekoDatabase.$on("query" as never, Logger.info)
 
 export default NekoDatabase

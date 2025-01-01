@@ -1,11 +1,13 @@
 import { Entity } from "../../entity/Entity.js";
 import { EntitySpell } from "../../entity/EntitySpell.js";
 import { Player } from "../../player/Player.js";
+import { Skills } from "../../player/PlayerSkills.js";
 import { GearType } from "../../resource/Item.js";
 import { Formulas } from "../../static/Formulas.js";
 import { Util } from "../../static/Util.js";
 import { Action } from "./Action.js";
 import { Heal } from "./Heal.js";
+import { Info } from "./Info.js";
 
 export class Hit extends Action {
     public damage!: number
@@ -97,13 +99,43 @@ export class Hit extends Action {
         return output.join("")
     }
 
-    protected execute() {
+    private async addSkillPoints(entity: Entity, multipliers: Partial<Skills>) {
+        if (!this.damage) return
+
+        if (entity instanceof Player) {
+            const results = await entity.give({
+                doNotSave: true,
+                hideIrrelevant: true,
+                rewards: {
+                    skills: {
+                        defense: this.damage * (multipliers.defense ?? 0),
+                        melee: this.damage * (multipliers.melee ?? 0),
+                        endurance: this.damage * (multipliers.endurance ?? 0)
+                    }
+                }
+            })
+
+            this.addMany(...Info.fromMany(entity, results))
+        }
+    }
+
+    protected async execute() {
         this.prepare()
 
         const stolen = this.damage * (this.entity.moddedStats.lifesteal / 100)
         if (stolen > 1) {
             this.actions.push(new Heal(this.entity, stolen))
         }
+
+        await this.addSkillPoints(this.entity, {
+            endurance: 0.75,
+            melee: 1
+        })
+
+        await this.addSkillPoints(this.defender, {
+            endurance: 1,
+            defense: 0.75
+        })
 
         this.defender.damage(this.damage)
     }
