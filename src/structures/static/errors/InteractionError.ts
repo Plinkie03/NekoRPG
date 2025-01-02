@@ -1,17 +1,12 @@
-import { codeBlock, RepliableInteraction } from "discord.js";
-import { Logger } from "./Logger.js";
-import { emptyString } from "../../Constants.js";
-import { BasicEmbed } from "./embeds/BasicEmbed.js";
+import { RepliableInteraction, codeBlock } from "discord.js"
+import { emptyString } from "../../../Constants.js"
+import { BasicEmbed } from "../embeds/BasicEmbed.js"
+import { Logger } from "../Logger.js"
 
-/**
- * TODO: Migrate each method to its own class in /errors/
- */
-export class Errors {
-    private constructor() {
+export class InteractionError {
+    private constructor() {}
 
-    }
-
-    public static async interaction(i: RepliableInteraction<"cached">, error: unknown) {
+    public static async from(i: RepliableInteraction<"cached">, error: unknown) {
         if (error instanceof Error) {
             Logger.error(error)
 
