@@ -4,6 +4,7 @@ import { Item } from "../../resource/Item.js"
 import { ItemEmbed } from "../embeds/ItemEmbed.js"
 import craft from "../../../interactions/button/info/item/craft.js"
 import bulkCraft from "../../../interactions/button/info/item/bulkCraft.js"
+import { Util } from "../Util.js"
 
 export class DisplayItemResponse {
     private constructor() {}
@@ -27,7 +28,7 @@ export class DisplayItemResponse {
                     })
                 )
     
-            await input[(input.isButton() ? "update" : "reply") as "reply"]({
+            await Util.reply(input, {
                 ephemeral: true,
                 embeds: [embed],
                 components: [row]

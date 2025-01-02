@@ -2,6 +2,7 @@ import { RepliableInteraction, codeBlock } from "discord.js"
 import { emptyString } from "../../../Constants.js"
 import { BasicEmbed } from "../embeds/BasicEmbed.js"
 import { Logger } from "../Logger.js"
+import { Util } from "../Util.js"
 
 export class InteractionError {
     private constructor() {}
@@ -22,10 +23,7 @@ export class InteractionError {
                 })
             }
 
-            if (!("editReply" in i)) return
-
-            // @ts-ignore
-            await i[i.replied ? "editReply" : "reply"]({
+            await Util.reply(i, {
                 embeds: [
                     embed
                 ],

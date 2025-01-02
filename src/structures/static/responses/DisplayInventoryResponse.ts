@@ -4,6 +4,7 @@ import { GlobalExtrasData } from "../../discord/Shared.js"
 import { BasicEmbed } from "../embeds/BasicEmbed.js"
 import page, { ActionType } from "../../../interactions/button/inventory/page.js"
 import view from "../../../interactions/button/inventory/view.js"
+import { Util } from "../Util.js"
 
 export class DisplayInventoryResponse {
     private constructor() {}
@@ -69,8 +70,7 @@ export class DisplayInventoryResponse {
                 itemRows.push(new ActionRowBuilder())
         }
 
-        // @ts-ignore
-        await input[input.isButton() ? "update" : "reply"]({
+        await Util.reply(input, {
             embeds: [embed],
             components: [
                 movementRow,

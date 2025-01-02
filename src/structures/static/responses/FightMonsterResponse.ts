@@ -4,6 +4,7 @@ import { Fight } from "../../battle/Fight.js"
 import { Monster } from "../../monster/Monster.js"
 import { Player } from "../../player/Player.js"
 import { FightEmbed } from "../embeds/FightEmbed.js"
+import { Util } from "../Util.js"
 
 export class FightMonsterResponse {
     private constructor() {}
@@ -30,7 +31,7 @@ export class FightMonsterResponse {
                     )
                 }
     
-                return input[(!input.replied ? (input.isButton() ? "update" : "reply") : "editReply") as "reply"]({
+                return Util.reply(input, {
                     ephemeral: true,
                     embeds: [
                         FightEmbed.from(input, input.user, fight, mob)

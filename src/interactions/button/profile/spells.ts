@@ -4,7 +4,7 @@ import { ArgType } from "../../../structures/discord/Shared.js";
 import { DisplayProfileResponse } from "../../../structures/static/responses/DisplayProfileResponse.js";
 
 export default new DiscordInteractionHandler({
-    id: 11,
+    id: 14,
     type: DiscordInteractionType.Button,
     args: [
         {
@@ -16,6 +16,6 @@ export default new DiscordInteractionHandler({
     ],
     ownerOnly: true,
     execute(payload) {
-        return DisplayProfileResponse.from(payload.instance, payload.extras.player)
+        return DisplayProfileResponse.fromSpells(payload.instance, payload.extras.player)
     },
 })

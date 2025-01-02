@@ -11,6 +11,7 @@ import { emptyString } from "../../Constants.js"
 import { Monster } from "../monster/Monster.js"
 import { Node } from "../resource/node/Node.js"
 import { BasicEmbed } from "../static/embeds/BasicEmbed.js"
+import { Util } from "../static/Util.js"
 
 export type EnumLike<T = any> = {
     [id: string]: T | string;
@@ -279,7 +280,7 @@ export class Shared {
         }
 
         if (i.isRepliable()) {
-            await i[(i.replied ? "editReply" : "reply") as unknown as "reply"]({
+            await Util.reply(i, {
                 embeds: [
                     embed
                 ],

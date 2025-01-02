@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionChoiceData, CDNRoutes, Collection, ImageFormat, parseEmoji, RouteBases } from "discord.js"
+import { ActionRowBuilder, AnyComponentBuilder, ApplicationCommandOptionChoiceData, BaseSelectMenuBuilder, CDNRoutes, Collection, ComponentBuilder, ImageFormat, InteractionReplyOptions, parseEmoji, RepliableInteraction, RouteBases } from "discord.js"
 import { Identifiable } from "./Game.js"
 import { Resource } from "../resource/Resource.js"
 import { Nullable } from "../resource/Item.js"
@@ -112,5 +112,23 @@ export class Util {
             maxHealth: Math.floor(instance.getStat("maxHealth")),
             strength: Math.floor(instance.getStat("strength"))
         }
+    }
+
+    public static reply(interaction: RepliableInteraction<'cached'>, options: InteractionReplyOptions) {
+        return interaction[(interaction.isButton() ? "update" : interaction.replied ? "editReply" : "reply") as "reply"](options)
+    }
+
+    public static createActionRows<T, O extends AnyComponentBuilder>(using: T[], builder: (el: T) => O): ActionRowBuilder<O>[] {
+        const rows = new Array<ActionRowBuilder<O>>(new ActionRowBuilder<O>())
+
+        for (const el of using) {
+            const got = builder(el)
+            const row = rows.at(-1)!
+
+            if (row.components.length === 5 || (got instanceof BaseSelectMenuBuilder))
+                rows.push(new ActionRowBuilder())
+        }
+
+        return rows.filter(x => !!x.components.length)
     }
 }

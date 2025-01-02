@@ -51,7 +51,7 @@ export class BulkCraftItemResponse {
                 })
             )
 
-        await input[(input.isChatInputCommand() ? "reply" : "update") as "reply"]({
+        await Util.reply(input, {
             ephemeral: true,
             embeds: [
                 embed

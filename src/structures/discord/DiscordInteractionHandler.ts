@@ -49,6 +49,10 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
         return [ this.data.id, ...args.map(x => x?.id ?? x?.toString() ?? "") ].join("_")
     }
 
+    public get bindedId() {
+        return this.id.bind(this)
+    }
+
     public static async handle(i: DiscordInteractionInterface[DiscordInteractionType]) {
         const client = NekoClient.from(i)
         const [ id, ...rawArgs ] = i.customId.split(DiscordInteractionHandler.CustomIdSplitter)

@@ -7,7 +7,7 @@ import destroy from "../../../interactions/button/inventory/destroy.js"
 import view from "../../../interactions/button/inventory/view.js"
 import lock from "../../../interactions/button/inventory/lock.js"
 import equip from "../../../interactions/button/inventory/equip.js"
-import refresh from "../../../interactions/button/profile/refresh.js"
+import refresh from "../../../interactions/button/profile/progress.js"
 
 export class DisplayInventoryItemResponse {
     private constructor() {}
