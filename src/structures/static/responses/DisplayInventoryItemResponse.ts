@@ -58,7 +58,7 @@ export class DisplayInventoryItemResponse {
                     new ButtonBuilder({
                         custom_id: equip.id(input.user, invItem.uuid, pg),
                         label: !invItem.equipped ? "Equip" : "Unequip",
-                        disabled: reqs !== true,
+                        disabled: reqs !== true || (invItem.item.isSpell() && extras.player.spells.isFull()),
                         style: ButtonStyle.Secondary
                     })
                 )

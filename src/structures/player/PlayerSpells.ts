@@ -23,6 +23,10 @@ export class PlayerSpells {
         return this.spellCache = spells
     }
 
+    public isFull() {
+        return this.equipped.length >= PlayerSpells.MaximumEquippedSpells
+    }
+    
     private clearCache() {
         delete this.spellCache
     }
