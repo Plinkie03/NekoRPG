@@ -10,6 +10,7 @@ import equip from "../../../interactions/button/inventory/equip.js"
 import progress from "../../../interactions/button/profile/progress.js"
 import spells from "../../../interactions/button/profile/spells.js"
 import gear from "../../../interactions/button/profile/gear.js"
+import open from "../../../interactions/button/inventory/open.js"
 
 export class DisplayInventoryItemResponse {
     private constructor() {}
@@ -33,6 +34,7 @@ export class DisplayInventoryItemResponse {
                     new ButtonBuilder({
                         custom_id: pg === -1 ? gear.id(input.user) : pg === -2 ? spells.id(input.user) : page.id(input.user, pg, ActionType.Stay),
                         label: "Back",
+                        disabled: !invItem.index,
                         style: ButtonStyle.Primary
                     }),
                     new ButtonBuilder({
@@ -63,6 +65,17 @@ export class DisplayInventoryItemResponse {
                         label: !invItem.equipped ? "Equip" : "Unequip",
                         disabled: reqs !== true || (invItem.item.isSpell() && extras.player.spells.isFull()),
                         style: ButtonStyle.Secondary
+                    })
+                )
+            } else if (invItem.item.isLootbox()) {
+                const reqs = invItem.equipped ? true : invItem.hasRequirements()
+
+                actionRow.addComponents(
+                    new ButtonBuilder({
+                        custom_id: open.id(input.user, invItem, pg),
+                        label: "Open",
+                        disabled: reqs !== true,
+                        style: ButtonStyle.Success
                     })
                 )
             }

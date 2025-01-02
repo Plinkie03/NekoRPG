@@ -52,6 +52,13 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         public readonly data: PlayerItemData
     ) {}
 
+    /**
+     * Same as uuid
+     */
+    public get id() {
+        return this.uuid
+    }
+
     public get index() {
         const index = this.manager.rawItems.findIndex(x => x.uuid === this.uuid)
         return index === -1 ? null : index
@@ -84,8 +91,8 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
 
     public async open(times = 1) {
         if (times > this.amount)
-            return Promise.resolve(false)
-        
+            return Promise.resolve(false as const)
+
         const result = await this.item.open(this.entity, times)
         if (result.type !== LootboxOpenResponseType.NotLootbox)
             await this.setAmount(this.amount - times)

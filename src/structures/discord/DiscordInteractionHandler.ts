@@ -82,6 +82,7 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
             
             if (handler.data.ownerOnly && !rawArgs.includes(i.user.id)) {
                 await i.reply({
+                    ephemeral: true,
                     content: `You can't interact with this, sweetie.`
                 })
                 return
