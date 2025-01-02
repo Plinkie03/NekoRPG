@@ -15,7 +15,7 @@ export class DisplayInventoryResponse {
         if (!items.length) {
             await input.reply({
                 ephemeral: true,
-                content: `That page doesn't exist anymore :(`
+                content: `There are no items in the inventory...`
             })
             return false
         }
@@ -46,7 +46,7 @@ export class DisplayInventoryResponse {
                     custom_id: page.id(input.user, pg, ActionType.Next),
                     emoji: "▶️",
                     label: "Next",
-                    disabled: extras.player.inventory.page(pg + 1).length === 0,
+                    disabled: pg === extras.player.inventory.pageCount,
                     style: ButtonStyle.Primary
                 })
             ])
@@ -60,7 +60,7 @@ export class DisplayInventoryResponse {
 
             row.addComponents(
                 new ButtonBuilder({
-                    custom_id: view.id(input.user, itm.uuid, pg),
+                    custom_id: view.id(input.user, itm.uuid),
                     label: (index + 1).toString(),
                     style: ButtonStyle.Secondary
                 })

@@ -110,6 +110,10 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return output.join(" ")
     }
 
+    public get pageNumber() {
+        return this.index !== null ? Util.getPageNumber(this.index) : null
+    }
+
     public get amount() {
         return this.data.amount
     }

@@ -20,15 +20,9 @@ export default new DiscordInteractionHandler({
             description: emptyString,
             type: ArgType.String,
             required: true
-        },
-        {
-            name: "page",
-            description: emptyString,
-            type: ArgType.Integer,
-            required: true
-        },
+        }
     ],
     async execute(payload) {
-        return DisplayInventoryItemResponse.from(payload.instance, payload.extras, payload.args[1], payload.args[2])
+        return DisplayInventoryItemResponse.from(payload.instance, payload.extras, payload.args[1], null)
     },
 })

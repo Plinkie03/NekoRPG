@@ -14,20 +14,14 @@ export default new DiscordInteractionHandler({
             required: true
         },
         {
-            name: "inventory item",
+            name: "uuid",
             required: true,
-            type: ArgType.InventoryItem,
+            type: ArgType.String,
             description: emptyString
-        },
-        {
-            name: "page",
-            type: ArgType.Integer,
-            description: emptyString,
-            required: true
         }
     ],
     ownerOnly: true,
     execute(payload) {
-        return OpenLootboxResponse.from(payload.instance, payload.args[1], payload.args[2], 1)
+        return OpenLootboxResponse.from(payload.instance, payload.extras.player, payload.args[1], 1)
     },
 })

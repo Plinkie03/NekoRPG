@@ -20,13 +20,7 @@ export default new DiscordInteractionHandler({
             description: emptyString,
             type: ArgType.String,
             required: true
-        },
-        {
-            name: "page",
-            description: emptyString,
-            type: ArgType.Integer,
-            required: true
-        },
+        }
     ],
     async execute(payload) {
         const item = payload.extras.player.inventory.getItemByUUID(payload.args[1])
@@ -35,6 +29,6 @@ export default new DiscordInteractionHandler({
         else
             await item?.equip()
         
-        return DisplayInventoryItemResponse.from(payload.instance, payload.extras, payload.args[1], payload.args[2])
+        return DisplayInventoryItemResponse.from(payload.instance, payload.extras, payload.args[1], null)
     },
 })

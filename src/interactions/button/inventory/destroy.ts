@@ -19,17 +19,18 @@ export default new DiscordInteractionHandler({
             type: ArgType.String,
             required: true,
             description: emptyString
-        },
-        {
-            name: "page",
-            type: ArgType.Integer,
-            required: true,
-            description: emptyString
         }
     ],
     ownerOnly: true,
     async execute(payload) {
-        await payload.extras.player.inventory.getItemByUUID(payload.args[1])?.destroy()
-        return DisplayInventoryResponse.from(payload.instance, payload.extras, payload.args[2])
+        const item = payload.extras.player.inventory.getItemByUUID(payload.args[1])
+        if (!item)
+            return false
+
+        const pg = item.pageNumber!
+        
+        await item.destroy()
+
+        return DisplayInventoryResponse.from(payload.instance, payload.extras, pg)
     },    
 })

@@ -65,7 +65,7 @@ export class DisplayProfileResponse {
                 ...Util.createActionRows(
                     player.gear.toArray(),
                     invItem => new ButtonBuilder({
-                        custom_id: view.id(i.user, invItem.uuid, -1),
+                        custom_id: view.id(i.user, invItem.uuid),
                         label: GearType[invItem.item.gearType!],
                         emoji: invItem.item.emoji ?? undefined,
                         style: ButtonStyle.Secondary
@@ -90,7 +90,7 @@ export class DisplayProfileResponse {
                 ...Util.createActionRows(
                     player.spells.equipped,
                     invItem => new ButtonBuilder({
-                        custom_id: view.id(i.user, invItem.uuid, -2),
+                        custom_id: view.id(i.user, invItem.uuid),
                         label: invItem.item.name,
                         emoji: invItem.item.emoji ?? undefined,
                         style: ButtonStyle.Secondary

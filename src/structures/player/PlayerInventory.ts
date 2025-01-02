@@ -113,10 +113,10 @@ export class PlayerInventory {
     public count(item: Item) {
         return this.rawItems.reduce((x, y) => x + (y.itemId === item.id ? y.amount : 0), 0)
     }
-
+    
     public page(n: number) {
-        const offset = n * 10 - 10
-        return this.rawItems.slice(offset, offset + 10).map(this.from.bind(this))
+        n = Math.max(Math.min(n, this.pageCount), 1)
+        return this.rawItems.slice(Util.getPageStart(n), Util.getPageEnd(n)).map(this.from.bind(this))
     }
 
     public search(q: string) {
@@ -130,5 +130,9 @@ export class PlayerInventory {
 
     [Symbol.iterator]() {
         return this.items.values()
+    }
+
+    public get pageCount() {
+        return Util.getPageCount(this.rawItems.length)
     }
 }

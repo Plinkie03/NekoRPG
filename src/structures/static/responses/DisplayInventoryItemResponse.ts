@@ -11,11 +11,12 @@ import progress from "../../../interactions/button/profile/progress.js"
 import spells from "../../../interactions/button/profile/spells.js"
 import gear from "../../../interactions/button/profile/gear.js"
 import open from "../../../interactions/button/inventory/open.js"
+import { Nullable } from "../../resource/Item.js"
 
 export class DisplayInventoryItemResponse {
     private constructor() {}
 
-    public static async from(input: ButtonInteraction<'cached'>, extras: GlobalExtrasData, uuid: string, pg: number) {
+    public static async from(input: ButtonInteraction<'cached'>, extras: GlobalExtrasData, uuid: string, backId: Nullable<typeof open.bindedId>) {
             const invItem = extras.player.inventory.getItemByUUID(uuid)
             if (!invItem) {
                 await input.reply({
@@ -32,25 +33,25 @@ export class DisplayInventoryItemResponse {
             const actionRow = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
                     new ButtonBuilder({
-                        custom_id: pg === -1 ? gear.id(input.user) : pg === -2 ? spells.id(input.user) : page.id(input.user, pg, ActionType.Stay),
+                        custom_id: backId?.(input.user, uuid) ?? page.id(input.user, invItem.pageNumber ?? 0, ActionType.Stay),
                         label: "Back",
                         disabled: !invItem.index,
                         style: ButtonStyle.Primary
                     }),
                     new ButtonBuilder({
-                        custom_id: destroy.id(input.user, invItem.uuid, pg),
+                        custom_id: destroy.id(input.user, invItem.uuid),
                         label: "Destroy",
                         disabled: !invItem.destroyable,
                         style: ButtonStyle.Danger
                     }),
                     new ButtonBuilder({
-                        custom_id: view.id(input.user, invItem.uuid, pg),
+                        custom_id: view.id(input.user, invItem.uuid),
                         label: "Refresh",
                         emoji: "🔄",
                         style: ButtonStyle.Primary
                     }),
                     new ButtonBuilder({
-                        custom_id: lock.id(input.user, invItem.uuid, pg),
+                        custom_id: lock.id(input.user, invItem.uuid),
                         label: invItem.locked ? "Unlock" : "Lock",
                         style: ButtonStyle.Secondary
                     })
@@ -61,7 +62,7 @@ export class DisplayInventoryItemResponse {
     
                 actionRow.addComponents(
                     new ButtonBuilder({
-                        custom_id: equip.id(input.user, invItem.uuid, pg),
+                        custom_id: equip.id(input.user, invItem.uuid),
                         label: !invItem.equipped ? "Equip" : "Unequip",
                         disabled: reqs !== true || (invItem.item.isSpell() && extras.player.spells.isFull()),
                         style: ButtonStyle.Secondary
@@ -72,7 +73,7 @@ export class DisplayInventoryItemResponse {
 
                 actionRow.addComponents(
                     new ButtonBuilder({
-                        custom_id: open.id(input.user, invItem, pg),
+                        custom_id: open.id(input.user, uuid),
                         label: "Open",
                         disabled: reqs !== true,
                         style: ButtonStyle.Success

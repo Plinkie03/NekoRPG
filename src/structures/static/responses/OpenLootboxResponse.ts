@@ -9,7 +9,16 @@ import view from "../../../interactions/button/inventory/view.js";
 export class OpenLootboxResponse {
     private constructor() {}
 
-    public static async from(i: ButtonInteraction<'cached'> | ChatInputCommandInteraction<'cached'>, invItem: PlayerInventoryItem, page: number, times: number) {
+    public static async from(i: ButtonInteraction<'cached'> | ChatInputCommandInteraction<'cached'>, player: Player, uuid: string, times: number) {
+        const invItem = player.inventory.getItemByUUID(uuid)
+        if (!invItem) {
+            await i.reply({
+                ephemeral: true,
+                content: `That item doesn't exist :(`
+            })
+            return false
+        }
+
         const result = await invItem.open(times)
 
         const embed = BasicEmbed.from(i, i.user, Colors.Aqua)
@@ -52,7 +61,7 @@ export class OpenLootboxResponse {
                 new ActionRowBuilder<ButtonBuilder>()
                     .addComponents(
                         new ButtonBuilder({
-                            custom_id: view.id(i.user, invItem.uuid, page),
+                            custom_id: view.id(i.user, invItem.uuid),
                             label: "Back",
                             disabled: !invItem.index,
                             style: ButtonStyle.Primary

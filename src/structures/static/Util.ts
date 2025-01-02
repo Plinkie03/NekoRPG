@@ -132,4 +132,27 @@ export class Util {
 
         return rows.filter(x => !!x.components.length)
     }
+
+    public static getPageCount(total: number, perPage = 10) {
+        const pageCount = Math.floor(total / perPage)
+
+        // We add 1 if the number is not equal to x0
+        return total % perPage !== 0 ? pageCount + 1 : pageCount
+    }
+
+    public static getPageStart(page: number, perPage = 10) {
+        return page * perPage - perPage
+    }
+
+    public static getPageEnd(page: number, perPage = 10) {
+        return page * perPage
+    }
+
+    public static getPageNumber(index: number, perPage = 10) {
+        // Since its an index, it starts from 0, so we increase by one
+        index++
+
+        const pageNumber = Math.floor(index / perPage)
+        return index % perPage !== 0 ? pageNumber + 1 : pageNumber
+    }
 }
