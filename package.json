@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "tsc && node dist/__tests__/runner",
-    "release": "commit-and-tag-version",
+    "release": "commit-and-tag-version --release-as",
     "bot": "tsc && node .",
     "db": "npx prisma format && npx prisma generate && npx prisma db push"
   },
