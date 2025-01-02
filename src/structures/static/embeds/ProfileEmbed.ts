@@ -66,7 +66,7 @@ export class ProfileEmbed {
         for (const item of gear) {
             embed.addFields({
                 inline: true,
-                name: GearType[item.item.type],
+                name: GearType[item.item.gearType!],
                 value: item.detailedName(true)
             })
         }

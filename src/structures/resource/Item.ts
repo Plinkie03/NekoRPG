@@ -239,7 +239,7 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
     }
 
     public get equippable(): boolean {
-        return true
+        return this.isGear() || this.isSpell()
     }
 
     public static getStatCount(rarity: RarityType) {
