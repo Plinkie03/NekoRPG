@@ -7,7 +7,9 @@ import destroy from "../../../interactions/button/inventory/destroy.js"
 import view from "../../../interactions/button/inventory/view.js"
 import lock from "../../../interactions/button/inventory/lock.js"
 import equip from "../../../interactions/button/inventory/equip.js"
-import refresh from "../../../interactions/button/profile/progress.js"
+import progress from "../../../interactions/button/profile/progress.js"
+import spells from "../../../interactions/button/profile/spells.js"
+import gear from "../../../interactions/button/profile/gear.js"
 
 export class DisplayInventoryItemResponse {
     private constructor() {}
@@ -29,7 +31,7 @@ export class DisplayInventoryItemResponse {
             const actionRow = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
                     new ButtonBuilder({
-                        custom_id: pg === -1 ? refresh.id(input.user) : page.id(input.user, pg, ActionType.Stay),
+                        custom_id: pg === -1 ? gear.id(input.user) : pg === -2 ? spells.id(input.user) : page.id(input.user, pg, ActionType.Stay),
                         label: "Back",
                         style: ButtonStyle.Primary
                     }),

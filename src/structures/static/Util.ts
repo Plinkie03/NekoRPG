@@ -122,8 +122,9 @@ export class Util {
         const rows = new Array<ActionRowBuilder<O>>(new ActionRowBuilder<O>())
 
         for (const el of using) {
-            const got = builder(el)
+            const got = builder(el) as O
             const row = rows.at(-1)!
+            row.addComponents(got)
 
             if (row.components.length === 5 || (got instanceof BaseSelectMenuBuilder))
                 rows.push(new ActionRowBuilder())

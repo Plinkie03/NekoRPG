@@ -8,6 +8,7 @@ import gear from "../../../interactions/button/profile/gear.js";
 import { Util } from "../Util.js";
 import spells from "../../../interactions/button/profile/spells.js";
 import skills from "../../../interactions/button/profile/skills.js";
+import { GearType } from "../../resource/Item.js";
 
 export class DisplayProfileResponse {
     private constructor() { }
@@ -65,7 +66,7 @@ export class DisplayProfileResponse {
                     player.gear.toArray(),
                     invItem => new ButtonBuilder({
                         custom_id: view.id(i.user, invItem.uuid, -1),
-                        label: invItem.detailedName(false),
+                        label: GearType[invItem.item.gearType!],
                         emoji: invItem.item.emoji ?? undefined,
                         style: ButtonStyle.Primary
                     })
@@ -89,8 +90,8 @@ export class DisplayProfileResponse {
                 ...Util.createActionRows(
                     player.spells.equipped,
                     invItem => new ButtonBuilder({
-                        custom_id: view.id(i.user, invItem.uuid, -1),
-                        label: invItem.detailedName(false),
+                        custom_id: view.id(i.user, invItem.uuid, -2),
+                        label: invItem.item.name,
                         emoji: invItem.item.emoji ?? undefined,
                         style: ButtonStyle.Primary
                     })
