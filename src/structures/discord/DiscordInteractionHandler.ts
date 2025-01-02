@@ -1,8 +1,8 @@
 import { AutocompleteInteraction, BaseInteraction, ButtonInteraction, CacheType, ChannelSelectMenuInteraction, Interaction, InteractionType, MentionableSelectMenuInteraction, ModalSubmitInteraction, RoleSelectMenuInteraction, StringSelectMenuInteraction, UserSelectMenuInteraction } from "discord.js"
 import { NekoClient } from "../../core/NekoClient.js"
-import { Errors } from "../static/Errors.js"
 import NekoDatabase from "../../core/NekoDatabase.js"
 import { ArgData, ArgsToArray, ArgType, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js"
+import { InteractionError } from "../static/errors/InteractionError.js"
 
 export enum DiscordInteractionType {
     Button,
@@ -92,7 +92,7 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
                 }
             )
         } catch (error: unknown) {
-            await Errors.interaction(i, error)
+            await InteractionError.from(i, error)
         } finally {
             client.manager.unlock(i.user)
         }

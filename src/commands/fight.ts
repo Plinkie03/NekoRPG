@@ -1,6 +1,7 @@
 import { Command } from "../structures/discord/Command.js";
 import { ArgType } from "../structures/discord/Shared.js";
 import { Responses } from "../structures/static/Responses.js";
+import { FightMonsterResponse } from "../structures/static/responses/FightMonsterResponse.js";
 
 export default new Command({
     name: "fight",
@@ -14,6 +15,6 @@ export default new Command({
         }
     ],
     async execute(payload) {
-        return Responses.fightMonster(payload.instance, payload.extras.player, payload.args[0])
+        return FightMonsterResponse.from(payload.instance, payload.extras.player, payload.args[0])
     },
 })

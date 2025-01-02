@@ -2,6 +2,7 @@ import { emptyString } from "../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../structures/discord/Shared.js";
 import { Responses } from "../../../structures/static/Responses.js";
+import { DisplayInventoryItemResponse } from "../../../structures/static/responses/DisplayInventoryItemResponse.js";
 
 export default new DiscordInteractionHandler({
     id: 5,
@@ -34,6 +35,6 @@ export default new DiscordInteractionHandler({
         else
             await item?.equip()
         
-        return Responses.displayInventoryItem(payload.instance, payload.extras, payload.args[1], payload.args[2])
+        return DisplayInventoryItemResponse.from(payload.instance, payload.extras, payload.args[1], payload.args[2])
     },
 })

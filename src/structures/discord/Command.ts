@@ -5,12 +5,12 @@ import { NekoClient } from "../../core/NekoClient.js";
 import { Logger } from "../static/Logger.js";
 import { Player } from "../player/Player.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
-import { Errors } from "../static/Errors.js";
 import { DiscordInteractionInterface, DiscordInteractionType } from "./DiscordInteractionHandler.js";
 import { ArgData, ArgsToArray, ArgType, AutocompletePayload, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js";
 import { Util } from "../static/Util.js";
 import { Game } from "../static/Game.js";
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
+import { InteractionError } from "../static/errors/InteractionError.js";
 
 export interface CommandExtrasData extends GlobalExtrasData {
     command: Command
@@ -145,7 +145,7 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                 }
             )
         } catch (error: unknown) {
-            await Errors.interaction(i, error)
+            await InteractionError.from(i, error)
         } finally {
             client.manager.unlock(i.user)
         }

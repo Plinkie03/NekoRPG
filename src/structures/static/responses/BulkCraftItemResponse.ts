@@ -1,12 +1,13 @@
-import { ChatInputCommandInteraction, ButtonInteraction, ModalSubmitInteraction, Colors } from "discord.js"
+import { ChatInputCommandInteraction, ButtonInteraction, ModalSubmitInteraction, Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"
 import { Player } from "../../player/Player.js"
 import { Item, CraftItemResponseType } from "../../resource/Item.js"
 import { BasicEmbed } from "../embeds/BasicEmbed.js"
 import { Util } from "../Util.js"
+import view from "../../../interactions/button/info/item/view.js"
 
 export class BulkCraftItemResponse {
     private constructor() {}
-    
+
     public static async from(input: ChatInputCommandInteraction<'cached'> | ButtonInteraction<'cached'> | ModalSubmitInteraction<'cached'>, player: Player, item: Item, times: number, disableButtons = false) {
         times = Math.max(times || 1, 1)
 
@@ -40,5 +41,26 @@ export class BulkCraftItemResponse {
                 break
             }
         }
+        
+        const row = new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(
+                new ButtonBuilder({
+                    custom_id: view.id(input.user, item),
+                    label: "Back",
+                    style: ButtonStyle.Primary
+                })
+            )
+
+        await input[(input.isChatInputCommand() ? "reply" : "update") as "reply"]({
+            ephemeral: true,
+            embeds: [
+                embed
+            ],
+            components: disableButtons ? [] : [
+                row
+            ]
+        })
+
+        return response.type === CraftItemResponseType.Success 
     }
 }

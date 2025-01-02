@@ -1,6 +1,7 @@
 import { Command } from "../../structures/discord/Command.js";
 import { ArgType } from "../../structures/discord/Shared.js";
 import { Responses } from "../../structures/static/Responses.js";
+import { BulkCraftItemResponse } from "../../structures/static/responses/BulkCraftItemResponse.js";
 
 export default new Command({
     name: "item",
@@ -20,6 +21,6 @@ export default new Command({
         }
     ],
     execute(payload) {
-        return Responses.bulkCraftItem(payload.instance, payload.extras.player, payload.args[0], payload.args[1], true)
+        return BulkCraftItemResponse.from(payload.instance, payload.extras.player, payload.args[0], payload.args[1], true)
     },
 })

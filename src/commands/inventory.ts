@@ -4,6 +4,7 @@ import { Command } from "../structures/discord/Command.js";
 import { ArgType } from "../structures/discord/Shared.js";
 import { Responses } from "../structures/static/Responses.js";
 import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
+import { DisplayInventoryResponse } from "../structures/static/responses/DisplayInventoryResponse.js";
 
 export default new Command({
     name: "inventory",
@@ -17,6 +18,6 @@ export default new Command({
         }
     ],
     async execute(payload) {
-        return Responses.displayInventory(payload.instance, payload.extras, payload.args[0])
+        return DisplayInventoryResponse.from(payload.instance, payload.extras, payload.args[0])
     },
 })

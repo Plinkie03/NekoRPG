@@ -2,6 +2,7 @@ import { emptyString } from "../../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../../structures/discord/Shared.js";
 import { Responses } from "../../../../structures/static/Responses.js";
+import { DisplayItemResponse } from "../../../../structures/static/responses/DisplayItemResponse.js";
 
 export default new DiscordInteractionHandler({
     id: 10,
@@ -22,6 +23,6 @@ export default new DiscordInteractionHandler({
         }
     ],
     async execute(payload) {
-        return Responses.displayItem(payload.instance, payload.extras.player, payload.args[1])
+        return DisplayItemResponse.from(payload.instance, payload.extras.player, payload.args[1])
     }
 })

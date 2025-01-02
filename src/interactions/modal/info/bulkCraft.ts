@@ -2,6 +2,7 @@ import { emptyString } from "../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../structures/discord/Shared.js";
 import { Responses } from "../../../structures/static/Responses.js";
+import { BulkCraftItemResponse } from "../../../structures/static/responses/BulkCraftItemResponse.js";
 
 export default new DiscordInteractionHandler({
     id: 9,
@@ -22,6 +23,6 @@ export default new DiscordInteractionHandler({
     ],
     ownerOnly: true,
     async execute(payload) {
-        return Responses.bulkCraftItem(payload.instance, payload.extras.player, payload.args[1], Number(payload.instance.fields.getTextInputValue("times")))
+        return BulkCraftItemResponse.from(payload.instance, payload.extras.player, payload.args[1], Number(payload.instance.fields.getTextInputValue("times")))
     },
 })

@@ -2,6 +2,7 @@ import { emptyString } from "../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../structures/discord/Shared.js";
 import { Responses } from "../../../structures/static/Responses.js";
+import { DisplayInventoryResponse } from "../../../structures/static/responses/DisplayInventoryResponse.js";
 
 export enum ActionType {
     Back,
@@ -37,7 +38,7 @@ export default new DiscordInteractionHandler({
     async execute(payload) {
         const [, page, action ] = payload.args
 
-        return Responses.displayInventory(
+        return DisplayInventoryResponse.from(
             payload.instance,
             payload.extras,
             action === ActionType.Back ? page - 1 : action === ActionType.Next ? page + 1 : page 

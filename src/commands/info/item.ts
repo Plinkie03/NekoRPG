@@ -1,6 +1,7 @@
 import { Command } from "../../structures/discord/Command.js";
 import { ArgType } from "../../structures/discord/Shared.js";
 import { Responses } from "../../structures/static/Responses.js";
+import { DisplayItemResponse } from "../../structures/static/responses/DisplayItemResponse.js";
 
 export default new Command({
     name: "item",
@@ -14,6 +15,6 @@ export default new Command({
         }
     ],
     execute(payload) {
-        return Responses.displayItem(payload.instance, payload.extras.player, payload.args[0])
+        return DisplayItemResponse.from(payload.instance, payload.extras.player, payload.args[0])
     },
 })
