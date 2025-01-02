@@ -10,7 +10,7 @@ import { Skills } from "../player/PlayerSkills.js"
 import { Formulas } from "../static/Formulas.js"
 import { RarityType } from "../static/Rarity.js"
 import { Requirements } from "../static/Requirements.js"
-import { RewardData, Rewards } from "../static/Rewards.js"
+import { RewardData, RewardItemData, Rewards } from "../static/Rewards.js"
 import { Util } from "../static/Util.js"
 import { Resource, ResourceData } from "./Resource.js"
 
@@ -64,7 +64,8 @@ export type CraftItemResponse = {
 export enum ItemType {
     Gear,
     Spell,
-    Material
+    Material,
+    Lootbox
 }
 
 export enum GearType {
@@ -109,7 +110,29 @@ export interface SpellItemData extends ItemData<ItemType.Spell> {
     execute(payload: SpellExecutionPayload): void
 }
 
+export interface LootboxItemData extends ItemData<ItemType.Lootbox> {
+    rewards: RewardData
+}
+
+export enum LootboxOpenResponseType {
+    NotLootbox,
+    MissingRequirements,
+    Failed,
+    Success
+}
+
+export type LootboxOpenResponse = {
+    type: LootboxOpenResponseType.Failed | LootboxOpenResponseType.NotLootbox
+} | {
+    type: LootboxOpenResponseType.Success,
+    rewards: string[]
+} | {
+    type: LootboxOpenResponseType.MissingRequirements,
+    errors: string[]
+}
+
 export interface ItemInterfaces {
+    [ItemType.Lootbox]: LootboxItemData
     [ItemType.Gear]: GearItemData
     [ItemType.Material]: MaterialItemData
     [ItemType.Spell]: SpellItemData
@@ -279,11 +302,32 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
     public isMaterial(): this is MaterialItem {
         return this.is(ItemType.Material)
     }
+
+    public isLootbox() {
+        return this.is(ItemType.Lootbox)
+    }
+
+    public async open(player: Player, times?: number): Promise<LootboxOpenResponse> {
+        if (!this.is(ItemType.Lootbox)) return { type: LootboxOpenResponseType.NotLootbox }
+        
+        const errors = this.hasRequirements(player)
+        if (errors !== true) return { type: LootboxOpenResponseType.MissingRequirements, errors }
+
+        const rewards = await player.give({ rewards: this.data.rewards, times })
+
+        if (!rewards.length) return { type: LootboxOpenResponseType.Failed }
+
+        return {
+            type: LootboxOpenResponseType.Success,
+            rewards
+        }
+    }
 }
 
 export const RandomStatKeys = Util.objectKeys(Item.RandomStatMinMax)
 
 export type SpellItem = Item<ItemType.Spell>
 export type MaterialItem = Item<ItemType.Material>
+export type LootboxItem = Item<ItemType.Lootbox>
 export type GearItem = Item<ItemType.Gear>
 export type EquippableItem = GearItem | SpellItem

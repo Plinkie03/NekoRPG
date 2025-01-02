@@ -5,7 +5,7 @@ import { Stats } from "../entity/EntityBaseStats.js";
 import { Rarity, RarityType } from "../static/Rarity.js";
 import NekoDatabase, { PlayerItemData } from "../../core/NekoDatabase.js";
 import { PlayerSpells } from "./PlayerSpells.js";
-import { Item, ItemType, Nullable } from "../resource/Item.js";
+import { Item, ItemType, LootboxOpenResponseType, Nullable } from "../resource/Item.js";
 import { Util } from "../static/Util.js";
 
 export enum PlayerInventoryItemAmountChangeResponse {
@@ -80,6 +80,17 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
 
     public get destroyable() {
         return !(this.equipped || this.locked)
+    }
+
+    public async open(times = 1) {
+        if (times > this.amount)
+            return Promise.resolve(false)
+        
+        const result = await this.item.open(this.entity, times)
+        if (result.type !== LootboxOpenResponseType.NotLootbox)
+            await this.setAmount(this.amount - times)
+
+        return result
     }
     
     public detailedName(emoji = true) {
