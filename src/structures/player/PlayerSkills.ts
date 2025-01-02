@@ -8,6 +8,13 @@ export type Skills = {
     [P in keyof RawPlayerSkills as P extends `${infer T}Level` ? T : never]: number
 }
 
+export interface PlayerSkillData {
+    name: keyof Skills
+    xp: number
+    level: number
+    reqXp: number
+}
+
 export class PlayerSkills {
     public static readonly DefaultXpReq = 10
     public static readonly DefaultXpMultiplier = 1.2
@@ -77,5 +84,30 @@ export class PlayerSkills {
 
     public static formatSkillLevel(skill: keyof Skills) {
         return `${skill}Level` as const
+    }
+
+    public get(name: keyof Skills): PlayerSkillData {
+        return {
+            level: this.getLevel(name),
+            name,
+            reqXp: this.getReqXp(name),
+            xp: this.getXp(name)
+        }
+    }
+
+    public toArray() {
+        return Object.values(this.all)
+    }
+    
+    public get all(): Record<keyof Skills, PlayerSkillData> {
+        return {
+            defense: this.get("defense"),
+            distance: this.get("distance"),
+            endurance: this.get("endurance"),
+            melee: this.get("melee"),
+            mining: this.get("mining"),
+            smithing: this.get("smithing"),
+            woodcutting: this.get("woodcutting")
+        }
     }
 }

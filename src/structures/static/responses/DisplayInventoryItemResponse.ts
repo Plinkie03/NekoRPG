@@ -7,6 +7,7 @@ import destroy from "../../../interactions/button/inventory/destroy.js"
 import view from "../../../interactions/button/inventory/view.js"
 import lock from "../../../interactions/button/inventory/lock.js"
 import equip from "../../../interactions/button/inventory/equip.js"
+import refresh from "../../../interactions/button/profile/refresh.js"
 
 export class DisplayInventoryItemResponse {
     private constructor() {}
@@ -28,7 +29,7 @@ export class DisplayInventoryItemResponse {
             const actionRow = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
                     new ButtonBuilder({
-                        custom_id: page.id(input.user, pg, ActionType.Stay),
+                        custom_id: pg === -1 ? refresh.id(input.user) : page.id(input.user, pg, ActionType.Stay),
                         label: "Back",
                         style: ButtonStyle.Primary
                     }),
