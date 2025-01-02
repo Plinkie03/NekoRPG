@@ -6,6 +6,7 @@ export default new Item<ItemType.Lootbox>({
     id: 6,
     name: "Wooden Chest",
     type: ItemType.Lootbox,
+    emoji: "<:woodenchest:1324485419017961512>",
     rewards: {
         items: [
             {
