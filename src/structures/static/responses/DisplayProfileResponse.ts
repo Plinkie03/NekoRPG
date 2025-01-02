@@ -68,7 +68,7 @@ export class DisplayProfileResponse {
                         custom_id: view.id(i.user, invItem.uuid, -1),
                         label: GearType[invItem.item.gearType!],
                         emoji: invItem.item.emoji ?? undefined,
-                        style: ButtonStyle.Primary
+                        style: ButtonStyle.Secondary
                     })
                 )
             ]
@@ -93,7 +93,7 @@ export class DisplayProfileResponse {
                         custom_id: view.id(i.user, invItem.uuid, -2),
                         label: invItem.item.name,
                         emoji: invItem.item.emoji ?? undefined,
-                        style: ButtonStyle.Primary
+                        style: ButtonStyle.Secondary
                     })
                 )
             ]

@@ -10,7 +10,7 @@ export class ProfileEmbed {
 
     public static fromProgress(i: ButtonInteraction<'cached'> | ChatInputCommandInteraction<'cached'>, player: Player) {
         const embed = BasicEmbed.from(i, i.user, Colors.Aqua)
-            .setTitle("Profile")
+            .setTitle("Progress")
             .setThumbnail(i.user.displayAvatarURL())
             .addFields({
                 name: "Progress",
@@ -78,7 +78,7 @@ export class ProfileEmbed {
         const spells = player.spells.equipped
 
         const embed = BasicEmbed.from(i, i.user, Colors.Aqua)
-            .setTitle("Gear")
+            .setTitle("Spells")
             .setThumbnail(i.user.displayAvatarURL())
             .setDescription(spells.map(x => x.detailedName(true)).join("\n") || "No spells :(")
 
