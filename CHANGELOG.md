@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.2.0](https://github.com/Plinkie03/NekoRPG/compare/v1.1.0...v1.2.0) (2025-01-02)
+
+
+### Features
+
+* added info/node command ([55ddf14](https://github.com/Plinkie03/NekoRPG/commit/55ddf149779d487e99567140d88d43f18b8afe8b))
+* Added profile command ([1542b56](https://github.com/Plinkie03/NekoRPG/commit/1542b56bdae9bcd6c5434f4ebf2eaf48ad03aeb8))
+
 ## 1.1.0 (2025-01-02)
 
 
