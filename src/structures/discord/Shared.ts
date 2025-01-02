@@ -2,7 +2,6 @@ import { ChatInputCommandInteraction, BaseInteraction, inlineCode, ApplicationCo
 import { DiscordInteractionInterface, DiscordInteractionType, InteractionExtrasData } from "./DiscordInteractionHandler.js"
 import { Player } from "../player/Player.js"
 import { NekoClient } from "../../core/NekoClient.js"
-import { Embeds } from "../static/Embeds.js"
 import NekoDatabase from "../../core/NekoDatabase.js"
 import { Game } from "../static/Game.js"
 import { Item, Nullable } from "../resource/Item.js"
@@ -11,6 +10,7 @@ import { CommandExtrasData } from "./Command.js"
 import { emptyString } from "../../Constants.js"
 import { Monster } from "../monster/Monster.js"
 import { Node } from "../resource/node/Node.js"
+import { BasicEmbed } from "../static/embeds/BasicEmbed.js"
 
 export type EnumLike<T = any> = {
     [id: string]: T | string;
@@ -253,7 +253,7 @@ export class Shared {
     }
 
     private static async reject(i: BaseInteraction<'cached'>, arg: ArgData, given?: unknown) {
-        const embed = Embeds.basic(i, i.user, "Red")
+        const embed = BasicEmbed.from(i, i.user, "Red")
             .setTitle("Argument Error")
             .setDescription(`The argument ${inlineCode(arg.name)} is absent or did not match the type.`)
             .addFields([

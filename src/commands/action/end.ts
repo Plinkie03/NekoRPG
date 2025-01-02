@@ -2,10 +2,10 @@ import { Colors } from "discord.js";
 import { Command } from "../../structures/discord/Command.js";
 import { ArgType } from "../../structures/discord/Shared.js";
 import { NodeFinishCollectResponseType, NodeStartCollectResponseType } from "../../structures/resource/node/Node.js";
-import { Embeds } from "../../structures/static/Embeds.js";
 import { Util } from "../../structures/static/Util.js";
 import { Tasks } from "../../structures/player/PlayerTasks.js";
 import { TimeParser } from "../../Constants.js";
+import { BasicEmbed } from "../../structures/static/embeds/BasicEmbed.js";
 
 export enum ActionType {
     Woodcutting,
@@ -29,7 +29,7 @@ export default new Command({
 
         const response = await payload.extras.player.tasks.finish(action)
 
-        const embed = Embeds.basic(payload.instance, payload.instance.user, Colors.Red)
+        const embed = BasicEmbed.from(payload.instance, payload.instance.user, Colors.Red)
 
         if (response === false) {
             embed

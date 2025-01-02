@@ -2,8 +2,8 @@ import { Colors } from "discord.js";
 import { Command } from "../../structures/discord/Command.js";
 import { ArgType } from "../../structures/discord/Shared.js";
 import { NodeStartCollectResponseType } from "../../structures/resource/node/Node.js";
-import { Embeds } from "../../structures/static/Embeds.js";
 import { Util } from "../../structures/static/Util.js";
+import { BasicEmbed } from "../../structures/static/embeds/BasicEmbed.js";
 
 export default new Command({
     name: "start",
@@ -20,7 +20,7 @@ export default new Command({
         const node = payload.args[0]
         const response = await node.start(payload.extras.player)
 
-        const embed = Embeds.basic(payload.instance, payload.instance.user, Colors.Red)
+        const embed = BasicEmbed.from(payload.instance, payload.instance.user, Colors.Red)
 
         switch (response.type) {
             case NodeStartCollectResponseType.Busy: {

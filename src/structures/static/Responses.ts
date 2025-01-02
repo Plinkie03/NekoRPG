@@ -1,6 +1,5 @@
 import { ActionRowBuilder, AutocompleteInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Colors, ModalSubmitInteraction } from "discord.js";
 import { GlobalExtrasData } from "../discord/Shared.js";
-import { Embeds } from "./Embeds.js";
 import manageInventoryPage, { ActionType } from "../../interactions/button/inventory/page.js";
 import viewInventoryItem from "../../interactions/button/inventory/view.js";
 import { emptyString } from "../../Constants.js";
@@ -16,6 +15,10 @@ import craftItem from "../../interactions/button/info/item/craft.js";
 import { Util } from "./Util.js";
 import bulkCraftItem from "../../interactions/button/info/item/bulkCraft.js";
 import viewItem from "../../interactions/button/info/item/view.js";
+import { BasicEmbed } from "./embeds/BasicEmbed.js";
+import { InventoryItemEmbed } from "./embeds/InventoryItemEmbed.js";
+import { FightEmbed } from "./embeds/FightEmbed.js";
+import { ItemEmbed } from "./embeds/ItemEmbed.js";
 
 /**
  * TODO: Migrate each method to its own class in /responses/
@@ -28,7 +31,7 @@ export class Responses {
 
         const response = await item.craft(player, times)
 
-        const embed = Embeds.basic(input, input.user, Colors.Red)
+        const embed = BasicEmbed.from(input, input.user, Colors.Red)
         
         switch (response.type) {
             case CraftItemResponseType.Failure: {
@@ -80,7 +83,7 @@ export class Responses {
     }
 
     public static async displayItem(input: ButtonInteraction<'cached'> | ChatInputCommandInteraction<'cached'>, player: Player, item: Item) {
-        const embed = await Embeds.item(input, input.user, item)
+        const embed = await ItemEmbed.from(input, input.user, item)
 
         const row = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
@@ -132,7 +135,7 @@ export class Responses {
             return input[(!input.replied ? (input.isButton() ? "update" : "reply") : "editReply") as "reply"]({
                 ephemeral: true,
                 embeds: [
-                    Embeds.fight(input, input.user, fight, mob)
+                    FightEmbed.from(input, input.user, fight, mob)
                 ],
                 components: finish ? [ row ] : []
             })
@@ -158,7 +161,7 @@ export class Responses {
             return false
         }
 
-        const embed = (await Embeds.inventoryItem(input, input.user, invItem))
+        const embed = (await InventoryItemEmbed.from(input, input.user, invItem))
             .setTitle(invItem.item.simpleName)
             .setThumbnail(invItem.item.image)
 
@@ -221,7 +224,7 @@ export class Responses {
             return false
         }
 
-        const embed = Embeds.basic(input, input.user, Colors.Aqua)
+        const embed = BasicEmbed.from(input, input.user, Colors.Aqua)
             .setDescription(
                 items.map(
                     (x, i) => `[${x.index! + 1}] ${x.detailedName() + x.detailedAmount}`

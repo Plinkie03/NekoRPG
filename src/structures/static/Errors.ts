@@ -1,7 +1,7 @@
 import { codeBlock, RepliableInteraction } from "discord.js";
 import { Logger } from "./Logger.js";
-import { Embeds } from "./Embeds.js";
 import { emptyString } from "../../Constants.js";
+import { BasicEmbed } from "./embeds/BasicEmbed.js";
 
 /**
  * TODO: Migrate each method to its own class in /errors/
@@ -15,7 +15,7 @@ export class Errors {
         if (error instanceof Error) {
             Logger.error(error)
 
-            const embed = Embeds.basic(i, i.user, "Red")
+            const embed = BasicEmbed.from(i, i.user, "Red")
 
             embed.setTitle("Interaction Error")
                 .setDescription(`The interaction has thrown an error, it has been reported to the Developer!`)

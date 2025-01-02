@@ -2,7 +2,6 @@ import { ActionRowBuilder, ButtonBuilder, Colors } from "discord.js";
 import SlimeBall from "../resources/item/material/other/SlimeBall.js";
 import { Command } from "../structures/discord/Command.js";
 import { ArgType } from "../structures/discord/Shared.js";
-import { Embeds } from "../structures/static/Embeds.js";
 import { Responses } from "../structures/static/Responses.js";
 import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
 

@@ -5,7 +5,6 @@ import { NekoClient } from "../../core/NekoClient.js";
 import { Logger } from "../static/Logger.js";
 import { Player } from "../player/Player.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
-import { Embeds } from "../static/Embeds.js";
 import { Errors } from "../static/Errors.js";
 import { DiscordInteractionInterface, DiscordInteractionType } from "./DiscordInteractionHandler.js";
 import { ArgData, ArgsToArray, ArgType, AutocompletePayload, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js";
