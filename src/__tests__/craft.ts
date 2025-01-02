@@ -3,7 +3,7 @@ import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
 import Wood from "../resources/item/material/log/BirchLog.js";
 import { Logger } from "../structures/static/Logger.js";
 
-NekoDatabase.getPlayer("123").then(async p => {
+NekoDatabase.getPlayerById("123").then(async p => {
     await p.inventory.addItem({
         itemId: Wood.id,
         amount: 10

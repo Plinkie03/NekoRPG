@@ -154,7 +154,7 @@ export class Command<Args extends ArgData[] = ArgData[]> {
     private async getExtras(i: ChatInputCommandInteraction<'cached'> | AutocompleteInteraction<'cached'>): Promise<CommandExtrasData> {
         return {
             command: this,
-            player: await NekoDatabase.getPlayer(i.user.id)
+            player: await NekoDatabase.getPlayerByUser(i.user)
         }
     }
 
@@ -174,12 +174,12 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                 return ApplicationCommandOptionType.Integer
             }
 
+            case ArgType.Player:
             case ArgType.User: {
                 return ApplicationCommandOptionType.User
             }
 
             case ArgType.InventoryItem:
-            case ArgType.Player:
             case ArgType.String: {
                 return ApplicationCommandOptionType.String
             }

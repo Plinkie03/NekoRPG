@@ -101,7 +101,7 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
     private async getExtras(i: DiscordInteractionInterface[DiscordInteractionType]): Promise<InteractionExtrasData> {
         return {
             handler: this as never,
-            player: await NekoDatabase.getPlayer(i.user.id)
+            player: await NekoDatabase.getPlayerByUser(i.user)
         }
     }
 }

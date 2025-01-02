@@ -3,7 +3,7 @@ import Slime from "../resources/monster/Slime.js"
 import { Action } from "../structures/battle/actions/Action.js"
 import { Fight } from "../structures/battle/Fight.js"
 
-NekoDatabase.getPlayer("123").then(async p1 => {
+NekoDatabase.getPlayerById("123").then(async p1 => {
     const mobs = Array.from({ length: 1 }, _ => Slime.clone())
 
     const fight = new Fight([

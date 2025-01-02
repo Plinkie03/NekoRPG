@@ -16,7 +16,7 @@ async function send(msg: string) {
     //await webhook.send(msg)
 }
 
-NekoDatabase.getPlayer("123").then(async p1 => {
+NekoDatabase.getPlayerById("123").then(async p1 => {
     if (p1.inventory.items.length === 1) {
         const itm = await p1.inventory.addItem({
             itemId: ArrowRain.id,
@@ -31,8 +31,8 @@ NekoDatabase.getPlayer("123").then(async p1 => {
 
     await setTimeout(5000)
     
-    const p2 = await NekoDatabase.getPlayer("321")
-    const p3 = await NekoDatabase.getPlayer("4321")
+    const p2 = await NekoDatabase.getPlayerById("321")
+    const p3 = await NekoDatabase.getPlayerById("4321")
 
     p1.data.username = "One"
     p2.data.username = "Two"

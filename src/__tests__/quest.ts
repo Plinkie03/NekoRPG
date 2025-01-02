@@ -5,6 +5,6 @@ import SlimeBall from "../resources/item/material/other/SlimeBall.js";
 import SlimeQuest from "../resources/quest/SlimeQuest.js";
 import { Logger } from "../structures/static/Logger.js";
 
-NekoDatabase.getPlayer("1096285761365610576").then(async p => {
+NekoDatabase.getPlayerById("1096285761365610576").then(async p => {
     console.log(p.quests.raw)
 })

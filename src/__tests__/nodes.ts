@@ -5,7 +5,7 @@ import BirchForestNode from "../resources/node/woodcutting/BirchForestNode.js";
 import { Logger } from "../structures/static/Logger.js";
 import { inspect } from "util";
 
-NekoDatabase.getPlayer("123").then(async p => {
+NekoDatabase.getPlayerById("123").then(async p => {
     console.log(
         await p.tasks.start(BirchForestNode)
     )

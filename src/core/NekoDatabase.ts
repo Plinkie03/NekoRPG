@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient, RawPlayerQuest, RawPlayerSkills, RawPlayerTasks } from "@prisma/client";
-import { Collection } from "discord.js";
+import { Collection, User } from "discord.js";
 import { Player } from "../structures/player/Player.js"
 import { Logger } from "../structures/static/Logger.js";
 import cloneDeep from "clone-deep"
@@ -30,7 +30,7 @@ class NekoDB extends PrismaClient {
         })
     }
 
-    public async getPlayer(id: string) {
+    public async getPlayerById(id: string) {
         const existing = this.players.get(id)
         if (existing) return existing
         
@@ -39,6 +39,12 @@ class NekoDB extends PrismaClient {
         
         this.players.set(player.id, player)
         return player
+    }
+
+    public async getPlayerByUser(user: User) {
+        const got = await this.getPlayerById(user.id)
+        got.data.username = user.username
+        return got
     }
 
     public createPlayer(id: string) {

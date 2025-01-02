@@ -2,6 +2,6 @@ import NekoDatabase from "../core/NekoDatabase.js";
 import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
 import { Logger } from "../structures/static/Logger.js";
 
-NekoDatabase.getPlayer("123").then(async p => {
+NekoDatabase.getPlayerById("123").then(async p => {
     console.log(p.inventory.items.map(x => x.detailedName() + x.detailedAmount).join("\n"))
 })

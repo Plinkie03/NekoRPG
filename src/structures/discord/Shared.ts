@@ -206,11 +206,10 @@ export class Shared {
 
         if (options.resolver instanceof BaseInteraction) {
             id = options.value!
+            return id ? options.resolver.client.users.fetch(id) : id
         } else {
-            id = options.resolver.getString(options.arg.name, options.arg.required)
+            return options.resolver.getUser(options.arg.name, options.arg.required)
         }
-
-        return id ? NekoDatabase.getPlayer(id) : id
     }
 
     public static async resolve<T>(options: ResolveOptions): Promise<T | null> {
