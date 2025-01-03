@@ -161,6 +161,7 @@ export class Fight {
                         })
 
                         await spellHit.run()
+
                         log.unshift(spellHit)
 
                         break attack

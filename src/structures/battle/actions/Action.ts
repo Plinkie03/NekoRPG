@@ -32,6 +32,9 @@ export abstract class Action {
 
     public async run() {
         await this.execute()
-        this.actions.forEach(x => x.execute())
+        
+        for (const action of this.actions) {
+            await action.execute()
+        }
     }
 }

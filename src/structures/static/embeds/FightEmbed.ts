@@ -14,7 +14,7 @@ export class FightEmbed {
 
         const embed = BasicEmbed.from(i, user, isWinner === true ? Colors.Green : isWinner === false ? Colors.Red : Colors.Blue)
             .setThumbnail(Util.getEmojiUrl(mob?.data.emoji) ?? null)
-            .setDescription(logs.map((x, i) => `## Round ${Util.formatInt(fight.round - (logs.length - i) + 1)}\n${Action.format(x)}`).join("\n"))
+            .setDescription(logs.map((x, i) => `## Round ${Util.formatInt(fight.logs.indexOf(x) + 1)}\n${Action.format(x)}`).join("\n"))
 
         if (isWinner === null) {
             for (let i = 0, len = fight.teams.length; i < len; i++) {
