@@ -32,7 +32,6 @@ export default new Item<ItemType.Spell>({
         }
 
         payload.hit.addMany(
-            payload.target.moddedStats.inflict(Poison, 3),
             payload.target.moddedStats.addFortification({
                 duration: fortificationTime,
                 multiplier: -fortificationMultiplier,
