@@ -5,11 +5,14 @@ import { Item, ItemType, GearType } from "../../resource/Item.js"
 import { Rewards } from "../Rewards.js"
 import { Util } from "../Util.js"
 import { BasicEmbed } from "./BasicEmbed.js"
+import { PlayerInventoryItem } from "../../player/PlayerInventoryItem.js"
 
 export class ItemEmbed {
     private constructor() {}
 
-    public static async from(i: Base, to: User, item: Item, stats = item.getStats()) {
+    public static async from(i: Base, to: User, itm: Item | PlayerInventoryItem) {
+        const item = itm instanceof PlayerInventoryItem ? itm.item : itm
+
         const client = NekoClient.from(i)
 
         const embed = BasicEmbed.from(i, to, Colors.Aqua)
@@ -29,10 +32,12 @@ export class ItemEmbed {
             value: item.price.toString()
         })
 
-        if (item.data.description) {
+        const desc = itm instanceof PlayerInventoryItem && itm.spell ? itm.spell.info() : item.data.description
+
+        if (desc) {
             fields.push({
                 name: "Description",
-                value: item.data.description
+                value: desc 
             })
         }
 
@@ -58,6 +63,8 @@ export class ItemEmbed {
                 value: (await Rewards.give({ rewards: item.data.craft!.rewards })).join("\n")
             })
         }
+
+        const stats = itm.getStats()
 
         for (const stat of Util.objectKeys(stats)) {
             const value = stats[stat]

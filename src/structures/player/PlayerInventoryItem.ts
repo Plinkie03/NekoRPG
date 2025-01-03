@@ -7,6 +7,7 @@ import NekoDatabase, { PlayerItemData } from "../../core/NekoDatabase.js";
 import { PlayerSpells } from "./PlayerSpells.js";
 import { Item, ItemType, LootboxOpenResponseType, Nullable } from "../resource/Item.js";
 import { Util } from "../static/Util.js";
+import { EntitySpell } from "../entity/EntitySpell.js";
 
 export enum PlayerInventoryItemAmountChangeResponse {
     Destroyed,
@@ -64,6 +65,10 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return index === -1 ? null : index
     }
 
+    public get spell() {
+        return this.item.isSpell() ? EntitySpell.from(this) : null
+    }
+    
     public get item() {
         return Game.getItem<T>(this.data.itemId)
     }
