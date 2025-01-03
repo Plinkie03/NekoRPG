@@ -115,7 +115,7 @@ export class Util {
     }
 
     public static reply(interaction: RepliableInteraction<'cached'>, options: InteractionReplyOptions) {
-        return interaction[(interaction.isButton() ? "update" : interaction.replied ? "editReply" : "reply") as "reply"](options)
+        return interaction[(interaction.replied ? "editReply" : interaction.isButton() ? "update" : "reply") as "reply"](options)
     }
 
     public static createActionRows<T, O extends AnyComponentBuilder>(using: T[], builder: (el: T) => O): ActionRowBuilder<O>[] {
