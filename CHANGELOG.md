@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.3.0](https://github.com/Plinkie03/NekoRPG/compare/v1.2.0...v1.3.0) (2025-01-03)
+
+
+### Features
+
+* **InventoryItem:** Add open option for lootboxes ([a8a2978](https://github.com/Plinkie03/NekoRPG/commit/a8a2978b32ec938c0b71575e968e5decce9674fc))
+* **Item:** Add lootboxes ([9a86307](https://github.com/Plinkie03/NekoRPG/commit/9a863072c6f44bed465af840923769a853843f80))
+
+
+### Bug Fixes
+
+* **Item:** Disallow equipping materials ([d63527a](https://github.com/Plinkie03/NekoRPG/commit/d63527a8e3a325a9ade701b93e1dc83decb37444))
+* **ProfileEmbed:** Incorrect naming for titles ([6a11939](https://github.com/Plinkie03/NekoRPG/commit/6a11939a774a30db3d125618336a9b9ed5bf05d3))
+* **Util:** Util#createActionRows malfunction ([6fb52bc](https://github.com/Plinkie03/NekoRPG/commit/6fb52bcc7fef054769d6ffb45908cfcc42c29d15))
+
+
+### Chores
+
+* **Slime:** Remove spells ([8255f11](https://github.com/Plinkie03/NekoRPG/commit/8255f115818b5ec916e90f9f09832f355e16189c))
+* update release script ([bd0ad8a](https://github.com/Plinkie03/NekoRPG/commit/bd0ad8a7c823b91af4843ef79e2542644ebf574b))
+* **WoodenChest:** Add emoji ([f1c4fa9](https://github.com/Plinkie03/NekoRPG/commit/f1c4fa98ef5a0589dd6a567a4757b0d43ec930e8))
+
+
+### Code Refactoring
+
+* move profile command to individual categories ([6f0426d](https://github.com/Plinkie03/NekoRPG/commit/6f0426d54c798e00283aa600acd2fbbeb18c7388))
+* **Player:** getPlayer no longer exists, replaced with getPlayerBy(Id|User) ([f8a3a96](https://github.com/Plinkie03/NekoRPG/commit/f8a3a966d670183207998c889daad8dd8264311b))
+* **Responses:** No longer require pages to positioning ([b67e1fe](https://github.com/Plinkie03/NekoRPG/commit/b67e1fe6eb4c2c75d9ce3a26bdaca95fcc7daf26))
+
 ## [1.2.0](https://github.com/Plinkie03/NekoRPG/compare/v1.1.0...v1.2.0) (2025-01-02)
 
 
