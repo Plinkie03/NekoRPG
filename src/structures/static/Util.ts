@@ -1,8 +1,8 @@
 import { ActionRowBuilder, AnyComponentBuilder, ApplicationCommandOptionChoiceData, BaseSelectMenuBuilder, CDNRoutes, Collection, ComponentBuilder, ImageFormat, InteractionReplyOptions, parseEmoji, RepliableInteraction, RouteBases } from "discord.js"
 import { Identifiable } from "./Game.js"
 import { Resource } from "../resource/Resource.js"
-import { Nullable } from "../resource/Item.js"
 import { Stats } from "../entity/EntityBaseStats.js"
+import { Nullable } from "../resource/Item.js"
 
 export class Util {
     private constructor() { }

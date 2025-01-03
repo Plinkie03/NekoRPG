@@ -47,6 +47,6 @@ export class MonsterBaseStats extends EntityBaseStats {
     }
 
     public getStat(name: keyof Stats): number {
-        return this.monster.data.stats[name]!
+        return this.monster.data.stats[name]! ?? 0
     }
 }

@@ -64,7 +64,7 @@ export class ItemEmbed {
             if (value === 0) continue
             fields.push({
                 name: Util.camelToTitle(stat),
-                value: (Item.isPercentualStat(stat) ? Util.formatFloat(value) : Util.formatInt(value)) + (Item.isPercentualStat(stat) ? "%" : emptyString)
+                value: Item.formatStatValue(stat, value)
             })
         }
 

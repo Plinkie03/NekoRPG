@@ -322,6 +322,14 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
             rewards
         }
     }
+
+    public static formatStat(stat: keyof Stats, value: number) {
+        return `${Util.camelToTitle(stat)} ${Item.formatStatValue(stat, value)}`
+    }
+
+    public static formatStatValue(stat: keyof Stats, value: number) {
+        return Item.isPercentualStat(stat) ? `${Util.formatFloat(value)}%` : Util.formatInt(value)
+    }
 }
 
 export const RandomStatKeys = Util.objectKeys(Item.RandomStatMinMax)
