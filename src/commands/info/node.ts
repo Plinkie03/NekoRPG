@@ -1,8 +1,8 @@
 import { Command } from "../../structures/discord/Command.js";
 import { ArgType } from "../../structures/discord/Shared.js";
 import { Responses } from "../../structures/static/Responses.js";
-import { DisplayItemResponse } from "../../structures/static/responses/DisplayItemResponse.js";
-import { DisplayNodeResponse } from "../../structures/static/responses/DisplayNodeResponse.js";
+import { DisplayItemResponse } from "../../structures/static/responses/info/DisplayItemResponse.js";
+import { DisplayNodeResponse } from "../../structures/static/responses/info/DisplayNodeResponse.js";
 
 export default new Command({
     name: "node",

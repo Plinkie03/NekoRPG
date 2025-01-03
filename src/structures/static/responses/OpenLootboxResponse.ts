@@ -21,7 +21,7 @@ export class OpenLootboxResponse {
 
         const result = await invItem.open(times)
 
-        const embed = BasicEmbed.from(i, i.user, Colors.Aqua)
+        const embed = BasicEmbed.from(i, i.user, Colors.Red)
 
         if (result === false) {
             embed.setTitle("Missing Quantity")
@@ -48,6 +48,7 @@ export class OpenLootboxResponse {
 
                 case LootboxOpenResponseType.Success: {
                     embed.setTitle("Success")
+                        .setColor(Colors.Green)
                         .setDescription(`You opened ${invItem.item.simpleName} ${Util.plural("time", times)} and received the following:\n${result.rewards.map(Util.addPoint).join("\n")}`)
                     break
                 }

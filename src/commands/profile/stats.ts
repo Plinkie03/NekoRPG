@@ -1,5 +1,5 @@
 import { Command } from "../../structures/discord/Command.js";
-import { DisplayProfileResponse } from "../../structures/static/responses/DisplayProfileResponse.js";
+import { DisplayProfileResponse } from "../../structures/static/responses/info/DisplayProfileResponse.js";
 
 export default new Command({
     name: "stats",

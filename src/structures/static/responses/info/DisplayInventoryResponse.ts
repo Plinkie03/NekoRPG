@@ -1,10 +1,10 @@
 import { ButtonInteraction, ChatInputCommandInteraction, Colors, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"
-import { emptyString } from "../../../Constants.js"
-import { GlobalExtrasData } from "../../discord/Shared.js"
-import { BasicEmbed } from "../embeds/BasicEmbed.js"
-import page, { ActionType } from "../../../interactions/button/inventory/page.js"
-import view from "../../../interactions/button/inventory/view.js"
-import { Util } from "../Util.js"
+import { emptyString } from "../../../../Constants.js"
+import { GlobalExtrasData } from "../../../discord/Shared.js"
+import { BasicEmbed } from "../../embeds/BasicEmbed.js"
+import page, { ActionType } from "../../../../interactions/button/inventory/page.js"
+import view from "../../../../interactions/button/inventory/view.js"
+import { Util } from "../../Util.js"
 
 export class DisplayInventoryResponse {
     private constructor() {}

@@ -2,7 +2,7 @@ import { emptyString } from "../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../structures/discord/Shared.js";
 import { Responses } from "../../../structures/static/Responses.js";
-import { DisplayInventoryResponse } from "../../../structures/static/responses/DisplayInventoryResponse.js";
+import { DisplayInventoryResponse } from "../../../structures/static/responses/info/DisplayInventoryResponse.js";
 
 export enum ActionType {
     Back,

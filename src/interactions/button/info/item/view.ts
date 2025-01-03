@@ -2,7 +2,7 @@ import { emptyString } from "../../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../../structures/discord/Shared.js";
 import { Responses } from "../../../../structures/static/Responses.js";
-import { DisplayItemResponse } from "../../../../structures/static/responses/DisplayItemResponse.js";
+import { DisplayItemResponse } from "../../../../structures/static/responses/info/DisplayItemResponse.js";
 
 export default new DiscordInteractionHandler({
     id: 10,

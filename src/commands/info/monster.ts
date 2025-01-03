@@ -1,7 +1,7 @@
 import { Command } from "../../structures/discord/Command.js";
 import { ArgType } from "../../structures/discord/Shared.js";
 import { Responses } from "../../structures/static/Responses.js";
-import { DisplayMonsterResponse } from "../../structures/static/responses/DisplayMonsterResponse.js";
+import { DisplayMonsterResponse } from "../../structures/static/responses/info/DisplayMonsterResponse.js";
 
 export default new Command({
     name: "monster",

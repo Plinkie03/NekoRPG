@@ -1,14 +1,14 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Invite } from "discord.js";
-import { Player } from "../../player/Player.js";
-import { ProfileEmbed } from "../embeds/ProfileEmbed.js";
-import progress from "../../../interactions/button/profile/progress.js";
-import view from "../../../interactions/button/inventory/view.js";
-import stats from "../../../interactions/button/profile/stats.js";
-import gear from "../../../interactions/button/profile/gear.js";
-import { Util } from "../Util.js";
-import spells from "../../../interactions/button/profile/spells.js";
-import skills from "../../../interactions/button/profile/skills.js";
-import { GearType } from "../../resource/Item.js";
+import { Player } from "../../../player/Player.js";
+import { ProfileEmbed } from "../../embeds/ProfileEmbed.js";
+import progress from "../../../../interactions/button/profile/progress.js";
+import view from "../../../../interactions/button/inventory/view.js";
+import stats from "../../../../interactions/button/profile/stats.js";
+import gear from "../../../../interactions/button/profile/gear.js";
+import { Util } from "../../Util.js";
+import spells from "../../../../interactions/button/profile/spells.js";
+import skills from "../../../../interactions/button/profile/skills.js";
+import { GearType } from "../../../resource/Item.js";
 
 export class DisplayProfileResponse {
     private constructor() { }

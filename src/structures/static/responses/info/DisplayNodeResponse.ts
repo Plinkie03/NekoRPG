@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction } from "discord.js";
-import { Player } from "../../player/Player.js";
-import { Node } from "../../resource/node/Node.js";
-import { NodeEmbed } from "../embeds/NodeEmbed.js";
+import { Player } from "../../../player/Player.js";
+import { Node } from "../../../resource/node/Node.js";
+import { NodeEmbed } from "../../embeds/NodeEmbed.js";
 
 export class DisplayNodeResponse {
     private constructor() {}

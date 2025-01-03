@@ -1,7 +1,7 @@
 import { emptyString } from "../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../structures/discord/Shared.js";
-import { DisplayProfileResponse } from "../../../structures/static/responses/DisplayProfileResponse.js";
+import { DisplayProfileResponse } from "../../../structures/static/responses/info/DisplayProfileResponse.js";
 
 export default new DiscordInteractionHandler({
     id: 11,

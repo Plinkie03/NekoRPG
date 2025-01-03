@@ -4,7 +4,7 @@ import { Command } from "../structures/discord/Command.js";
 import { ArgType } from "../structures/discord/Shared.js";
 import { Responses } from "../structures/static/Responses.js";
 import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
-import { DisplayInventoryResponse } from "../structures/static/responses/DisplayInventoryResponse.js";
+import { DisplayInventoryResponse } from "../structures/static/responses/info/DisplayInventoryResponse.js";
 
 export default new Command({
     name: "inventory",
