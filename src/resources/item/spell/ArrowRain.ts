@@ -20,6 +20,7 @@ const fortificationMultiplier = 0.25
 export default new Item<ItemType.Spell>({
     id: 2,
     type: ItemType.Spell,
+    price: 500,
     name: "Arrow Rain",
     cooldown: 5,
     info: spell => `Unleash a volley of ${arrowCount(spell)} magical arrows upon the target dealing ${spell.entity.baseStats.displayDamage(arrowMultiplier(spell))} damage each, reducing their defense by ${fortificationMultiplier}x for ${Util.plural("round", fortificationTime)} and stunning the target for ${Util.plural("round", stunTime)}.`,
