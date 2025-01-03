@@ -210,7 +210,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         const errors = this.hasRequirements()
         if (errors !== true) return { type: InventoryEquipSpellResponseType.MissingRequirements, errors }
 
-        this.setEquipped(true)
+        await this.setEquipped(true)
 
         this.manager["player"].clearCache()
 
