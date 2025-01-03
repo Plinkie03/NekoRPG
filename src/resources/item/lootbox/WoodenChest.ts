@@ -1,6 +1,7 @@
 import { Item, ItemType } from "../../../structures/resource/Item.js";
 import IronSword from "../gear/weapon/sword/IronSword.js";
 import BirchLog from "../material/log/BirchLog.js";
+import ArrowRain from "../spell/ArrowRain.js";
 
 export default new Item<ItemType.Lootbox>({
     id: 6,
@@ -10,8 +11,8 @@ export default new Item<ItemType.Lootbox>({
     rewards: {
         items: [
             {
-                item: IronSword,
-                chance: 100
+                item: ArrowRain,
+                chance: 25
             }
         ]
     },
