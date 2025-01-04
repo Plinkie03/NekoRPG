@@ -39,7 +39,7 @@ export class NodeEmbed {
         }
 
         for (const resource of node.resources) {
-            const rewards = await Rewards.give({ rewards: resource.rewards })
+            const rewards = await Rewards.give({ rewards: resource.rewards  })
             fields.push({
                 name: `Resource - ${resource.item.simpleName}`,
                 value: [

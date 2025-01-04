@@ -223,12 +223,7 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         const rewards = new Array<string>()
 
         const add = async () => {
-            rewards.push(...(await player.give({
-                rewards: {
-                    items: [ this ]
-                },
-                times: success
-            })))
+            rewards.push(...(await player.giveSimple({ items: [ this ]}, success)))
         }
 
         if (this.isStackable()) {
@@ -240,10 +235,7 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
             }
         }
         
-        rewards.push(...(await player.give({
-            rewards: this.data.craft.rewards,
-            times: success
-        })))
+        rewards.push(...(await player.giveSimple(this.data.craft.rewards, success)))
 
         return { type: CraftItemResponseType.Success, rewards, success, failed: times - success }
     }
@@ -308,7 +300,7 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         const errors = this.hasRequirements(player)
         if (errors !== true) return { type: LootboxOpenResponseType.MissingRequirements, errors }
 
-        const rewards = await player.give({ rewards: this.data.rewards, times })
+        const rewards = await player.giveSimple(this.data.rewards, times)
 
         if (!rewards.length) return { type: LootboxOpenResponseType.Failed }
 

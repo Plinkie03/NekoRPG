@@ -80,7 +80,7 @@ export class Quest extends Resource<QuestData> {
 
         return {
             type: QuestFinishResponseType.Success,
-            rewards: await player.give({ rewards: this.data.rewards })
+            rewards: await player.giveSimple(this.data.rewards)
         }
     }
 }
