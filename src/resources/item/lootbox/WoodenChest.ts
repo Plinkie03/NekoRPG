@@ -21,7 +21,7 @@ export default new Item<ItemType.Lootbox>({
         requirements: {
             items: [
                 {
-                    amount: 20,
+                    amount: 10,
                     item: BirchLog
                 }
             ]
