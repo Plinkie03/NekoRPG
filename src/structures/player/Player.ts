@@ -96,6 +96,10 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
         })
     }
 
+    public async giveSimple(rewards: RewardData, times?: number) {
+        return this.give({ rewards, times })
+    }
+
     public async craft(item: Item, times?: number) {
         return item.craft(this, times)
     }

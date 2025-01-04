@@ -31,7 +31,7 @@ export class Monster extends Entity<MonsterData> {
         return new Monster(this.data)
     }
 
-    public give(options: Omit<RewardOptions, "rewards">) {
+    public loot(options: Omit<RewardOptions, "rewards">) {
         return Rewards.give({
             rewards: this.data.rewards,
             ...options
