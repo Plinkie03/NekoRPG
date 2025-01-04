@@ -225,11 +225,7 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         const add = async () => {
             rewards.push(...(await player.give({
                 rewards: {
-                    items: [
-                        {
-                            item: this
-                        }
-                    ]
+                    items: [ this ]
                 },
                 times: success
             })))

@@ -6,7 +6,7 @@ import NekoDatabase from "../../core/NekoDatabase.js";
 import { Item } from "../resource/Item.js";
 
 export interface RewardData {
-    items?: RewardItemData[]
+    items?: (RewardItemData | Item)[]
     skills?: Partial<Skills>
     xp?: number
     money?: number
@@ -77,7 +77,13 @@ export class Rewards {
         }
 
         if (rewards.items?.length) {
-            for (const rewardItem of rewards.items) {
+            for (const resolvable of rewards.items) {
+                const rewardItem = (resolvable instanceof Item ? {
+                    chance: 100,
+                    amount: 1,
+                    item: resolvable
+                } : resolvable) as RewardItemData
+
                 const amount = rewardItem.item.isStackable() ? (rewardItem.amount ?? 1) * times : 1
                 const amountDisplay = Util.formatItemAmount(amount) && ` (${Util.formatItemAmount(amount)})` || ""
 
