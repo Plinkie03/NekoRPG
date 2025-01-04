@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.0](https://github.com/Plinkie03/NekoRPG/compare/v1.3.0...v1.4.0) (2025-01-04)
+
+
+### Features
+
+* **Command:** Add info/monster ([9fb6f0d](https://github.com/Plinkie03/NekoRPG/commit/9fb6f0d0dfddf5b2c98036ea9de5daec77458698))
+
+
+### Bug Fixes
+
+* **Fight:** Not properly using spells ([e2ff45a](https://github.com/Plinkie03/NekoRPG/commit/e2ff45a1a3a1683c7763eccfd9042f47f9542edb))
+* **InventoryItem#equipSpell:** Not awaiting async code ([80015e0](https://github.com/Plinkie03/NekoRPG/commit/80015e00eccada9bc22d2efafcd50b6db0680fa4))
+* **Node#finish,Item#craft:** Incorrectly giving rewards ([6cc7937](https://github.com/Plinkie03/NekoRPG/commit/6cc793791279d26bd32b0fdd21ac1f2ef5ff519c))
+* **Util:** Util#reply did not respect replied interactions ([82d28bc](https://github.com/Plinkie03/NekoRPG/commit/82d28bcd55139bf4e7a259ad7e3787dc39d9aa6e))
+
+
+### Chores
+
+* Add a lot of new items and nodes, along with emojis ([dd6d375](https://github.com/Plinkie03/NekoRPG/commit/dd6d375b03ae51b0aa7da0f7be27832cb8bf691f))
+* **ArrowRain:** No longer inflicts poison ([a8c5cf9](https://github.com/Plinkie03/NekoRPG/commit/a8c5cf9549832b83a2fde15f93da0a7e56b0a94c))
+* **ArrowRain:** Now have a price ([3816192](https://github.com/Plinkie03/NekoRPG/commit/3816192e7603f103bbd8d1fd95cd88f93fea264e))
+* Update discord.js ([e6a4839](https://github.com/Plinkie03/NekoRPG/commit/e6a4839f5c7e039cd54b0af6e4f8965380c92472))
+* **WoodenChest:** Edit drop to spell ([d0a78a9](https://github.com/Plinkie03/NekoRPG/commit/d0a78a9c2e9b488feab41fd829a6e04382a807b9))
+
+
+### Code Refactoring
+
+* **ItemEmbed:** Use options ([b773405](https://github.com/Plinkie03/NekoRPG/commit/b77340518d4d3c707a24ab04601c645177f960e0))
+* **Responses:** Move info responses to its own folder ([9d33c3e](https://github.com/Plinkie03/NekoRPG/commit/9d33c3ef6872e88945b96283286d0a3e1c01d2ff))
+
 ## [1.3.0](https://github.com/Plinkie03/NekoRPG/compare/v1.2.0...v1.3.0) (2025-01-03)
 
 
