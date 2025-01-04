@@ -85,9 +85,7 @@ export interface GearItemData extends ItemData<ItemType.Gear> {
     weaponType?: WeaponType
 }
 
-export interface MaterialItemData extends ItemData<ItemType.Material> {
-    price: number
-}
+export interface MaterialItemData extends ItemData<ItemType.Material> {}
 
 export enum WeaponType {
     Sword,
@@ -232,7 +230,8 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
                             item: this
                         }
                     ]
-                }
+                },
+                times: success
             })))
         }
 

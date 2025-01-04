@@ -48,7 +48,8 @@ export default new Command({
                     embed
                         .setTitle("Success")
                         .setColor(Colors.Green)
-                        .setDescription(`You've been ${response.node.type} for ${TimeParser.parseToString(response.elapsed)} and received the following materials:\n${response.results.map(
+                        .setThumbnail(response.node.image)
+                        .setDescription(`You've been ${response.node.type} at ${response.node.name} for ${TimeParser.parseToString(response.elapsed)} and received the following materials:\n${response.results.map(
                             x => x.rewards.map(Util.addPoint).join("\n")
                         ).join("\n\n")}`)
                     break

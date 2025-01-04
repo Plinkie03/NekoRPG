@@ -78,7 +78,7 @@ export class Rewards {
 
         if (rewards.items?.length) {
             for (const rewardItem of rewards.items) {
-                const amount = rewardItem.amount ?? 1
+                const amount = rewardItem.item.isStackable() ? (rewardItem.amount ?? 1) * times : 1
                 const amountDisplay = Util.formatItemAmount(amount) && ` (${Util.formatItemAmount(amount)})` || ""
 
                 if (player) {

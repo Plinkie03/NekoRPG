@@ -40,7 +40,8 @@ export default new Command({
                 embed
                     .setColor(Colors.Green)
                     .setTitle("Success")
-                    .setDescription(`You've started ${node.type}!`)
+                    .setThumbnail(node.image)
+                    .setDescription(`You've started ${node.type} at ${node.name}!`)
                 break
             }
         }

@@ -108,8 +108,7 @@ export abstract class Node extends Resource<NodeData> {
                         ...resource.rewards,
                         items: [
                             {
-                                item: resource.item,
-                                amount: stats.success
+                                item: resource.item
                             }
                         ]
                     },
