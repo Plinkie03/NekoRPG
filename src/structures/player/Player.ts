@@ -103,4 +103,8 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
     public async craft(item: Item, times?: number) {
         return item.craft(this, times)
     }
+
+    public clone(): this {
+        return this
+    }
 }

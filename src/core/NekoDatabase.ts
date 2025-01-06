@@ -156,6 +156,21 @@ class NekoDB extends PrismaClient {
             }
         })
     }
+
+    public async queryPlayers(query: string) {
+        return this.rawPlayer.findMany({
+            where: {
+                username: {
+                    contains: query
+                }
+            },
+            select: {
+                id: true,
+                username: true
+            },
+            take: 10
+        })
+    }
 }
 
 const NekoDatabase = new NekoDB({

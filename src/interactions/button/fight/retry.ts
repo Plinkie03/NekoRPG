@@ -2,7 +2,7 @@ import { emptyString } from "../../../Constants.js";
 import { DiscordInteractionHandler, DiscordInteractionType } from "../../../structures/discord/DiscordInteractionHandler.js";
 import { ArgType } from "../../../structures/discord/Shared.js";
 import { Responses } from "../../../structures/static/Responses.js";
-import { FightMonsterResponse } from "../../../structures/static/responses/FightMonsterResponse.js";
+import { FightEntityResponse } from "../../../structures/static/responses/FightEntityResponse.js";
 
 export default new DiscordInteractionHandler({
     id: 6,
@@ -23,6 +23,6 @@ export default new DiscordInteractionHandler({
         },
     ],
     execute(payload) {
-        return FightMonsterResponse.from(payload.instance, payload.extras.player, payload.args[1])
+        return FightEntityResponse.from(payload.instance, payload.extras.player, payload.args[1])
     },
 })

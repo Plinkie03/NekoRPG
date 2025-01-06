@@ -124,7 +124,7 @@ export class Fight {
     }
 
     public get ended() {
-        return !(this.getWinnerTeam() === null && this.round !== this.options.maxRound)
+        return !(this.getWinnerTeam() === null && this.isAnyTeamAlive() && this.round !== this.options.maxRound)
     }
 
     public async start() {
@@ -185,6 +185,10 @@ export class Fight {
         const log = new Array<Action>()
         this.logs.push(log)
         return log
+    }
+
+    public isAnyTeamAlive() {
+        return this.teams.some(x => !!this.getAliveEntities(x).length)
     }
 
     public getPlayersInTeam(team: Nullable<Entity[]>) {

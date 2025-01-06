@@ -207,9 +207,10 @@ export class Shared {
 
         if (options.resolver instanceof BaseInteraction) {
             id = options.value!
-            return id ? options.resolver.client.users.fetch(id) : id
+            return id ? NekoDatabase.getPlayerById(id) : id
         } else {
-            return options.resolver.getUser(options.arg.name, options.arg.required)
+            const user = options.resolver.getUser(options.arg.name, options.arg.required)
+            return user ? NekoDatabase.getPlayerByUser(user) : user
         }
     }
 

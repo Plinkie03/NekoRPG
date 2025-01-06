@@ -4,13 +4,13 @@ import { Responses } from "../structures/static/Responses.js";
 import { FightEntityResponse } from "../structures/static/responses/FightEntityResponse.js";
 
 export default new Command({
-    name: "hunt",
-    description: "Hunt a monster",
+    name: "challenge",
+    description: "Challenge a player",
     args: [
         {
-            name: "monster",
-            description: "The mob to fight",
-            type: ArgType.ZoneMonster,
+            name: "player",
+            description: "The player to challenge",
+            type: ArgType.Player,
             required: true
         }
     ],

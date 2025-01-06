@@ -73,4 +73,5 @@ export abstract class Entity<Data extends IEntity<any> = IEntity<any>, Stats ext
 
     public abstract getSpells(): EntitySpell[]
     public abstract get displayName(): string
+    public abstract clone(): Entity
 }

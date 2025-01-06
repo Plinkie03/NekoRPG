@@ -79,11 +79,11 @@ export class NekoManager {
         }
     }
 
-    public lock(i: RepliableInteraction<"cached">) {
-        if (this.locked.has(i.user.id)) {
+    public lock(i: RepliableInteraction<"cached">, id = i.user.id) {
+        if (this.locked.has(id)) {
             Util.reply(i, {
                 ephemeral: true,
-                content: "Sike! Wait for the previous command to finish executing ❤"
+                content: id === i.user.id ? "Sike! Wait for the previous command to finish executing ❤" : `That person seems to be doing something else :(`
             })
 
             return false

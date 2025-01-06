@@ -4,17 +4,23 @@ import { Fight } from "../../battle/Fight.js"
 import { Monster } from "../../monster/Monster.js"
 import { Util } from "../Util.js"
 import { BasicEmbed } from "./BasicEmbed.js"
+import { Entity } from "../../entity/Entity.js"
 
 export class FightEmbed {
     private constructor() {}
 
-    public static from(i: Base, user: User, fight: Fight, mob?: Monster) {
+    public static from(i: Base, user: User, fight: Fight, other?: Entity) {
         const isWinner = fight.getWinnerTeam()?.some(x => x.id === user.id) ?? null
         const logs = fight.lastLogs
 
         const embed = BasicEmbed.from(i, user, isWinner === true ? Colors.Green : isWinner === false ? Colors.Red : Colors.Blue)
-            .setThumbnail(Util.getEmojiUrl(mob?.data.emoji) ?? null)
+            .setThumbnail(other instanceof Monster && Util.getEmojiUrl(other?.data.emoji) || null)
             .setDescription(logs.map((x, i) => `## Round ${Util.formatInt(fight.logs.indexOf(x) + 1)}\n${Action.format(x)}`).join("\n"))
+
+        const winners = fight.getWinnerTeam()
+        if (winners !== null) {
+            embed.setTitle(`${winners.map(x => x.displayName).join(", ")} won the fight!`)
+        }
 
         if (isWinner === null) {
             for (let i = 0, len = fight.teams.length; i < len; i++) {

@@ -41,7 +41,9 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                                     Command.zoneMonsterAutocomplete :
                                     arg.type === ArgType.ZoneNode ?
                                         Command.zoneNodeAutocomplete :
-                                        undefined
+                                        arg.type === ArgType.Player ?
+                                            Command.playerAutocomplete :
+                                            undefined
         }
     }
 
@@ -213,6 +215,14 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                 el => el.displayName + el.displayLevel
             ),
             el => el.displayName + el.displayLevel,
+            el => el.id
+        )
+    }
+
+    public static async playerAutocomplete(payload: AutocompletePayload) {
+        return Util.formatChoices(
+            await NekoDatabase.queryPlayers(payload.query),
+            el => el.username,
             el => el.id
         )
     }
