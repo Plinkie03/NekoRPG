@@ -57,7 +57,7 @@ export default new Command({
             }
         }
 
-        await payload.instance.reply({
+        await Util.reply(payload.instance, {
             ephemeral: true,
             embeds: [ embed ]
         })

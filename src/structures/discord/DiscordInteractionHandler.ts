@@ -3,6 +3,7 @@ import { NekoClient } from "../../core/NekoClient.js"
 import NekoDatabase from "../../core/NekoDatabase.js"
 import { ArgData, ArgsToArray, ArgType, GlobalExtrasData, InteractionPayload, Shared } from "./Shared.js"
 import { InteractionError } from "../static/errors/InteractionError.js"
+import { Util } from "../static/Util.js"
 
 export enum DiscordInteractionType {
     Button,
@@ -60,7 +61,7 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
         const handler = client.manager.interactions.get(Number(id))
 
         if (!handler) {
-            await i.reply({
+            await Util.reply(i, {
                 ephemeral: true,
                 content: `Wow, where is this interaction handler?`
             })
@@ -81,7 +82,7 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
             if (args === null) return
             
             if (handler.data.ownerOnly && !rawArgs.includes(i.user.id)) {
-                await i.reply({
+                await Util.reply(i, {
                     ephemeral: true,
                     content: `You can't interact with this, sweetie.`
                 })

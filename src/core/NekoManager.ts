@@ -7,6 +7,7 @@ import { cwd } from "process";
 import { FileScheme } from "../Constants.js";
 import { DiscordEventHandler } from "../structures/discord/DiscordEventHandler.js";
 import { DiscordInteractionHandler } from "../structures/discord/DiscordInteractionHandler.js";
+import { Util } from "../structures/static/Util.js";
 
 export class NekoManager {
     public readonly commands = new Collection<string, Command | Collection<string, Command>>()
@@ -80,7 +81,7 @@ export class NekoManager {
 
     public lock(i: RepliableInteraction<"cached">) {
         if (this.locked.has(i.user.id)) {
-            i.reply({
+            Util.reply(i, {
                 ephemeral: true,
                 content: "Sike! Wait for the previous command to finish executing ❤"
             })

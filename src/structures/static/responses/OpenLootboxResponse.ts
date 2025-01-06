@@ -12,7 +12,7 @@ export class OpenLootboxResponse {
     public static async from(i: ButtonInteraction<'cached'> | ChatInputCommandInteraction<'cached'>, player: Player, uuid: string, times: number) {
         const invItem = player.inventory.getItemByUUID(uuid)
         if (!invItem) {
-            await i.reply({
+            await Util.reply(i, {
                 ephemeral: true,
                 content: `That item doesn't exist :(`
             })

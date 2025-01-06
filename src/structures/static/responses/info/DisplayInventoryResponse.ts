@@ -13,7 +13,7 @@ export class DisplayInventoryResponse {
         const items = extras.player.inventory.page(pg)
 
         if (!items.length) {
-            await input.reply({
+            await Util.reply(input, {
                 ephemeral: true,
                 content: `There are no items in the inventory...`
             })

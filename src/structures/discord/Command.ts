@@ -110,7 +110,7 @@ export class Command<Args extends ArgData[] = ArgData[]> {
         const command = client.manager.getCommand(i)
 
         if (!command) {
-            await i.reply({
+            await Util.reply(i, {
                 ephemeral: true,
                 content: `Command not found... how'd you get this?`
             })

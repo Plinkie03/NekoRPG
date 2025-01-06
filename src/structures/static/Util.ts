@@ -3,6 +3,8 @@ import { Identifiable } from "./Game.js"
 import { Resource } from "../resource/Resource.js"
 import { Stats } from "../entity/EntityBaseStats.js"
 import { Nullable } from "../resource/Item.js"
+import { argv } from "process"
+import { Logger } from "./Logger.js"
 
 export class Util {
     private constructor() { }
@@ -115,6 +117,10 @@ export class Util {
     }
 
     public static reply(interaction: RepliableInteraction<'cached'>, options: InteractionReplyOptions) {
+        if (Util.isDevBuild()) {
+            delete options.ephemeral
+        }
+
         return interaction[(interaction.replied ? "editReply" : interaction.isButton() ? "update" : "reply") as "reply"](options)
     }
 
@@ -154,5 +160,9 @@ export class Util {
 
         const pageNumber = Math.floor(index / perPage)
         return index % perPage !== 0 ? pageNumber + 1 : pageNumber
+    }
+
+    public static isDevBuild() {
+        return argv.at(2)?.endsWith("dev") ?? false
     }
 }

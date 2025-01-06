@@ -12,6 +12,7 @@ import spells from "../../../../interactions/button/profile/spells.js"
 import gear from "../../../../interactions/button/profile/gear.js"
 import open from "../../../../interactions/button/inventory/open.js"
 import { Nullable } from "../../../resource/Item.js"
+import { Util } from "../../Util.js"
 
 export class DisplayInventoryItemResponse {
     private constructor() {}
@@ -19,7 +20,7 @@ export class DisplayInventoryItemResponse {
     public static async from(input: ButtonInteraction<'cached'>, extras: GlobalExtrasData, uuid: string, backId: Nullable<typeof open.bindedId>) {
             const invItem = extras.player.inventory.getItemByUUID(uuid)
             if (!invItem) {
-                await input.reply({
+                await Util.reply(input, {
                     ephemeral: true,
                     content: `That item doesn't exist :(`
                 })
@@ -81,7 +82,7 @@ export class DisplayInventoryItemResponse {
                 )
             }
     
-            await input.update({
+            await Util.reply(input, {
                 embeds: [embed],
                 content: emptyString,
                 components: [actionRow] 

@@ -7,7 +7,8 @@
   "scripts": {
     "test": "tsc && node dist/__tests__/runner",
     "release": "npx commit-and-tag-version",
-    "bot": "tsc && node .",
+    "prod": "tsc && node .",
+    "dev": "tsc && node . --dev",
     "db": "npx prisma format && npx prisma generate && npx prisma db push"
   },
   "keywords": [],

@@ -27,7 +27,6 @@ export default new Command({
         }
     ],
     async execute(payload) {
-        await payload.instance.reply(SlimeField.emoji!)
         return Promise.resolve(true)
     },
 })
