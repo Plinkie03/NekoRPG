@@ -4,8 +4,8 @@ import { Responses } from "../structures/static/Responses.js";
 import { FightMonsterResponse } from "../structures/static/responses/FightMonsterResponse.js";
 
 export default new Command({
-    name: "fight",
-    description: "Fight a monster",
+    name: "hunt",
+    description: "Hunt a monster",
     args: [
         {
             name: "monster",
