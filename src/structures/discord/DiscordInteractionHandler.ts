@@ -61,7 +61,7 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
         const handler = client.manager.interactions.get(Number(id))
 
         if (!handler) {
-            await Util.reply(i, {
+            await i.reply({
                 ephemeral: true,
                 content: `Wow, where is this interaction handler?`
             })
@@ -81,11 +81,12 @@ export class DiscordInteractionHandler<T extends DiscordInteractionType = Discor
 
             if (args === null) return
             
-            if (handler.data.ownerOnly && !rawArgs.includes(i.user.id)) {
-                await Util.reply(i, {
+            if (handler.data.ownerOnly && rawArgs[0] !== i.user.id) {
+                await i.reply({
                     ephemeral: true,
                     content: `You can't interact with this, sweetie.`
                 })
+
                 return
             }
 

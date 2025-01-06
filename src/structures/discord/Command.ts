@@ -114,6 +114,8 @@ export class Command<Args extends ArgData[] = ArgData[]> {
         if (!command) {
             await Util.reply(i, {
                 ephemeral: true,
+                embeds: [],
+                components: [],
                 content: `Command not found... how'd you get this?`
             })
 
