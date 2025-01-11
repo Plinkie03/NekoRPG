@@ -16,6 +16,7 @@ export class Hit extends Action {
     public dodged!: boolean
     public crit!: boolean
     private customMessage?: string
+    private appends = new Array<string>()
     private hideAttacker = false
     private ignoreSpecials = false
     
@@ -85,6 +86,11 @@ export class Hit extends Action {
         return Math.floor(finalDamage)
     }
 
+    public append(str: string) {
+        this.appends.push(str)
+        return this
+    }
+
     protected get message() {
         const output = new Array<string>()
 
@@ -107,8 +113,11 @@ export class Hit extends Action {
                 output.push(` but the hit was blocked, reducing the damage!`)
         }
 
-        output.push(` (-${Util.formatInt(this.damage)})`)
+        if (!this.blocked && !this.dodged)
+            output.push(this.damage ? ` (-${Util.formatInt(this.damage)})` : ` but dealt no damage!`)
 
+        output.push(...this.appends.map(x => ` ${x}`))
+        
         return output.join("")
     }
 

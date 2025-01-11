@@ -17,7 +17,10 @@ export default new ItemPassive({
     execute(payload) {
         const hit = payload.action as Hit
 
-        hit.damage *= StrengthBuff
+        if (hit.entity === payload.entity) {
+            hit.damage *= StrengthBuff
+            hit.append(`[RAGE]`)
+        }
 
         return true
     },

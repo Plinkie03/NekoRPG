@@ -15,7 +15,10 @@ export default new ItemPassive({
     execute(payload) {
         const hit = payload.action as Hit | SpellAttack
 
-        hit.damage *= 3
+        if (hit.entity === payload.entity) {
+            hit.damage *= 3
+            hit.append(`[EXECUTION]`)
+        }
 
         return true
     },
