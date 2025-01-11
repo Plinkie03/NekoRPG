@@ -13,6 +13,7 @@ import { Requirements } from "../static/Requirements.js"
 import { RewardData, RewardItemData, Rewards } from "../static/Rewards.js"
 import { Util } from "../static/Util.js"
 import { Resource, ResourceData } from "./Resource.js"
+import { ItemPassive } from "./ItemPassive.js"
 
 export type Nullable<T> = T | null
 
@@ -82,6 +83,7 @@ export enum GearType {
 export interface GearItemData extends ItemData<ItemType.Gear> {
     stats: Partial<Stats>
     gearType: GearType
+    passives?: ItemPassive[]
     weaponType?: WeaponType
 }
 
@@ -250,6 +252,10 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
 
     public get equippable(): boolean {
         return this.isGear() || this.isSpell()
+    }
+
+    public get passives(): ItemPassive[] {
+        return this.isGear() && this.data.passives || []
     }
 
     public static getStatCount(rarity: RarityType) {

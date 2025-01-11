@@ -1,6 +1,7 @@
 import { Fight } from "../battle/Fight.js";
 import { Info } from "../battle/actions/Info.js";
 import { Effect, EffectData } from "../resource/Effect.js";
+import { ItemPassive, ItemPassiveBasePayload } from "../resource/ItemPassive.js";
 import { Util } from "../static/Util.js";
 import { Entity } from "./Entity.js";
 import { EntityBaseStats, Stats } from "./EntityBaseStats.js";
@@ -23,10 +24,16 @@ export interface SpellCooldown extends TemporaryData {
     id: number
 }
 
+export interface PassiveCooldown extends TemporaryData {
+    id: number
+}
+
 export class EntityModdedStats extends EntityBaseStats {
     public readonly fortifications = new Array<StatFortification>()
     public readonly ailments = new Array<Ailment>()
     public readonly spellCooldowns = new Array<SpellCooldown>()
+    public readonly passiveCooldowns = new Array<PassiveCooldown>()
+
     public stunDuration = 0
 
     private getStatFortificationMultiplier(name: keyof Stats) {
@@ -100,6 +107,17 @@ export class EntityModdedStats extends EntityBaseStats {
         return !this.spellCooldowns.some(x => x.id === spell.item.id) && (!spell.item.data.chance || Util.isChance(spell.item.data.chance))
     }
 
+    public canTriggerPassive(payload: ItemPassiveBasePayload) {
+        return !this.passiveCooldowns.some(x => x.id === payload.passive.id) && payload.passive.data.criteria(payload)
+    }
+
+    public addPassiveItemCooldown(passive: ItemPassive) {
+        this.passiveCooldowns.push({
+            duration: passive.data.cooldown,
+            id: passive.id
+        })
+    }
+
     public addSpellCooldown(spell: EntitySpell) {
         if (!spell.item.data.cooldown) return
         this.spellCooldowns.push({
@@ -135,7 +153,8 @@ export class EntityModdedStats extends EntityBaseStats {
     public async step(fight: Fight) {
         await this.stepOne(this.fortifications)
         await this.stepOne(this.spellCooldowns)
-        
+        await this.stepOne(this.passiveCooldowns)
+
         await this.stepOne(
             this.ailments,
             async eff => {
@@ -146,7 +165,7 @@ export class EntityModdedStats extends EntityBaseStats {
                 })
             }
         )
-        
+
         if (this.isStunned())
             this.stunDuration--
     }
@@ -154,6 +173,7 @@ export class EntityModdedStats extends EntityBaseStats {
     public reset() {
         this.fortifications.length = 0
         this.spellCooldowns.length = 0
+        this.passiveCooldowns.length = 0
         this.ailments.length = 0
         this.stunDuration = 0
     }

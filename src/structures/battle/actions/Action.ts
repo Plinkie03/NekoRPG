@@ -34,7 +34,7 @@ export abstract class Action {
         await this.execute()
         
         for (const action of this.actions) {
-            await action.execute()
+            await action.run()
         }
     }
 }
