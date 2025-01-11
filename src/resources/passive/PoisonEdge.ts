@@ -11,9 +11,9 @@ export default new ItemPassive({
     id: 4,
     name: "Poison Edge",
     chance: 25,
-    gearTypes: [ GearType.Weapon ],
-    info: payload => `${payload.data.chance}% chance to inflict poison to the target for ${Duration} turns`,
     types: [ Hit ],
+    gearTypes: ItemPassive.OnlyWeapons,
+    info: payload => `${payload.data.chance}% chance to inflict poison to the target for ${Duration} turns`,
     criteria: payload => true,
     execute(payload) {
         const hit = payload.action as Hit

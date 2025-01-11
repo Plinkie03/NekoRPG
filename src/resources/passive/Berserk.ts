@@ -9,8 +9,8 @@ const MaxMultiplier = 0.3
 export default new ItemPassive({
     id: 1,
     name: "Berserk",
-    types: [ Hit, SpellAttack ],
-    gearTypes: [ GearType.Weapon ],
+    types: ItemPassive.AttackActions,
+    gearTypes: ItemPassive.OnlyWeapons,
     info: payload => `For every percent of health lost, Damage Taken -1%, Strength +1% (Caps at ${Util.formatFloat(MaxMultiplier * 1e2)})`,
     criteria: payload => true,
     execute(payload) {

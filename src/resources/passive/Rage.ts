@@ -10,9 +10,9 @@ const StrengthBuff = 2
 export default new ItemPassive({
     id: 2,
     name: "Rage",
-    gearTypes: [ GearType.Weapon ],
+    types: ItemPassive.AttackActions,
+    gearTypes: ItemPassive.OnlyWeapons,
     info: payload => `When HP falls below ${MinHpPercent * 1e2}%, Strength ${StrengthBuff}x`,
-    types: [ Hit, SpellAttack ],
     criteria: payload => payload.entity.hp / payload.entity.moddedStats.maxHealth <= MinHpPercent,
     execute(payload) {
         const hit = payload.action as Hit | SpellAttack

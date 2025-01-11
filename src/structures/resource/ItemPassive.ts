@@ -3,6 +3,9 @@ import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
 import { Action } from "../battle/actions/Action.js";
 import { Entity } from "../entity/Entity.js";
 import { GearType } from "./Item.js";
+import { Hit } from "../battle/actions/Hit.js";
+import { SpellAttack } from "../battle/actions/SpellAttack.js";
+import { Enum } from "../static/Enum.js";
 
 export interface ItemPassiveBasePayload {
     passive: ItemPassive
@@ -24,6 +27,10 @@ export interface ItemPassiveData extends ResourceData {
 }
 
 export class ItemPassive extends Resource<ItemPassiveData> {
+    public static readonly AttackActions = [ Hit, SpellAttack ]
+    public static readonly NonWeapons = Enum.values(GearType).filter(x => x !== GearType.Weapon)
+    public static readonly OnlyWeapons = [ GearType.Weapon ]
+
     public info() {
         return this.data.info(this)
     }

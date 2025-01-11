@@ -7,8 +7,8 @@ import { Util } from "../../structures/static/Util.js";
 export default new ItemPassive({
     id: 3,
     name: "Execution",
-    gearTypes: [ GearType.Weapon ],
-    types: [ Hit, SpellAttack ],
+    types: ItemPassive.AttackActions,
+    gearTypes: ItemPassive.OnlyWeapons,
     chance: 20,
     info: payload => `${payload.data.chance}% chance to execute the target [Execution: deal 3x damage]`,
     criteria: payload => true,
