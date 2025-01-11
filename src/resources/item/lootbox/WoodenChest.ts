@@ -1,5 +1,5 @@
 import { Item, ItemType } from "../../../structures/resource/Item.js";
-import IronSword from "../gear/weapon/sword/IronSword.js";
+import IronSword from "../gear/iron/IronSword.js";
 import BirchLog from "../material/log/BirchLog.js";
 import ArrowRain from "../spell/ArrowRain.js";
 

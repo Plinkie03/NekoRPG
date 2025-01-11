@@ -121,7 +121,7 @@ export class Util {
             delete options.ephemeral
         }
 
-        return interaction[(interaction.replied ? "editReply" : interaction.isButton() ? "update" : "reply") as "reply"](options)
+        return interaction[(interaction.replied ? "editReply" : interaction.isModalSubmit() && interaction.isFromMessage() ? "update" : interaction.isButton() ? "update" : "reply") as "reply"](options)
     }
 
     public static createActionRows<T, O extends AnyComponentBuilder>(using: T[], builder: (el: T) => O): ActionRowBuilder<O>[] {

@@ -1,5 +1,5 @@
 import { Monster } from "../../structures/monster/Monster.js";
-import IronSword from "../item/gear/weapon/sword/IronSword.js";
+import IronSword from "../item/gear/iron/IronSword.js";
 import SlimeArmy from "../item/spell/SlimeArmy.js";
 
 export default new Monster({

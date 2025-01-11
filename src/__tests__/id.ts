@@ -1,3 +1,3 @@
-import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
+import IronSword from "../resources/item/gear/iron/IronSword.js";
 
 console.log(IronSword.id)

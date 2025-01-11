@@ -1,5 +1,5 @@
 import { Monster } from "../../structures/monster/Monster.js";
-import IronSword from "../item/gear/weapon/sword/IronSword.js";
+import IronSword from "../item/gear/iron/IronSword.js";
 
 export default new Monster({
     id: 1,
@@ -14,9 +14,6 @@ export default new Monster({
     rewards: {
         xp: 50,
         money: 5,
-        gems: 1,
-        items: [
-            IronSword
-        ]
+        gems: 1
     }
 })

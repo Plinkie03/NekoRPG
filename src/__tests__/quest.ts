@@ -1,5 +1,5 @@
 import NekoDatabase from "../core/NekoDatabase.js";
-import IronSword from "../resources/item/gear/weapon/sword/IronSword.js";
+import IronSword from "../resources/item/gear/iron/IronSword.js";
 import BirchLog from "../resources/item/material/log/BirchLog.js";
 import SlimeBall from "../resources/item/material/other/SlimeBall.js";
 import SlimeQuest from "../resources/quest/SlimeQuest.js";
