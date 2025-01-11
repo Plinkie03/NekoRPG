@@ -2,6 +2,7 @@ import { Entity, IEntity } from "../entity/Entity.js";
 import { EntityBaseStats, Stats } from "../entity/EntityBaseStats.js";
 import { EntitySpell } from "../entity/EntitySpell.js";
 import { Player } from "../player/Player.js";
+import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
 import { SpellItem } from "../resource/Item.js";
 import { ResourceData } from "../resource/Resource.js";
 import { RewardData, RewardOptions, Rewards } from "../static/Rewards.js";
@@ -21,6 +22,10 @@ export class Monster extends Entity<MonsterData> {
 
     public getSpells(): EntitySpell[] {
         return this.data.spells?.map(x => new EntitySpell(this, x.id, 1)) ?? []
+    }
+
+    public getEquipment(): PlayerInventoryItem[] {
+        return []
     }
 
     public get displayName(): string {

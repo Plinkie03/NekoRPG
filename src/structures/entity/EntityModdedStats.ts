@@ -6,20 +6,21 @@ import { Entity } from "./Entity.js";
 import { EntityBaseStats, Stats } from "./EntityBaseStats.js";
 import { EntitySpell } from "./EntitySpell.js";
 
-export interface StatFortification {
-    name: keyof Stats
+export interface TemporaryData {
     duration: number
+}
+
+export interface StatFortification extends TemporaryData {
+    name: keyof Stats
     multiplier: number
 }
 
-export interface Ailment {
-    duration: number
+export interface Ailment extends TemporaryData {
     effect: Effect
 }
 
-export interface SpellCooldown {
+export interface SpellCooldown extends TemporaryData {
     id: number
-    duration: number
 }
 
 export class EntityModdedStats extends EntityBaseStats {
@@ -116,38 +117,36 @@ export class EntityModdedStats extends EntityBaseStats {
         return new Info(this.entity, `${this.entity.displayName} has been inflicted ${effect.simpleName} for ${Util.plural("round", duration)}!`)
     }
 
+    private async stepOne<T extends TemporaryData>(
+        arr: Array<T>,
+        cycle?: (el: T) => Promise<void>
+    ) {
+        for (let i = 0, len = arr.length;i < len;i++) {
+            const el = arr[i]
+            await cycle?.(el)
+
+            if (--el.duration === 0) {
+                arr.splice(i, 1)
+                i--
+            }
+        }
+    }
+
     public async step(fight: Fight) {
-        for (let i = 0;i < this.fortifications.length;i++) {
-            const fort = this.fortifications[i]
-            if (--fort.duration === 0) {
-                this.fortifications.splice(i, 1)
-                i--
+        await this.stepOne(this.fortifications)
+        await this.stepOne(this.spellCooldowns)
+        
+        await this.stepOne(
+            this.ailments,
+            async eff => {
+                await eff.effect.tick({
+                    entity: this.entity,
+                    fight,
+                    effect: eff.effect
+                })
             }
-        }
-
-        for (let i = 0;i < this.spellCooldowns.length;i++) {
-            const cd = this.spellCooldowns[i]
-            if (--cd.duration === 0) {
-                this.spellCooldowns.splice(i, 1)
-                i--
-            }
-        }
-
-        for (let i = 0;i < this.ailments.length;i++) {
-            const eff = this.ailments[i]
-            
-            await eff.effect.tick({
-                entity: this.entity,
-                fight,
-                effect: eff.effect
-            })
-
-            if (--eff.duration === 0) {
-                this.ailments.splice(i, 1)
-                i--
-            }
-        }
-
+        )
+        
         if (this.isStunned())
             this.stunDuration--
     }

@@ -14,6 +14,7 @@ import { Item } from "../resource/Item.js";
 import { PlayerTasks } from "./PlayerTasks.js";
 import { Game } from "../static/Game.js";
 import { PlayerQuests } from "./PlayerQuests.js";
+import { PlayerInventoryItem } from "./PlayerInventoryItem.js";
 
 export class Player extends Entity<PlayerData, PlayerBaseStats> {
     public static DefaultXpReq = 100
@@ -31,6 +32,10 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
         return Game.getZone(this.data.zoneId!)
     }
 
+    public getEquipment(): PlayerInventoryItem[] {
+        return this.gear.toArray()
+    }
+    
     public getSpells(): EntitySpell[] {
         return this.spells.equipped.map(x => EntitySpell.from(x))
     }

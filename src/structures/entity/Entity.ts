@@ -2,6 +2,7 @@ import { TypedEmitter } from "tiny-typed-emitter"
 import { EntityBaseStats } from "./EntityBaseStats.js"
 import { EntityModdedStats } from "./EntityModdedStats.js"
 import { EntitySpell } from "./EntitySpell.js"
+import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js"
 
 export interface IEntity<Id> {
     id: Id
@@ -74,4 +75,5 @@ export abstract class Entity<Data extends IEntity<any> = IEntity<any>, Stats ext
     public abstract getSpells(): EntitySpell[]
     public abstract get displayName(): string
     public abstract clone(): Entity
+    public abstract getEquipment(): PlayerInventoryItem[]
 }
