@@ -29,7 +29,7 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
     public readonly gear = new PlayerGear(this)
 
     public get zone() {
-        return Game.getZone(this.data.zoneId!)
+        return Game.Zones.get(this.data.zoneId!)
     }
 
     public getEquipment(): PlayerInventoryItem[] {

@@ -41,7 +41,7 @@ export class MonsterEmbed {
         }
 
         const foundIn = Game.Zones.filter(x => x.monsters?.some(x => x.id === monster.id))
-        if (foundIn.size) {
+        if (foundIn.length) {
             fields.push({
                 name: `Found At`,
                 value: foundIn.map(x => Util.addPoint(x.simpleName)).join("\n")

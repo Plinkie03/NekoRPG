@@ -37,7 +37,7 @@ export class PlayerTasks {
 
         return {
             elapsed: Date.now() - startedAt!.getTime(),
-            node: Game.getNode(nodeId),
+            node: Game.Nodes.get(nodeId),
             startedAt: startedAt!.getTime()
         }
     }

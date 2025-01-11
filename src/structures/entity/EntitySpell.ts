@@ -12,7 +12,7 @@ export class EntitySpell {
     ) {}
 
     public get item() {
-        return Game.getItem<ItemType.Spell>(this.spellId)
+        return Game.Items.get(this.spellId) as SpellItem
     }
 
     public canCast() {

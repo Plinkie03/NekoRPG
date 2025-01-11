@@ -29,7 +29,7 @@ export class PlayerQuests {
         return {
             started: raw.started,
             amount: raw.count,
-            quest: Game.getQuest(raw.questId),
+            quest: Game.Quests.get(raw.questId),
             uuid: raw.uuid
         }
     }

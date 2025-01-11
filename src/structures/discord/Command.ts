@@ -189,7 +189,7 @@ export class Command<Args extends ArgData[] = ArgData[]> {
 
     public static async itemAutocomplete(payload: AutocompletePayload) {
         return Util.formatResourceChoices(Util.searchMany(
-            Game.RawItems,
+            Game.Items,
             payload.query,
             el => el.id,
             el => el.name
@@ -198,7 +198,7 @@ export class Command<Args extends ArgData[] = ArgData[]> {
 
     public static async nodeAutocomplete(payload: AutocompletePayload) {
         return Util.formatResourceChoices(Util.searchMany(
-            Game.RawNodes,
+            Game.Nodes,
             payload.query,
             el => el.id,
             el => el.name
@@ -208,7 +208,7 @@ export class Command<Args extends ArgData[] = ArgData[]> {
     public static async monsterAutocomplete(payload: AutocompletePayload) {
         return Util.formatChoices(
             Util.searchMany(
-                Game.RawMonsters,
+                Game.Monsters,
                 payload.query,
                 el => el.id,
                 el => el.displayName + el.displayLevel

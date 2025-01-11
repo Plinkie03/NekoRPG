@@ -70,7 +70,7 @@ export class PlayerInventory {
     }
 
     public async addItem(param: Parameters<PlayerInventory["createRawItem"]>[0], stack = true): Promise<PlayerInventoryItem> {
-        const item = Game.getItem(param.itemId)
+        const item = Game.Items.get(param.itemId)
 
         if (item.isStackable() && stack) {
             const current = this.getItemById(param.itemId)
@@ -86,7 +86,7 @@ export class PlayerInventory {
 
     private createRawItem(data: Omit<Prisma.RawItemUncheckedCreateInput, "stats" | "amount" | "rarity" | "locked" | "playerId" | "multiplier" | "uuid"> & { amount?: number, rarity?: number }, rarityMultiplier: number = 1) {
         const rarity = data.rarity ? Rarity.get(data.rarity) : Rarity.getRandom(rarityMultiplier)
-        const item = Game.getItem(data.itemId)
+        const item = Game.Items.get(data.itemId)
 
         return {
             rarity: rarity.type,

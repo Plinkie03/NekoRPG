@@ -70,11 +70,11 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public get passives() {
-        return this.data.passives.map(x => Game.getPassive(x.passiveId))
+        return this.data.passives.map(x => Game.Passives.get(x.passiveId))
     }
     
     public get item() {
-        return Game.getItem<T>(this.data.itemId)
+        return Game.Items.get(this.data.itemId) as Item<T>
     }
 
     public get uuid() {

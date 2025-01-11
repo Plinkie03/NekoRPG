@@ -286,7 +286,7 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
 
         const slots = Math.floor(Math.max(1, rarity / 2.25))
         
-        const possibilities = Game.RawPassives.filter(x => x.canHave(this.gearType!))
+        const possibilities = Game.Passives.filter(x => x.canHave(this.gearType!))
 
         while (possibilities.length !== 0 && slots !== passives.length) {
             const rndIndex = Math.floor(Math.random() * possibilities.length)

@@ -131,7 +131,7 @@ export class Shared {
             id = options.resolver.getInteger(options.arg.name, options.arg.required)
         }
 
-        return id ? Game.getItem(id) : id
+        return id ? Game.Items.get(id) : id
     }
 
     private static async [ArgType.Monster](options: ArgResolveOptions) {
@@ -143,7 +143,7 @@ export class Shared {
             id = options.resolver.getInteger(options.arg.name, options.arg.required)
         }
 
-        return id ? Game.getMonster(id) : id
+        return id ? Game.Monsters.get(id) : id
     }
 
     private static async [ArgType.ZoneMonster](options: ArgResolveOptions) {
@@ -179,7 +179,7 @@ export class Shared {
             id = options.resolver.getInteger(options.arg.name, options.arg.required)
         }
 
-        return id ? Game.getNode(id) : id
+        return id ? Game.Nodes.get(id) : id
     }
 
     private static async [ArgType.User](options: ArgResolveOptions) {
