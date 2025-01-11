@@ -113,10 +113,7 @@ export class Hit extends Action {
                 output.push(` but the hit was blocked, reducing the damage!`)
         }
 
-        if (!this.blocked && !this.dodged)
-            output.push(this.damage ? ` (-${Util.formatInt(this.damage)})` : ` but dealt no damage!`)
-
-        output.push(...this.appends.map(x => ` ${x}`))
+        output.push(` (-${Util.formatInt(this.damage)})`, ...this.appends.map(x => ` ${x}`))
         
         return output.join("")
     }

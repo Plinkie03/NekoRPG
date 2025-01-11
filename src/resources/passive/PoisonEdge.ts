@@ -18,8 +18,10 @@ export default new ItemPassive({
     execute(payload) {
         const hit = payload.action as Hit
 
-        if (hit.entity === payload.entity)
+        if (hit.entity === payload.entity) {
             hit.add(hit.defender.moddedStats.inflict(Poison, Duration))
+            hit.append(`[POISON]`)
+        }
 
         return true
     },
