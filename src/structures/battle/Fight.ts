@@ -86,11 +86,13 @@ export class Fight {
         return this.getCurrentTeam()
     }
 
+    private prepareOne(entity: Entity) {
+        entity.reset()
+        entity.on("dead", this.onEntityDead.bind(this))
+    }
+
     private prepare() {
-        for (const entity of this.getEntities()) {
-            entity.reset()
-            entity.on("dead", this.onEntityDead.bind(this))
-        }
+        this.getEntities().forEach(this.prepareOne.bind(this))
     }
 
     private async finish() {
@@ -180,6 +182,14 @@ export class Fight {
         } while (!this.ended)
 
         await this.finish()
+    }
+
+    public addSummon(from: Entity, summon: Monster) {
+        summon = summon.clone()
+        summon.isSummon = true
+        
+        this.prepareOne(summon)
+        this.getAllyTeam(from).push(summon)
     }
 
     private newActionLog() {

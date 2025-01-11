@@ -15,9 +15,8 @@ export default new ItemPassive({
     info: payload => `When HP falls below ${MinHpPercent * 1e2}%, Strength ${StrengthBuff}x`,
     criteria: payload => payload.entity.hp / payload.entity.moddedStats.maxHealth <= MinHpPercent,
     execute(payload) {
-        const hit = payload.action as Hit | SpellAttack
+        const hit = payload.action as Hit
 
-        console.log(`RAGE`)
         hit.damage *= StrengthBuff
 
         return true

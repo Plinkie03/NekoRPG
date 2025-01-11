@@ -29,7 +29,7 @@ export class FightEmbed {
                 embed.addFields({
                     inline: false,
                     name: `Team ${i + 1}`,
-                    value: team.map(
+                    value: team.filter(x => !(x instanceof Monster) || !x.isSummon || !x.isDead()).map(
                         x => `- ${x.displayName}${x.moddedStats.ailments.length ? ` ${x.moddedStats.ailments.map(x => x.effect.emoji).filter(Boolean).join(" ")}` : ""}: ${x.isDead() ? "☠️" : `${Util.formatInt(x.hp)} / ${Util.formatInt(x.moddedStats.maxHealth)} (${Util.formatFloat(x.hp / x.moddedStats.maxHealth * 100)}%)`}`
                     ).join("\n")
                 })

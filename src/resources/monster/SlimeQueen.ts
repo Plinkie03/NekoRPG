@@ -1,5 +1,6 @@
 import { Monster } from "../../structures/monster/Monster.js";
 import IronSword from "../item/gear/weapon/sword/IronSword.js";
+import SlimeArmy from "../item/spell/SlimeArmy.js";
 
 export default new Monster({
     id: 2,
@@ -10,6 +11,9 @@ export default new Monster({
         maxHealth: 1_000,
         strength: 5
     },
+    spells: [
+        SlimeArmy
+    ],
     description: "A weird sticky mass",
     rewards: {
         xp: 500,

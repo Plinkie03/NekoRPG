@@ -19,6 +19,7 @@ export interface MonsterData extends IEntity<number>, ResourceData {
 
 export class Monster extends Entity<MonsterData> {
     public readonly baseStats: MonsterBaseStats = new MonsterBaseStats(this)
+    public isSummon = false
 
     public getSpells(): EntitySpell[] {
         return this.data.spells?.map(x => new EntitySpell(this, x.id, 1)) ?? []
@@ -37,6 +38,8 @@ export class Monster extends Entity<MonsterData> {
     }
 
     public loot(options: Omit<RewardOptions, "rewards">) {
+        if (this.isSummon) return new Array<string>()
+
         return Rewards.give({
             rewards: this.data.rewards,
             ...options
