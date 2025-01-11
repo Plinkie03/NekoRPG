@@ -15,6 +15,7 @@ import { Util } from "../static/Util.js"
 import { Resource, ResourceData } from "./Resource.js"
 import { ItemPassive } from "./ItemPassive.js"
 import { SpellCast } from "../battle/actions/SpellCast.js"
+import { Game } from "../static/Game.js"
 
 export type Nullable<T> = T | null
 
@@ -84,7 +85,6 @@ export enum GearType {
 export interface GearItemData extends ItemData<ItemType.Gear> {
     stats: Partial<Stats>
     gearType: GearType
-    passives?: ItemPassive[]
     weaponType?: WeaponType
 }
 
@@ -255,17 +255,15 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         return this.isGear() || this.isSpell()
     }
 
-    public get passives(): ItemPassive[] {
-        return this.isGear() && this.data.passives || []
-    }
-
     public static getStatCount(rarity: RarityType) {
         return rarity
     }
 
-    public static getRandomStats(rarity: RarityType) {
+    public getRandomStats(rarity: RarityType) {
         const arr = new Array<Omit<Prisma.RawItemStatUncheckedCreateInput, "itemUUID">>()
 
+        if (!this.equippable) return arr
+        
         const mult = Math.sqrt(rarity)
 
         for (let i = 0, len = Item.getStatCount(rarity); i < len; i++) {
@@ -279,6 +277,27 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         }
 
         return arr
+    }
+
+    public getRandomPassives(rarity: RarityType) {
+        const passives = new Array<Omit<Prisma.RawItemPassiveUncheckedCreateInput, "itemUUID">>()
+
+        if (rarity <= RarityType.Epic || !this.isGear()) return passives
+
+        const slots = Math.floor(Math.max(1, rarity / 2.25))
+        
+        const possibilities = Game.RawPassives.filter(x => x.canHave(this.gearType!))
+
+        while (possibilities.length !== 0 && slots !== passives.length) {
+            const rndIndex = Math.floor(Math.random() * possibilities.length)
+            const passive = possibilities.splice(rndIndex, 1)[0]
+            
+            passives.push({
+                passiveId: passive.id
+            })
+        }
+        
+        return passives
     }
 
     public static isPercentualStat(statName: keyof Stats) {

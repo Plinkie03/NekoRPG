@@ -44,7 +44,7 @@ export abstract class Action {
 
         for (const entity of this.entities) {
             for (const gear of entity.getEquipment()) {
-                for (const passive of gear.item.passives) {
+                for (const passive of gear.passives) {
                     const payload: ItemPassiveExecutePayload = { passive, action: this, entity }
 
                     if (entity.moddedStats.canTriggerPassive(payload) && passive.data.execute(payload)) {

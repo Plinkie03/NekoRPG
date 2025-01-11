@@ -91,9 +91,12 @@ export class PlayerInventory {
         return {
             rarity: rarity.type,
             equipped: data.equipped,
-            stats: item.isGear() ? {
-                create: Item.getRandomStats(rarity.type)
-            } : undefined,
+            stats: {
+                create: item.getRandomStats(rarity.type)
+            },
+            passives: {
+                create: item.getRandomPassives(rarity.type)
+            },
             multiplier: item.isEquippable() ? Formulas.random(rarity.multiplier[0], rarity.multiplier[1]) : 1,
             amount: data.amount ?? 1,
             itemId: data.itemId,

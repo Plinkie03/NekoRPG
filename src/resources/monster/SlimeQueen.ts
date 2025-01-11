@@ -2,21 +2,18 @@ import { Monster } from "../../structures/monster/Monster.js";
 import IronSword from "../item/gear/weapon/sword/IronSword.js";
 
 export default new Monster({
-    id: 1,
-    level: 1,
-    name: "Slime",
-    emoji: "<:slime:1324071700102512843>",
+    id: 2,
+    level: 5,
+    name: "Slime Queen",
+    emoji: "<:slimequeen:1327671088317993103>",
     stats: {
-        maxHealth: 50,
+        maxHealth: 1_000,
         strength: 5
     },
     description: "A weird sticky mass",
     rewards: {
-        xp: 50,
-        money: 5,
-        gems: 1,
-        items: [
-            IronSword
-        ]
+        xp: 500,
+        money: 50,
+        gems: 10
     }
 })

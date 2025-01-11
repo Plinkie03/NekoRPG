@@ -1,5 +1,6 @@
 import { Hit } from "../../structures/battle/actions/Hit.js";
 import { SpellAttack } from "../../structures/battle/actions/SpellAttack.js";
+import { GearType } from "../../structures/resource/Item.js";
 import { ItemPassive } from "../../structures/resource/ItemPassive.js";
 import { Util } from "../../structures/static/Util.js";
 
@@ -9,6 +10,7 @@ const StrengthBuff = 2
 export default new ItemPassive({
     id: 2,
     name: "Rage",
+    gearTypes: [ GearType.Weapon ],
     info: payload => `When HP falls below ${MinHpPercent * 1e2}%, Strength ${StrengthBuff}x`,
     types: [ Hit, SpellAttack ],
     criteria: payload => payload.entity.hp / payload.entity.moddedStats.maxHealth <= MinHpPercent,

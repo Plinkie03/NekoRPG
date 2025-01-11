@@ -69,17 +69,27 @@ model RawPlayerTasks {
 }
 
 model RawItem {
-  uuid       String        @id @unique @default(uuid())
+  uuid       String           @id @unique @default(uuid())
   playerId   String
   itemId     Int
   amount     Int
-  locked     Boolean       @default(false)
-  equipped   Boolean       @default(false)
+  locked     Boolean          @default(false)
+  equipped   Boolean          @default(false)
   rarity     Int
   multiplier Float
   stats      RawItemStat[]
+  passives   RawItemPassive[]
 
   player RawPlayer @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model RawItemPassive {
+  itemUUID  String
+  passiveId Int
+
+  item RawItem @relation(fields: [itemUUID], references: [uuid], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([itemUUID, passiveId])
 }
 
 model RawPlayerQuest {

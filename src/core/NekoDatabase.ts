@@ -7,7 +7,8 @@ import cloneDeep from "clone-deep"
 const PlayerIncludes = {
     items: {
         include: {
-            stats: true
+            stats: true,
+            passives: true
         }
     },
     tasks: true,
@@ -83,6 +84,7 @@ class NekoDB extends PrismaClient {
         return this.rawItem.create({
             data,
             include: {
+                passives: true,
                 stats: true
             }
         })

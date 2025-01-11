@@ -64,10 +64,10 @@ export class ItemEmbed {
             })
         }
 
-        if (item.passives.length !== 0) {
+        if (itm instanceof PlayerInventoryItem && itm.passives.length !== 0) {
             fields.push({
-                name: Util.plural("Passive", item.passives.length, undefined, true),
-                value: item.passives.map(x => `**${x.simpleName}**: ${x.info()}`).join("\n")
+                name: Util.plural("Passive", itm.passives.length, undefined, true),
+                value: itm.passives.map(x => `**${x.simpleName}**: ${x.info()}`).join("\n")
             })
         }
 

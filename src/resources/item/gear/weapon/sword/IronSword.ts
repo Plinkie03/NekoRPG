@@ -17,12 +17,6 @@ export default new Item({
     stats: {
         strength: 10
     },
-    passives: [
-        Berserk,
-        Rage,
-        PoisonEdge,
-        Execution
-    ],
     craft: {
         requirements: {
             items: [

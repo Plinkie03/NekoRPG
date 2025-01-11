@@ -68,6 +68,10 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     public get spell() {
         return this.item.isSpell() ? EntitySpell.from(this) : null
     }
+
+    public get passives() {
+        return this.data.passives.map(x => Game.getPassive(x.passiveId))
+    }
     
     public get item() {
         return Game.getItem<T>(this.data.itemId)
@@ -152,7 +156,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         const value = (this.item.isGear() ? this.item.getStat(stat) : 0) * this.multiplier
         const statBoost = this.getStatBoost(stat)
 
-        return Item.isPercentualStat(stat) ? value + statBoost : value * (statBoost || 1)
+        return Item.isPercentualStat(stat) ? value + statBoost : value * (1 + statBoost / 1e2 || 1)
     }
 
     public getStats(): Stats {

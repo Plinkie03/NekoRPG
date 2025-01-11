@@ -1,5 +1,6 @@
 import { Hit } from "../../structures/battle/actions/Hit.js";
 import { SpellAttack } from "../../structures/battle/actions/SpellAttack.js";
+import { GearType } from "../../structures/resource/Item.js";
 import { ItemPassive } from "../../structures/resource/ItemPassive.js";
 import { Util } from "../../structures/static/Util.js";
 
@@ -9,6 +10,7 @@ export default new ItemPassive({
     id: 1,
     name: "Berserk",
     types: [ Hit, SpellAttack ],
+    gearTypes: [ GearType.Weapon ],
     info: payload => `For every percent of health lost, Damage Taken -1%, Strength +1% (Caps at ${Util.formatFloat(MaxMultiplier * 1e2)})`,
     criteria: payload => true,
     execute(payload) {

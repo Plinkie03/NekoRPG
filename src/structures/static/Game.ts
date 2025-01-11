@@ -10,15 +10,19 @@ import { Resource } from "../resource/Resource.js";
 import { Util } from "./Util.js";
 import { Quest } from "../resource/Quest.js";
 import { Monster } from "../monster/Monster.js";
+import { ItemPassive } from "../resource/ItemPassive.js";
 
 export type Identifiable<T = unknown> = T & { id: number }
 
 export class Game {
     public static readonly RawItems = new Array<Item>()
     public static readonly Items = new Collection<number, Item>()
-    
+
     public static readonly RawMonsters = new Array<Monster>()
     public static readonly Monsters = new Collection<number, Monster>()
+
+    public static readonly RawPassives = new Array<ItemPassive>()
+    public static readonly Passives = new Collection<number, ItemPassive>()
 
     public static readonly RawNodes = new Array<Node>()
     public static readonly Nodes = new Collection<number, Node>()
@@ -39,6 +43,7 @@ export class Game {
     private static readonly EffectPath = join(this.ResourcePath, "effect")
     private static readonly QuestPath = join(this.ResourcePath, "quest")
     private static readonly MonsterPath = join(this.ResourcePath, "monster")
+    private static readonly PassivePath = join(this.ResourcePath, "passive")
 
     private constructor() {}
 
@@ -49,6 +54,7 @@ export class Game {
         await Game.load(Game.ZonePath, Game.RawZones, Game.Zones)
         await Game.load(Game.MonsterPath, Game.RawMonsters, Game.Monsters)
         await Game.load(Game.QuestPath, Game.RawQuests, Game.Quests)
+        await Game.load(Game.PassivePath, Game.RawPassives, Game.Passives)
     }
 
     private static async load<T extends Identifiable>(path: string, rawRef: Array<T>, ref: Collection<number, T>) {
@@ -98,6 +104,12 @@ export class Game {
         const quest = Game.Quests.get(id)
         if (!quest) Logger.halt(`Quest with id ${id} does not exist!`)
         return quest
+    }
+
+    public static getPassive(id: number) {
+        const passive = Game.Passives.get(id)
+        if (!passive) Logger.halt(`Passive with id ${id} does not exist!`)
+        return passive
     }
 
     public static getMonster(id: number) {
