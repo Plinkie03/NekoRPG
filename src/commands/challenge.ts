@@ -11,6 +11,7 @@ import accept from "../interactions/button/fight/accept.js";
 export default new Command({
     name: "challenge",
     description: "Challenge a player",
+    disabled: true,
     args: [
         {
             name: "player",
@@ -20,13 +21,6 @@ export default new Command({
         }
     ],
     async execute(payload) {
-        await Util.reply(payload.instance, {
-            content: "Unavailable",
-            ephemeral: true
-        })
-
-        return false
-        
         if (payload.args[0].id === payload.extras.player.id) {
             await Util.reply(payload.instance, {
                 content: `Really, babe?`,

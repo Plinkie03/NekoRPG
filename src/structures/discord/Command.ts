@@ -21,6 +21,7 @@ export interface CommandData<Args extends ArgData[] = ArgData[]> {
     defer?: boolean
     permissions?: PermissionResolvable
     description: string
+    disabled?: boolean
     args?: [...Args]
     execute(this: NekoClient, payload: InteractionPayload<ChatInputCommandInteraction<'cached'>, CommandExtrasData, Args>): Promise<boolean>
 }
@@ -45,10 +46,6 @@ export class Command<Args extends ArgData[] = ArgData[]> {
                                             Command.playerAutocomplete :
                                             undefined
         }
-    }
-
-    public get args(): ArgsToArray<Args> {
-        throw ""
     }
 
     public toJSON(): ApplicationCommandData {

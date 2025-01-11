@@ -65,12 +65,14 @@ export class NekoManager {
         for (const file of readdirSync(resolve("dist", "commands"), { withFileTypes: true })) {
             if (file.isFile()) {
                 const cmd = await import(FileScheme + resolve(file.path, file.name)).then(x => <Command>x.default)
+                if (cmd.data.disabled) continue
                 this.commands.set(cmd.data.name, cmd)
             } else {
                 const commandsCollection = new Collection<string, Command>()
 
                 for (const secondFile of readdirSync(resolve(file.path, file.name), { withFileTypes: true })) {
                     const cmd = await import(FileScheme + resolve(secondFile.path, secondFile.name)).then(x => <Command>x.default)
+                    if (cmd.data.disabled) continue
                     commandsCollection.set(cmd.data.name, cmd)
                 }
 
