@@ -4,6 +4,7 @@ import { ArgType } from "../../structures/discord/Shared.js";
 import { NodeStartCollectResponseType } from "../../structures/resource/node/Node.js";
 import { Util } from "../../structures/static/Util.js";
 import { BasicEmbed } from "../../structures/static/embeds/BasicEmbed.js";
+import { ActionStartResponse } from "../../structures/static/responses/ActionStartResponse.js";
 
 export default new Command({
     name: "start",
@@ -17,40 +18,6 @@ export default new Command({
         }
     ],
     async execute(payload) {
-        const node = payload.args[0]
-        const response = await node.start(payload.extras.player)
-
-        const embed = BasicEmbed.from(payload.instance, payload.instance.user, Colors.Red)
-
-        switch (response.type) {
-            case NodeStartCollectResponseType.Busy: {
-                embed
-                    .setTitle("Busy")
-                    .setDescription(`You're already ${node.type}!`)
-                break
-            }
-
-            case NodeStartCollectResponseType.MissingRequirements: {
-                embed.setTitle("Missing Requirements")
-                    .setDescription(response.errors.map(Util.addPoint).join("\n"))
-                break
-            }
-
-            case NodeStartCollectResponseType.Success: {
-                embed
-                    .setColor(Colors.Green)
-                    .setTitle("Success")
-                    .setThumbnail(node.image)
-                    .setDescription(`You've started ${node.type} at ${node.name}!`)
-                break
-            }
-        }
-
-        await Util.reply(payload.instance, {
-            ephemeral: true,
-            embeds: [ embed ]
-        })
-
-        return response.type === NodeStartCollectResponseType.Success
+        return ActionStartResponse.from(payload.instance, payload.extras.player, payload.args[0])
     },
 })

@@ -47,10 +47,10 @@ export class Rewards {
             const xp = rewards.xp * times
             const result = player?.addXp(xp)
             
-            push(`${xp} XP`, false)
+            push(`${Util.formatInt(xp)} XP`, false)
 
             if (result === true)
-                push(`${player!.displayName} is now level ${player!.level}!`, true)
+                push(`${player!.displayName} is now level ${Util.formatInt(player!.level)}!`, true)
 
             if (player) 
                 save = true
@@ -60,7 +60,7 @@ export class Rewards {
             const money = rewards.money * times
             player?.addMoney(money)
 
-            push(`$${money}`, false)
+            push(`$${Util.formatInt(money)}`, false)
 
             if (player)
                 save = true
@@ -70,7 +70,7 @@ export class Rewards {
             const gems = rewards.gems * times
             player?.addGems(gems)
 
-            push(`💎${gems}`, false)
+            push(`💎${Util.formatInt(gems)}`, false)
 
             if (player)
                 save = true
@@ -103,10 +103,10 @@ export class Rewards {
                 const skillXp = Math.floor(rewards.skills[skillName]! * times)
                 const result = player?.skills.addXp(skillName, skillXp)
 
-                push(`${skillXp} ${Util.camelToTitle(skillName)} XP`, false)
+                push(`${Util.formatInt(skillXp)} ${Util.camelToTitle(skillName)} XP`, false)
                 
                 if (result === true)
-                    push(`${player!.displayName}'s ${Util.camelToTitle(skillName)} is now level ${player!.skills.getLevel(skillName)}!`, true)
+                    push(`${player!.displayName}'s ${Util.camelToTitle(skillName)} is now level ${Util.formatInt(player!.skills.getLevel(skillName))}!`, true)
 
                 if (player)
                     save = true
