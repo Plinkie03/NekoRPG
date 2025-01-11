@@ -3,6 +3,7 @@ import { PlayerInventoryItem } from "../../player/PlayerInventoryItem.js"
 import { PlayerTaskData, PlayerTasks, Tasks } from "../../player/PlayerTasks.js"
 import { Requirements } from "../../static/Requirements.js"
 import { RewardData, Rewards } from "../../static/Rewards.js"
+import { Time } from "../../static/Time.js"
 import { Util } from "../../static/Util.js"
 import { Item, Nullable } from "../Item.js"
 import { Resource, ResourceData } from "../Resource.js"
@@ -122,10 +123,10 @@ export abstract class Node extends Resource<NodeData> {
         }
     }
 
-    public static getResourceStats(resource: NodeItemData, time: number): ResourceStatsData {
+    public static getResourceStats(resource: NodeItemData, elapsed: number): ResourceStatsData {
         const amount = resource.amount ?? 1
 
-        const total = Math.floor(time / resource.hardness * amount)
+        const total = Math.floor(Math.min(elapsed, Time.days(1)) / resource.hardness * amount)
 
         let success = 0
 
