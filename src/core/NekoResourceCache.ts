@@ -47,6 +47,6 @@ export class NekoResourceCache<T extends Identifiable> extends Array<T> {
     }
 
     public getValidId() {
-        return this.sort((x, y) => x.id - y.id).at(-1)?.id ?? 1
+        return (this.sort((x, y) => x.id - y.id).at(-1)?.id ?? 0) + 1
     }
 }
