@@ -117,9 +117,8 @@ export class Util {
     }
 
     public static reply(interaction: RepliableInteraction<'cached'>, options: InteractionReplyOptions) {
-        if (Util.isDevBuild()) {
+        if (Util.isDevBuild()) 
             delete options.ephemeral
-        }
 
         return interaction[(interaction.replied ? "editReply" : interaction.isModalSubmit() && interaction.isFromMessage() ? "update" : interaction.isButton() ? "update" : "reply") as "reply"](options)
     }
