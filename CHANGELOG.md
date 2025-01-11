@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.1](https://github.com/Plinkie03/NekoRPG/compare/v1.4.0...v1.4.1) (2025-01-11)
+
+
+### Features
+
+* **Iron:** Add full iron set ([af214c9](https://github.com/Plinkie03/NekoRPG/commit/af214c912f2530a7929e236ed9886460be073d26))
+
+
+### Bug Fixes
+
+* **Action:** Not executing deeper hierarchies ([e05cded](https://github.com/Plinkie03/NekoRPG/commit/e05cdedfdc0b11d33fa2e7424b595e1bd98714f8))
+* **Berserk:** Listen for spell attacks ([a1a20a1](https://github.com/Plinkie03/NekoRPG/commit/a1a20a1e81030210f10f2c60978622611543ade1))
+* **NekoResourceCache#getValidId:** Giving duplicated ids ([c3b6daa](https://github.com/Plinkie03/NekoRPG/commit/c3b6daa7cbc435759511ed88be7a6f9322b06882))
+* **NekoResourceCache:** loading a lot of instances when filtering ([64b80b4](https://github.com/Plinkie03/NekoRPG/commit/64b80b4c1e2665f979e359f6ece0b3bea6b433e4))
+* **Passives:** Certain passives were triggering for non players ([9fe1e96](https://github.com/Plinkie03/NekoRPG/commit/9fe1e96a3f7d77e1856cf01b2863f0f27f373310))
+* **Rarity:** Remove test multiplier ([69e03cd](https://github.com/Plinkie03/NekoRPG/commit/69e03cdcb900d7f4dfb5c44d923ffed98a407f1c))
+* Revert some Util#reply usages ([3a1b918](https://github.com/Plinkie03/NekoRPG/commit/3a1b9186eeab361a9c9ccdd1d032c2eb1141e281))
+* **Util#reply:** Account for modal updates in messages ([e01a079](https://github.com/Plinkie03/NekoRPG/commit/e01a079d640875aa6edb1d0c49f56d8f05114c8a))
+
+
+### Chores
+
+* **ChallengeCommand:** disable ([6935700](https://github.com/Plinkie03/NekoRPG/commit/6935700d120a32dcdfed8fef56eb651556ca6dd4))
+* Change most Player#give calls to Player#giveSimple ([d76364b](https://github.com/Plinkie03/NekoRPG/commit/d76364b218c9ea776d5a316e086b5518767c4ad6))
+* **Command:** Add #disabled property ([4c8ac66](https://github.com/Plinkie03/NekoRPG/commit/4c8ac667bb7545de51a7c351210a2a990910e6dd))
+* **FightCommand:** Rename to hunt ([dddd49f](https://github.com/Plinkie03/NekoRPG/commit/dddd49ff4344d9435f74130db929238a548a11ec))
+* **Fight:** Now supports summons, added summon spell ([4fc6e54](https://github.com/Plinkie03/NekoRPG/commit/4fc6e547ef4e3f95130dbbad570e073f4f703c15))
+* **IronSword:** Recipe modified ([79e2827](https://github.com/Plinkie03/NekoRPG/commit/79e2827b52150a7f3f1e61c5a3fcff1df2c0cf7c))
+* **ItemPassive:** Made constants for certain action types and gear types ([49a51c1](https://github.com/Plinkie03/NekoRPG/commit/49a51c1f385a90d8fa3e36a3b5a93ad1ee2cb877))
+* **Passives:** Add some new passives ([a451a9a](https://github.com/Plinkie03/NekoRPG/commit/a451a9ac06e177891adbd4716d4e289613a91a01))
+* **Passives:** Now append triggers to actions ([9585913](https://github.com/Plinkie03/NekoRPG/commit/9585913a7d225ae8d9692e0c89bdc8e200a3898b))
+* **PlayerInventoryItem:** Now have random passives ([1a4ed29](https://github.com/Plinkie03/NekoRPG/commit/1a4ed29c7d844f9c869b4474b8cbb3ce929a66c9))
+* Restrict action limit to 1 day ([22eef3e](https://github.com/Plinkie03/NekoRPG/commit/22eef3edf9a0f0bf55872287ae54149afaa217e4))
+
+
+### Code Refactoring
+
+* **Actions:** Created SpellCast and SpellAttack for spells ([9f51704](https://github.com/Plinkie03/NekoRPG/commit/9f517042119cf5002a2ec82e91884149970071de))
+* **EntityModdedStats:** Make unique method for steps ([662291b](https://github.com/Plinkie03/NekoRPG/commit/662291b2168075a15183bccd1e22df73d53d5e38))
+* **Game:** Cache in its own class ([902ed06](https://github.com/Plinkie03/NekoRPG/commit/902ed06f4fa994519dab0c09c353d8b90406596e))
+* **Monster#give:** Now Monster#loot ([b767caf](https://github.com/Plinkie03/NekoRPG/commit/b767caf9df4691419ebc40f4ffd618fe4a15d505))
+* Move command responses of actions to the responses folder ([35797e9](https://github.com/Plinkie03/NekoRPG/commit/35797e9941a85f251542394cde92d38a77ba56f9))
+* **Replies:** Migrate to Util#reply ([af36cb4](https://github.com/Plinkie03/NekoRPG/commit/af36cb4433c513f162bb85b538cccf87aa96b6e7))
+* **Rewards:** Can now resolve items in RewardData#items ([769c1cb](https://github.com/Plinkie03/NekoRPG/commit/769c1cb17f51f9d3cf782db942bbf013d75cec17))
+
 ## [1.4.0](https://github.com/Plinkie03/NekoRPG/compare/v1.3.0...v1.4.0) (2025-01-04)
 
 
