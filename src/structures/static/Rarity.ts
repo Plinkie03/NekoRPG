@@ -66,7 +66,6 @@ export class Rarity {
     private constructor() {}
 
     public static getRandom(multiplier: number = 1): IRarity {
-        multiplier = 1e5
         for (let i = 0;i < Rarity.Rarities.length;i++) {
             const rarity = Rarity.Rarities[i]
             if (!Util.isChance(rarity.chance * multiplier)) continue
