@@ -108,7 +108,7 @@ export class EntityModdedStats extends EntityBaseStats {
     }
 
     public canTriggerPassive(payload: ItemPassiveExecutePayload) {
-        return !this.passiveCooldowns.some(x => x.id === payload.passive.id) && payload.passive.data.criteria(payload)
+        return (!payload.passive.data.chance || Util.isChance(payload.passive.data.chance)) && !this.passiveCooldowns.some(x => x.id === payload.passive.id) && payload.passive.data.types.some(x => payload.action instanceof x) && payload.passive.data.criteria(payload)
     }
 
     public addPassiveItemCooldown(passive: ItemPassive) {
@@ -129,6 +129,8 @@ export class EntityModdedStats extends EntityBaseStats {
     }
 
     public inflict(effect: Effect, duration: number) {
+        if (this.ailments.some(x => x.effect.id === effect.id)) return null
+        
         this.ailments.push({
             duration,
             effect

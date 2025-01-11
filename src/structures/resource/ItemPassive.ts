@@ -14,6 +14,8 @@ export interface ItemPassiveExecutePayload extends ItemPassiveBasePayload {
 
 export interface ItemPassiveData extends ResourceData {
     cooldown?: number
+    types: any[]
+    chance?: number
     criteria(payload: ItemPassiveExecutePayload): boolean
     info(passive: ItemPassive): string
     execute(payload: ItemPassiveExecutePayload): boolean

@@ -107,7 +107,7 @@ export class Hit extends Action {
                 output.push(` but the hit was blocked, reducing the damage!`)
         }
 
-        output.push(` (-${this.damage})`)
+        output.push(` (-${Util.formatInt(this.damage)})`)
 
         return output.join("")
     }

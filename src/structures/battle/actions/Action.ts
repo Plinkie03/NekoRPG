@@ -1,4 +1,5 @@
 import { Entity } from "../../entity/Entity.js";
+import { Nullable } from "../../resource/Item.js";
 import { ItemPassiveBasePayload, ItemPassiveExecutePayload } from "../../resource/ItemPassive.js";
 
 export abstract class Action {
@@ -27,12 +28,13 @@ export abstract class Action {
         ).join("\n")
     }
 
-    public add(action: Action) {
-        this.actions.push(action)
+    public add(action: Nullable<Action>) {
+        if (action) 
+            this.actions.push(action)
         return this
     }
 
-    public addMany(...actions: Action[]) {
+    public addMany(...actions: Nullable<Action>[]) {
         actions.forEach(this.add.bind(this))
         return this
     }
