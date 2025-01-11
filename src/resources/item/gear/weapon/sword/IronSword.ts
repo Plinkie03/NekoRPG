@@ -1,5 +1,7 @@
 import { GearType, Item, ItemType, WeaponType } from "../../../../../structures/resource/Item.js";
 import Berserk from "../../../../passive/Berserk.js";
+import IronIngot from "../../../material/ingot/IronIngot.js";
+import BirchLog from "../../../material/log/BirchLog.js";
 import Wood from "../../../material/log/BirchLog.js";
 
 export default new Item({
@@ -19,7 +21,11 @@ export default new Item({
         requirements: {
             items: [
                 {
-                    item: Wood,
+                    item: IronIngot,
+                    amount: 5
+                },
+                {
+                    item: BirchLog,
                     amount: 10
                 }
             ]
