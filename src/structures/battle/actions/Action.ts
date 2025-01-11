@@ -16,6 +16,10 @@ export abstract class Action {
         return [ this.entity ]
     }
 
+    public as<T>() {
+        return this as unknown as T
+    }
+    
     public static format(actions: Action[], spacing = 1): string {
         return actions.map(
             x => {

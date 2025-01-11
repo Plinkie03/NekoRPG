@@ -4,11 +4,11 @@ import { NekoResources } from "./NekoResources.js"
 import { Util } from "../structures/static/Util.js"
 import { Logger } from "../structures/static/Logger.js"
 
-export class NekoResourceCache<T extends Identifiable> extends Array<T> {
+export class NekoResourceCache<T extends Identifiable> {
+    public readonly raw = new Array<T>()
     public readonly collection: Collection<number, T> = new Collection()
 
     public constructor(...many: T[]) {
-        super()
         this.set(...many)
     }
 
@@ -18,24 +18,24 @@ export class NekoResourceCache<T extends Identifiable> extends Array<T> {
                 throw new Error(`${one.id} is already in the cache! For instance type ${one.constructor.name} (Valid ID: ${this.getValidId()})`)
             }
 
-            this.push(one)
+            this.raw.push(one)
             this.collection.set(one.id, one)
         }
         
-        Logger.info(`Loaded ${this.length} elements of type ${this[0]?.constructor.name}`)
+        Logger.info(`Loaded ${this.raw.length} elements of type ${this.raw[0]?.constructor.name}`)
     }
 
     public get(id: number) {
         const el = this.collection.get(id)
 
-        if (!el) throw new Error(`${id} does not exist on ${this[0]?.constructor.name}!`)
+        if (!el) throw new Error(`${id} does not exist on ${this.raw[0]?.constructor.name}!`)
 
         return el
     }
 
     public search(query: string) {
         return Util.searchMany(
-            this,
+            this.raw,
             query,
             el => el.id,
             el => "name" in el ? el.name!.toString() : `${el}`
@@ -47,6 +47,6 @@ export class NekoResourceCache<T extends Identifiable> extends Array<T> {
     }
 
     public getValidId() {
-        return (this.sort((x, y) => x.id - y.id).at(-1)?.id ?? 0) + 1
+        return (this.raw.sort((x, y) => x.id - y.id).at(-1)?.id ?? 0) + 1
     }
 }

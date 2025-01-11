@@ -13,15 +13,14 @@ export default new ItemPassive({
     chance: 25,
     types: [ Hit ],
     gearTypes: ItemPassive.OnlyWeapons,
+    cooldown: 5,
     info: payload => `${payload.data.chance}% chance to inflict poison to the target for ${Duration} turns`,
-    criteria: payload => true,
+    criteria: payload => payload.entity === payload.action.as<Hit>().entity,
     execute(payload) {
         const hit = payload.action as Hit
-
-        if (hit.entity === payload.entity) {
-            hit.add(hit.defender.moddedStats.inflict(Poison, Duration))
-            hit.append(`[POISON]`)
-        }
+        
+        hit.add(hit.defender.moddedStats.inflict(Poison, Duration))
+        hit.append(`[POISON]`)
 
         return true
     },

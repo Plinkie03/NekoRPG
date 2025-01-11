@@ -5,20 +5,18 @@ import { ItemPassive } from "../../structures/resource/ItemPassive.js";
 import { Util } from "../../structures/static/Util.js";
 
 export default new ItemPassive({
-    id: 3,
+    id: 5,
     name: "Execution",
     types: ItemPassive.AttackActions,
     gearTypes: ItemPassive.OnlyWeapons,
     chance: 20,
     info: payload => `${payload.data.chance}% chance to execute the target [Execution: deal 3x damage]`,
-    criteria: payload => true,
+    criteria: payload => payload.entity === payload.action.as<Hit>().entity,
     execute(payload) {
         const hit = payload.action as Hit | SpellAttack
-
-        if (hit.entity === payload.entity) {
-            hit.damage *= 3
-            hit.append(`[EXECUTION]`)
-        }
+        
+        hit.damage *= 3
+        hit.append(`[EXECUTION]`)
 
         return true
     },

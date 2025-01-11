@@ -13,8 +13,6 @@ export class ItemEmbed {
     public static async from(i: Base, to: User, itm: Item | PlayerInventoryItem) {
         const item = itm instanceof PlayerInventoryItem ? itm.item : itm
 
-        const client = NekoClient.from(i)
-
         const embed = BasicEmbed.from(i, to, Colors.Aqua)
             .setTitle(item.simpleName)
             .setThumbnail(item.image)
@@ -67,7 +65,7 @@ export class ItemEmbed {
         if (itm instanceof PlayerInventoryItem && itm.passives.length !== 0) {
             fields.push({
                 name: Util.plural("Passive", itm.passives.length, undefined, true),
-                value: itm.passives.map(x => `**${x.simpleName}**: ${x.info()}`).join("\n")
+                value: itm.passives.map(x => `**${x.simpleName}**: ${x.info()}${x.data.cooldown ? ` (CD: ${x.data.cooldown}R)` : ""}`).join("\n")
             })
         }
 

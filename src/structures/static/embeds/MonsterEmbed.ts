@@ -40,7 +40,7 @@ export class MonsterEmbed {
             })
         }
 
-        const foundIn = Game.Zones.filter(x => x.monsters?.some(x => x.id === monster.id))
+        const foundIn = Game.Zones.raw.filter(x => x.monsters?.some(x => x.id === monster.id))
         if (foundIn.length) {
             fields.push({
                 name: `Found At`,

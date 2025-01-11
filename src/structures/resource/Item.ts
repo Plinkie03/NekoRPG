@@ -282,11 +282,11 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
     public getRandomPassives(rarity: RarityType) {
         const passives = new Array<Omit<Prisma.RawItemPassiveUncheckedCreateInput, "itemUUID">>()
 
-        if (rarity <= RarityType.Epic || !this.isGear()) return passives
+        if (rarity <= RarityType.Rare || !this.isGear()) return passives
 
         const slots = Math.floor(Math.max(1, rarity / 2.25))
         
-        const possibilities = Game.Passives.filter(x => x.canHave(this.gearType!))
+        const possibilities = Game.Passives.raw.filter(x => x.canHave(this.gearType!))
 
         while (possibilities.length !== 0 && slots !== passives.length) {
             const rndIndex = Math.floor(Math.random() * possibilities.length)
