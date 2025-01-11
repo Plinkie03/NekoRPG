@@ -1,10 +1,11 @@
-import { Action } from "@prisma/client/runtime/library";
 import { Resource, ResourceData } from "./Resource.js";
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js";
+import { Action } from "../battle/actions/Action.js";
+import { Entity } from "../entity/Entity.js";
 
 export interface ItemPassiveBasePayload {
     passive: ItemPassive
-    item: PlayerInventoryItem
+    entity: Entity
 }
 
 export interface ItemPassiveExecutePayload extends ItemPassiveBasePayload {
@@ -12,10 +13,14 @@ export interface ItemPassiveExecutePayload extends ItemPassiveBasePayload {
 }
 
 export interface ItemPassiveData extends ResourceData {
-    cooldown: number
-    criteria(payload: ItemPassiveBasePayload): boolean
-    info(payload: ItemPassiveBasePayload): void
+    cooldown?: number
+    criteria(payload: ItemPassiveExecutePayload): boolean
+    info(passive: ItemPassive): string
     execute(payload: ItemPassiveExecutePayload): boolean
 }
 
-export class ItemPassive extends Resource<ItemPassiveData> {}
+export class ItemPassive extends Resource<ItemPassiveData> {
+    public info() {
+        return this.data.info(this)
+    }
+}

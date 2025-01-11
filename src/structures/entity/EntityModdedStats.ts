@@ -1,7 +1,7 @@
 import { Fight } from "../battle/Fight.js";
 import { Info } from "../battle/actions/Info.js";
 import { Effect, EffectData } from "../resource/Effect.js";
-import { ItemPassive, ItemPassiveBasePayload } from "../resource/ItemPassive.js";
+import { ItemPassive, ItemPassiveBasePayload, ItemPassiveExecutePayload } from "../resource/ItemPassive.js";
 import { Util } from "../static/Util.js";
 import { Entity } from "./Entity.js";
 import { EntityBaseStats, Stats } from "./EntityBaseStats.js";
@@ -90,7 +90,7 @@ export class EntityModdedStats extends EntityBaseStats {
 
     // TODO: DON'T RESET STUN
     public stun(duration: number) {
-        this.stunDuration = duration
+        this.stunDuration = duration + 1
         return new Info(this.entity, `${this.entity.displayName} has been stunned for ${Util.plural("round", duration)}!`)
     }
 
@@ -107,11 +107,13 @@ export class EntityModdedStats extends EntityBaseStats {
         return !this.spellCooldowns.some(x => x.id === spell.item.id) && (!spell.item.data.chance || Util.isChance(spell.item.data.chance))
     }
 
-    public canTriggerPassive(payload: ItemPassiveBasePayload) {
+    public canTriggerPassive(payload: ItemPassiveExecutePayload) {
         return !this.passiveCooldowns.some(x => x.id === payload.passive.id) && payload.passive.data.criteria(payload)
     }
 
     public addPassiveItemCooldown(passive: ItemPassive) {
+        if (!passive.data.cooldown) return
+        
         this.passiveCooldowns.push({
             duration: passive.data.cooldown,
             id: passive.id
@@ -139,7 +141,7 @@ export class EntityModdedStats extends EntityBaseStats {
         arr: Array<T>,
         cycle?: (el: T) => Promise<void>
     ) {
-        for (let i = 0, len = arr.length;i < len;i++) {
+        for (let i = 0; i < arr.length;i++) {
             const el = arr[i]
             await cycle?.(el)
 

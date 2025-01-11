@@ -1,5 +1,6 @@
 import { Heal } from "../../../structures/battle/actions/Heal.js";
 import { Hit } from "../../../structures/battle/actions/Hit.js";
+import { SpellAttack } from "../../../structures/battle/actions/SpellAttack.js";
 import { EntitySpell } from "../../../structures/entity/EntitySpell.js";
 import { Item, ItemType } from "../../../structures/resource/Item.js";
 import { Util } from "../../../structures/static/Util.js";
@@ -27,12 +28,13 @@ export default new Item<ItemType.Spell>({
     info: spell => `Unleash a volley of ${arrowCount(spell)} magical arrows upon the target dealing ${spell.entity.baseStats.displayDamage(arrowMultiplier(spell))} damage each, reducing their defense by ${fortificationMultiplier}x for ${Util.plural("round", fortificationTime)} and stunning the target for ${Util.plural("round", stunTime)}.`,
     execute(payload) {
         for (let i = 0, len = arrowCount(payload.spell);i < len;i++) {
-            payload.hit.add(
-                Hit.fromSpellAttack(payload.entity, payload.target, arrowMultiplier(payload.spell))
+            payload.cast.add(
+                SpellAttack.new(payload.entity, payload.target, arrowMultiplier(payload.spell))
             )
         }
 
-        payload.hit.addMany(
+        payload.cast.addMany(
+            payload.target.moddedStats.stun(stunTime),
             payload.target.moddedStats.addFortification({
                 duration: fortificationTime,
                 multiplier: -fortificationMultiplier,

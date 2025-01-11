@@ -14,6 +14,7 @@ import { RewardData, RewardItemData, Rewards } from "../static/Rewards.js"
 import { Util } from "../static/Util.js"
 import { Resource, ResourceData } from "./Resource.js"
 import { ItemPassive } from "./ItemPassive.js"
+import { SpellCast } from "../battle/actions/SpellCast.js"
 
 export type Nullable<T> = T | null
 
@@ -96,7 +97,7 @@ export enum WeaponType {
 }
 export interface SpellExecutionPayload {
     fight: Fight
-    hit: Hit
+    cast: SpellCast
     spell: EntitySpell
     entity: Entity
     target: Entity

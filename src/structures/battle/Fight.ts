@@ -9,6 +9,7 @@ import { Monster } from "../monster/Monster.js";
 import { Player } from "../player/Player.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
 import { Collection } from "discord.js";
+import { SpellCast } from "./actions/SpellCast.js";
 
 type FightFunction = (fight: Fight) => any
 
@@ -151,18 +152,18 @@ export class Fight {
 
                     for (const spell of attacker.getSpells()) {
                         if (!spell.canCast()) continue
-                        const spellHit = Hit.fromSpell(attacker, defender, spell)
+                        const spellCast = new SpellCast(attacker, defender, spell)
 
                         spell.cast({
                             fight: this,
-                            hit: spellHit,
+                            cast: spellCast,
                             entity: attacker,
                             target: defender
                         })
 
-                        await spellHit.run()
+                        await spellCast.run()
 
-                        log.unshift(spellHit)
+                        log.unshift(spellCast)
 
                         break attack
                     }

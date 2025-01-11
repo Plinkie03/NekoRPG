@@ -68,8 +68,8 @@ export class Util {
         return n === 1 ? "" : `${Util.formatInt(n)}x`
     }
 
-    public static plural(of: string, n: number, add?: string) {
-        return `${n} ${n === 1 ? of : of + (add ?? "s")}`
+    public static plural(of: string, n: number, add?: string, skip = false) {
+        return `${!skip && `${Util.formatInt(n)} ` || ""}${n === 1 ? of : of + (add ?? "s")}`
     }
 
     public static objectKeys<T extends object>(t: T) {

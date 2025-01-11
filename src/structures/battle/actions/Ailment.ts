@@ -1,4 +1,5 @@
-import { Entity } from "../../entity/Entity.js";
+import { Entity, IEntity } from "../../entity/Entity.js";
+import { EntityBaseStats } from "../../entity/EntityBaseStats.js";
 import { Effect } from "../../resource/Effect.js";
 import { Action } from "./Action.js";
 

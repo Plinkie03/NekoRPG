@@ -1,4 +1,5 @@
 import { Entity } from "../../entity/Entity.js";
+import { ItemPassiveBasePayload, ItemPassiveExecutePayload } from "../../resource/ItemPassive.js";
 
 export abstract class Action {
     public readonly actions = new Array<Action>()
@@ -7,6 +8,12 @@ export abstract class Action {
 
     protected abstract get message(): string
     protected abstract execute(): Promise<void>
+
+    protected prepare() {}
+
+    protected get entities(): Entity[] {
+        return [ this.entity ]
+    }
 
     public static format(actions: Action[], spacing = 1): string {
         return actions.map(
@@ -31,8 +38,22 @@ export abstract class Action {
     }
 
     public async run() {
+        this.prepare()
+
+        for (const entity of this.entities) {
+            for (const gear of entity.getEquipment()) {
+                for (const passive of gear.item.passives) {
+                    const payload: ItemPassiveExecutePayload = { passive, action: this, entity }
+
+                    if (entity.moddedStats.canTriggerPassive(payload) && passive.data.execute(payload)) {
+                        entity.moddedStats.addPassiveItemCooldown(passive)
+                    }
+                }
+            }
+        }
+
         await this.execute()
-        
+
         for (const action of this.actions) {
             await action.run()
         }

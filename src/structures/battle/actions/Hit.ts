@@ -1,4 +1,5 @@
-import { Entity } from "../../entity/Entity.js";
+import { Entity, IEntity } from "../../entity/Entity.js";
+import { EntityBaseStats } from "../../entity/EntityBaseStats.js";
 import { EntitySpell } from "../../entity/EntitySpell.js";
 import { Player } from "../../player/Player.js";
 import { Skills } from "../../player/PlayerSkills.js";
@@ -10,12 +11,13 @@ import { Heal } from "./Heal.js";
 import { Info } from "./Info.js";
 
 export class Hit extends Action {
-    public damage!: number
+    public finalDamage!: number
     public blocked!: boolean
     public dodged!: boolean
     public crit!: boolean
     private customMessage?: string
-    private spell?: boolean
+    private hideAttacker = false
+    private ignoreSpecials = false
     
     public constructor(
         attacker: Entity,
@@ -25,21 +27,38 @@ export class Hit extends Action {
         super(attacker)
     }
 
-    private prepare() {
-        this.dodged = !this.spell && (Util.isChance(this.defender.moddedStats.dodgeRate) || Util.isChance(this.entity.moddedStats.agility / this.defender.moddedStats.agility * 100))
-        this.blocked = !this.spell && !this.dodged && Util.isChance(this.defender.moddedStats.blockRate)
-        this.crit = !this.spell && !this.dodged && Util.isChance(this.entity.moddedStats.criticalRate)
+    protected get entities(): Entity<IEntity<any>, EntityBaseStats>[] {
+        return [ ...super.entities, this.defender ]
+    }
+
+    protected prepare() {
+        this.dodged = !this.ignoreSpecials && (Util.isChance(this.defender.moddedStats.dodgeRate) || Util.isChance(this.entity.moddedStats.agility / this.defender.moddedStats.agility * 100))
+        this.blocked = !this.ignoreSpecials && !this.dodged && Util.isChance(this.defender.moddedStats.blockRate)
+        this.crit = !this.ignoreSpecials && !this.dodged && Util.isChance(this.entity.moddedStats.criticalRate)
 
         this.damage = this.calculateDamage()
     }
 
-    public setSpell() {
-        this.spell = true
-        return this
+    public set damage(n: number) {
+        this.finalDamage = Math.floor(n)
+    }
+
+    public get damage() {
+        return this.finalDamage
     }
 
     public setMultiplier(mult: number) {
         this.multiplier = mult
+        return this
+    }
+
+    public setAttackerVisibility() {
+        this.hideAttacker = true
+        return this
+    }
+
+    public setIgnoreSpecials() {
+        this.ignoreSpecials = true
         return this
     }
 
@@ -72,7 +91,7 @@ export class Hit extends Action {
         if (this.customMessage)
             output.push(this.customMessage)
         else {
-            if (this.spell !== true) {
+            if (!this.hideAttacker) {
                 output.push(
                     this.entity.displayName,
                     " "
@@ -88,9 +107,7 @@ export class Hit extends Action {
                 output.push(` but the hit was blocked, reducing the damage!`)
         }
 
-        if (this.damage !== 0) {
-            output.push(` (-${this.damage})`)
-        }
+        output.push(` (-${this.damage})`)
 
         return output.join("")
     }
@@ -116,8 +133,6 @@ export class Hit extends Action {
     }
 
     protected async execute() {
-        this.prepare()
-
         const stolen = this.damage * (this.entity.moddedStats.lifesteal / 100)
         if (stolen > 1) {
             this.actions.push(new Heal(this.entity, stolen))
@@ -138,17 +153,5 @@ export class Hit extends Action {
 
     public static from(attacker: Entity, defender: Entity) {
         return new Hit(attacker, defender)
-    }
-
-    public static fromSpell(attacker: Entity, defender: Entity, spell: EntitySpell) {
-        return new Hit(attacker, defender, 0).setMessage(`${attacker.displayName} used ${spell.item.simpleName}${
-            spell.item.data.multitarget ? 
-                "" :
-                ` on ${defender.displayName}`
-        }:`)
-    }
-
-    public static fromSpellAttack(attacker: Entity, defender: Entity, mult: number) {
-        return new Hit(attacker, defender, mult).setSpell()
     }
 }

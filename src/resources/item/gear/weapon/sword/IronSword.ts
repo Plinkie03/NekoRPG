@@ -1,4 +1,5 @@
 import { GearType, Item, ItemType, WeaponType } from "../../../../../structures/resource/Item.js";
+import Berserk from "../../../../passive/Berserk.js";
 import Wood from "../../../material/log/BirchLog.js";
 
 export default new Item({
@@ -11,6 +12,9 @@ export default new Item({
     stats: {
         strength: 10
     },
+    passives: [
+        Berserk
+    ],
     craft: {
         requirements: {
             items: [

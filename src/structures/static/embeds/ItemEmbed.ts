@@ -64,6 +64,13 @@ export class ItemEmbed {
             })
         }
 
+        if (item.passives.length !== 0) {
+            fields.push({
+                name: Util.plural("Passive", item.passives.length, undefined, true),
+                value: item.passives.map(x => `**${x.simpleName}**: ${x.info()}`).join("\n")
+            })
+        }
+
         const stats = itm.getStats()
 
         for (const stat of Util.objectKeys(stats)) {
