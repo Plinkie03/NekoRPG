@@ -19,7 +19,7 @@ export class FightEmbed {
 
         const winners = fight.getWinnerTeam()
         if (winners !== null) {
-            embed.setTitle(`${winners.map(x => x.displayName).join(", ")} won the fight!`)
+            embed.setTitle(`${winners.filter(x => !(x instanceof Monster) || !x.isSummon).map(x => x.displayName).join(", ")} won the fight!`)
         }
 
         if (isWinner === null) {
