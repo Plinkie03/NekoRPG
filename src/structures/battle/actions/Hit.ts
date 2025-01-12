@@ -82,7 +82,7 @@ export class Hit extends Action {
             finalDamage *= (1 - this.defender.moddedStats.blockReduction / 100)
         }
 
-        return Math.floor(finalDamage)
+        return Math.floor(Math.max(finalDamage - this.defender.moddedStats.defense, 0))
     }
 
     public append(str: string) {
