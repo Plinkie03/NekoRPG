@@ -13,7 +13,7 @@ export default new Item({
     type: ItemType.Gear,
     gearType: GearType.Leggings,
     name: "Iron Leggings",
-    emoji: "<:iron_chestplate:1327761093933793280>",
+    emoji: "<:iron_leggings:1327762247627313254>",
     description: "Leggings forged by iron",
     stats: {
         defense: 10,
