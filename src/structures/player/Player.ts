@@ -32,6 +32,10 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
         return Game.Zones.get(this.data.zoneId!)
     }
 
+    public hasMoney(m: number) {
+        return this.data.money >= m
+    }
+    
     public getEquipment(): PlayerInventoryItem[] {
         return this.gear.toArray()
     }

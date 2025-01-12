@@ -262,18 +262,24 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public async rerollRarity() {
+        if (!this.entity.hasMoney(this.upgradeCost)) return false
+
         const reroll = Rarity.getRandom(this.upgrades)
         
         await NekoDatabase.rawItem.update({
             data: {
-                rarity: reroll.type
+                rarity: reroll.type,
+                upgrades: this.data.upgrades + 1
             },
             where: {
                 uuid: this.uuid
             }
         })
 
+        this.data.upgrades++
         this.data.rarity = reroll.type
+
+        return true
     }
 
     public async rerollPassives() {
