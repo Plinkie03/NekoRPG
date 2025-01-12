@@ -69,9 +69,8 @@ export class Hit extends Action {
     }
 
     private calculateDamage() {
-        if (this.dodged) {
+        if (this.dodged) 
             return 0
-        }
 
         let finalDamage = Formulas.random(this.entity.moddedStats.minDamage, this.entity.moddedStats.maxDamage) * this.multiplier
 
