@@ -1,8 +1,6 @@
 import { ButtonInteraction, ChatInputCommandInteraction, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"
 import { Player } from "../../../player/Player.js"
 import { Item } from "../../../resource/Item.js"
-import { ItemEmbed } from "../../embeds/ItemEmbed.js"
-import bulkCraft from "../../../../interactions/button/info/item/bulkCraft.js"
 import { Util } from "../../Util.js"
 import { Monster } from "../../../monster/Monster.js"
 import { MonsterEmbed } from "../../embeds/MonsterEmbed.js"
