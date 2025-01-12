@@ -33,7 +33,7 @@ export class Hit extends Action {
     }
 
     protected prepare() {
-        this.dodged = !this.ignoreSpecials && (Util.isChance(this.defender.moddedStats.dodgeRate) || Util.isChance(this.entity.moddedStats.agility / this.defender.moddedStats.agility * 100))
+        this.dodged = !this.ignoreSpecials && (Util.isChance(this.defender.moddedStats.dodgeRate) || Util.isChance(Math.min(this.defender.moddedStats.agility / this.entity.moddedStats.agility * 100, 50)))
         this.blocked = !this.ignoreSpecials && !this.dodged && Util.isChance(this.defender.moddedStats.blockRate)
         this.crit = !this.ignoreSpecials && !this.dodged && Util.isChance(this.entity.moddedStats.criticalRate)
 
@@ -104,12 +104,14 @@ export class Hit extends Action {
             }
 
             output.push(
-                this.dodged ? `tried to attack` : `landed a${this.crit ? " critical " : " "}hit on `,
+                this.dodged ? `tried to attack ` : `landed a${this.crit ? " critical " : " "}hit on `,
                 this.defender.displayName
             )
 
             if (this.blocked)
                 output.push(` but the hit was blocked, reducing the damage!`)
+            else if (this.dodged)
+                output.push(` but dodged it`)
         }
 
         output.push(` (-${Util.formatInt(this.damage)})`, ...this.appends.map(x => ` ${x}`))
