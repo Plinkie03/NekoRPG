@@ -15,7 +15,7 @@ export class ProfileEmbed {
             .setThumbnail(i.user.displayAvatarURL())
             .addFields({
                 name: "Progress",
-                value: `Level: ${Util.formatInt(player.level)}\nExp: ${Util.formatInt(player.data.xp)} / ${Util.formatInt(player.getReqXp())} (${Util.formatFloat(player.data.xp / player.getReqXp())}%)`
+                value: `Level: ${Util.formatInt(player.level)}\nExp: ${Util.formatInt(player.data.xp)} / ${Util.formatInt(player.getReqXp())} (${Util.formatFloat(player.data.xp / player.getReqXp() * 100)}%)`
             }, {
                 name: "Economy",
                 value: `Money: ${Util.formatInt(player.data.money)}\nGems: ${Util.formatInt(player.data.gems)}`
