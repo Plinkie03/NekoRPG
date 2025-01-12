@@ -9,7 +9,8 @@ export default new Monster({
     emoji: "<:slimequeen:1327671088317993103>",
     stats: {
         maxHealth: 2_500,
-        strength: 50
+        strength: 100,
+        defense: 100
     },
     spells: [
         SlimeArmy
