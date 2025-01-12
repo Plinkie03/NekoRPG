@@ -28,7 +28,7 @@ export type Skills = {
 
 export class PlayerSkills {
     public static readonly DefaultXpReq = 10
-    public static readonly DefaultXpMultiplier = 1.2
+    public static readonly DefaultXpMultiplier = 1.75
 
     public constructor(private readonly player: Player) { }
 
