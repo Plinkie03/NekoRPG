@@ -7,8 +7,8 @@ export default new Monster({
     name: "Slime",
     emoji: "<:slime:1324071700102512843>",
     stats: {
-        maxHealth: 50,
-        strength: 5
+        maxHealth: 250,
+        strength: 10
     },
     description: "A weird sticky mass",
     rewards: {
