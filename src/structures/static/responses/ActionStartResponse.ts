@@ -1,5 +1,5 @@
 import { ButtonInteraction, ChatInputCommandInteraction, Colors } from "discord.js"
-import { Node, NodeStartCollectResponseType } from "../../resource/node/Node.js"
+import { Node, NodeAction, NodeStartCollectResponseType } from "../../resource/node/Node.js"
 import { Player } from "../../player/Player.js"
 import { BasicEmbed } from "../embeds/BasicEmbed.js"
 import { Util } from "../Util.js"
@@ -14,7 +14,7 @@ export class ActionStartResponse {
             case NodeStartCollectResponseType.Busy: {
                 embed
                     .setTitle("Busy")
-                    .setDescription(`You're already ${node.type}!`)
+                    .setDescription(`You're already ${NodeAction[node.type]}!`)
                 break
             }
 
@@ -29,7 +29,7 @@ export class ActionStartResponse {
                     .setColor(Colors.Green)
                     .setTitle("Success")
                     .setThumbnail(node.image)
-                    .setDescription(`You've started ${node.type} at ${node.name}!`)
+                    .setDescription(`You've started ${NodeAction[node.type]} at ${node.name}!`)
                 break
             }
         }
