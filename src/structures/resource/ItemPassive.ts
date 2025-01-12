@@ -6,6 +6,7 @@ import { GearType } from "./Item.js";
 import { Hit } from "../battle/actions/Hit.js";
 import { SpellAttack } from "../battle/actions/SpellAttack.js";
 import { Enum } from "../static/Enum.js";
+import { Fight } from "../battle/Fight.js";
 
 export interface ItemPassiveBasePayload {
     passive: ItemPassive
@@ -14,6 +15,7 @@ export interface ItemPassiveBasePayload {
 
 export interface ItemPassiveExecutePayload extends ItemPassiveBasePayload {
     action: Action
+    fight: Fight
 }
 
 export interface ItemPassiveData extends ResourceData {
@@ -21,6 +23,7 @@ export interface ItemPassiveData extends ResourceData {
     types: any[]
     gearTypes?: GearType[]
     chance?: number
+    showTag?: boolean
     criteria(payload: ItemPassiveExecutePayload): boolean
     info(passive: ItemPassive): string
     execute(payload: ItemPassiveExecutePayload): boolean
@@ -37,5 +40,9 @@ export class ItemPassive extends Resource<ItemPassiveData> {
 
     public canHave(type: GearType) {
         return this.data.gearTypes?.includes(type) ?? true
+    }
+
+    public get showTag() {
+        return this.data.showTag !== false
     }
 }

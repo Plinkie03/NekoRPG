@@ -64,7 +64,7 @@ export class Fight {
         return this.teams[this.teamIndex % this.teams.length]
     }
 
-    private getAliveEntities(team: Entity[]) {
+    public getAliveEntities(team: Entity[]) {
         return team.filter(x => !x.isDead())
     }
 
@@ -163,7 +163,7 @@ export class Fight {
                             target: defender
                         })
 
-                        await spellCast.run()
+                        await spellCast.run(this)
 
                         log.unshift(spellCast)
 
@@ -171,7 +171,7 @@ export class Fight {
                     }
 
                     const basic = Hit.from(attacker, defender)
-                    await basic.run()
+                    await basic.run(this)
                     log.unshift(basic)
                 }
             }

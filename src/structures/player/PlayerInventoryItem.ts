@@ -253,6 +253,61 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return this.item.isSpell() ? this.equipSpell() : this.equipGear()
     }
 
+    public get upgrades() {
+        return 1
+    }
+
+    public async rerollRarity() {
+        const reroll = Rarity.getRandom(this.upgrades)
+        
+        await NekoDatabase.rawItem.update({
+            data: {
+                rarity: reroll.type
+            },
+            where: {
+                uuid: this.uuid
+            }
+        })
+
+        this.data.rarity = reroll.type
+    }
+
+    public async rerollPassives() {
+        const passives = await this.item.getRandomPassives(this.rarity.type)
+
+        await NekoDatabase.$transaction([
+            NekoDatabase.rawItemPassive.deleteMany({
+                where: {
+                    itemUUID: this.uuid
+                }
+            }),
+            NekoDatabase.rawItemPassive.createMany({
+                data: passives.map(x => ({
+                    ...x,
+                    itemUUID: this.uuid
+                }))
+            })
+        ])
+    }
+
+    public async rerollStats() {
+        const stats = await this.item.getRandomStats(this.rarity.type)
+        
+        await NekoDatabase.$transaction([
+            NekoDatabase.rawItemStat.deleteMany({
+                where: {
+                    itemUUID: this.uuid
+                }
+            }),
+            NekoDatabase.rawItemStat.createMany({
+                data: stats.map(x => ({
+                    ...x,
+                    itemUUID: this.uuid
+                }))
+            })
+        ])
+    }
+
     public async unequip(): Promise<boolean> {
         if (!this.equipped) return false
         await this.setEquipped(false)

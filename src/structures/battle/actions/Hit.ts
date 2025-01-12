@@ -11,12 +11,11 @@ import { Heal } from "./Heal.js";
 import { Info } from "./Info.js";
 
 export class Hit extends Action {
-    public finalDamage!: number
+    public finalDamage: number = -1
     public blocked!: boolean
     public dodged!: boolean
     public crit!: boolean
     private customMessage?: string
-    private appends = new Array<string>()
     private hideAttacker = false
     private ignoreSpecials = false
     
@@ -48,6 +47,11 @@ export class Hit extends Action {
         return this.finalDamage
     }
 
+    public setFinalDamage(n: number) {
+        this.damage = n
+        return this
+    }
+
     public setMultiplier(mult: number) {
         this.multiplier = mult
         return this
@@ -69,8 +73,11 @@ export class Hit extends Action {
     }
 
     private calculateDamage() {
-        if (this.dodged) 
+        if (this.dodged)
             return 0
+
+        if (this.damage !== -1)
+            return this.damage
 
         let finalDamage = Formulas.random(this.entity.moddedStats.minDamage, this.entity.moddedStats.maxDamage) * this.multiplier
 
@@ -83,11 +90,6 @@ export class Hit extends Action {
         }
 
         return Math.floor(Math.max(finalDamage - this.defender.moddedStats.defense, 0))
-    }
-
-    public append(str: string) {
-        this.appends.push(str)
-        return this
     }
 
     protected get message() {
@@ -114,7 +116,7 @@ export class Hit extends Action {
                 output.push(` but dodged it`)
         }
 
-        output.push(` (-${Util.formatInt(this.damage)})`, ...this.appends.map(x => ` ${x}`))
+        output.push(` (-${Util.formatInt(this.damage)})`)
         
         return output.join("")
     }

@@ -1,6 +1,7 @@
 import { Entity, IEntity } from "../../entity/Entity.js";
 import { EntityBaseStats } from "../../entity/EntityBaseStats.js";
 import { Effect } from "../../resource/Effect.js";
+import { Fight } from "../Fight.js";
 import { Action } from "./Action.js";
 
 export class Ailment extends Action {
@@ -15,9 +16,9 @@ export class Ailment extends Action {
         this.damage = Math.floor(damage)
     }
 
-    public static async run(...params: ConstructorParameters<typeof Ailment>) {
+    public static async run(fight: Fight, ...params: ConstructorParameters<typeof Ailment>) {
         const ailment = new Ailment(...params)
-        await ailment.run()
+        await ailment.run(fight)
         return ailment
     }
 

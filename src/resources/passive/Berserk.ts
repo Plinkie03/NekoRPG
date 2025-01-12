@@ -10,6 +10,7 @@ export default new ItemPassive({
     id: 1,
     name: "Berserk",
     types: ItemPassive.AttackActions,
+    showTag: false,
     gearTypes: ItemPassive.OnlyWeapons,
     info: payload => `For every percent of health lost, Damage Taken -1%, Strength +1% (Caps at ${Util.formatFloat(MaxMultiplier * 1e2)})`,
     criteria: payload => true,

@@ -1,8 +1,12 @@
 import { Entity } from "../../entity/Entity.js";
 import { Nullable } from "../../resource/Item.js";
 import { ItemPassiveBasePayload, ItemPassiveExecutePayload } from "../../resource/ItemPassive.js";
+import { Fight } from "../Fight.js";
 
 export abstract class Action {
+    private hideDisplay = false
+    private appends = new Array<string>()
+
     public readonly actions = new Array<Action>()
 
     public constructor(public readonly entity: Entity) {}
@@ -16,6 +20,11 @@ export abstract class Action {
         return [ this.entity ]
     }
 
+    public hide() {
+        this.hideDisplay = true
+        return this
+    }
+
     public as<T>() {
         return this as unknown as T
     }
@@ -23,13 +32,16 @@ export abstract class Action {
     public static format(actions: Action[], spacing = 1): string {
         return actions.map(
             x => {
-                const msg = x.message
+                if (x.hideDisplay || !x.message)
+                    return null
+
+                const msg = `${x.message}${x.appends.length ? ` ${x.appends.join(" ")}` : ""}`
                 return [
                     `${(spacing === 1 ? "" : " ".repeat(spacing + 1)) + "- "}${msg[0].toUpperCase() + msg.slice(1)}`,
                     Action.format(x.actions as Action[], spacing + 1)
                 ].filter(Boolean).join("\n")
             }
-        ).join("\n")
+        ).filter(Boolean).join("\n")
     }
 
     public add(action: Nullable<Action>) {
@@ -43,16 +55,28 @@ export abstract class Action {
         return this
     }
 
-    public async run() {
+    public append(str: string) {
+        this.appends.push(str)
+        return this
+    }
+
+    public async run(fight: Fight) {
         this.prepare()
 
         for (const entity of this.entities) {
             for (const gear of entity.getEquipment()) {
                 for (const passive of gear.passives) {
-                    const payload: ItemPassiveExecutePayload = { passive, action: this, entity }
+                    const payload: ItemPassiveExecutePayload = {
+                        passive, 
+                        action: this, 
+                        entity,
+                        fight
+                    }
 
                     if (entity.moddedStats.canTriggerPassive(payload) && passive.data.execute(payload)) {
                         entity.moddedStats.addPassiveItemCooldown(passive)
+                        if (passive.showTag)
+                            this.append(passive.tag)
                     }
                 }
             }
@@ -61,7 +85,7 @@ export abstract class Action {
         await this.execute()
 
         for (const action of this.actions) {
-            await action.run()
+            await action.run(fight)
         }
     }
 }

@@ -55,6 +55,7 @@ model RawItem {
   uuid       String           @id @unique @default(uuid())
   playerId   String
   itemId     Int
+  upgrades   Int              @default(1)
   amount     Int
   locked     Boolean          @default(false)
   equipped   Boolean          @default(false)

@@ -10,7 +10,7 @@ const Duration = 5
 export default new ItemPassive({
     id: 4,
     name: "Poison Edge",
-    chance: 25,
+    chance: 10,
     types: [ Hit ],
     gearTypes: ItemPassive.OnlyWeapons,
     cooldown: 5,
@@ -20,7 +20,6 @@ export default new ItemPassive({
         const hit = payload.action as Hit
         
         hit.add(hit.defender.moddedStats.inflict(Poison, Duration))
-        hit.append(`[POISON]`)
 
         return true
     },
