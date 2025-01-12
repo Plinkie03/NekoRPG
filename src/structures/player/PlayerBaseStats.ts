@@ -1,5 +1,6 @@
 import { EntityBaseStats } from "../entity/EntityBaseStats.js";
 import { Player } from "./Player.js";
+import { SkillType } from "./PlayerSkills.js";
 
 export class PlayerBaseStats extends EntityBaseStats {
     public constructor(private readonly player: Player) {
@@ -15,15 +16,15 @@ export class PlayerBaseStats extends EntityBaseStats {
     }
 
     public get maxHealth(): number {
-        return 100 + this.player.gear.stats.maxHealth
+        return (100 + this.player.gear.stats.maxHealth) * this.player.skills.get(SkillType.Endurance).multiplier
     }
 
     public get strength(): number {
-        return 20 + this.player.gear.stats.strength
+        return (20 + this.player.gear.stats.strength) * this.player.skills.get(SkillType.Melee).multiplier
     }
 
     public get defense(): number {
-        return 5 + this.player.gear.stats.defense
+        return (5 + this.player.gear.stats.defense) * this.player.skills.get(SkillType.Defense).multiplier
     }
 
     public get agility(): number {
