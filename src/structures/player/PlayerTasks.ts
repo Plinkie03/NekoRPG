@@ -1,9 +1,9 @@
-import { RawPlayerTasks } from "@prisma/client";
 import { Player } from "./Player.js";
-import { Node } from "../resource/node/Node.js";
+import { Node, NodeAction } from "../resource/node/Node.js";
 import { Nullable } from "../resource/Item.js";
 import { Game } from "../static/Game.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
+import { RawPlayerTask } from "@prisma/client";
 
 export interface PlayerTaskData {
     elapsed: number
@@ -11,53 +11,48 @@ export interface PlayerTaskData {
     node: Node
 }
 
-export type Tasks = {
-    [P in keyof RawPlayerTasks as P extends `${infer A}NodeId` ? A : never]: Nullable<PlayerTaskData>
-}
-
 export class PlayerTasks {
     public constructor(private readonly player: Player) { }
 
-    public get current(): Tasks {
-        return {
-            mining: this.get("mining"),
-            woodcutting: this.get("woodcutting")
-        }
-    }
-
     public get raw() {
-        return this.player.data.tasks!
+        return this.player.data.tasks
     }
 
-    public get(type: keyof Tasks): Nullable<PlayerTaskData> {
-        const nodeId = this.raw![PlayerTasks.formatNodeId(type)]
-        const startedAt = this.raw![PlayerTasks.formatNodeStartedAt(type)]
+    public get(type: NodeAction): Nullable<PlayerTaskData> {
+        const task = this.raw.find(x => Game.Nodes.get(x.nodeId).type === type)
 
-        if (!nodeId) return null
+        if (!task) return null
 
         return {
-            elapsed: Date.now() - startedAt!.getTime(),
-            node: Game.Nodes.get(nodeId),
-            startedAt: startedAt!.getTime()
+            elapsed: Date.now() - task.startedAt.getTime(),
+            node: Game.Nodes.get(task.nodeId),
+            startedAt: task.startedAt.getTime()
         }
     }
 
-    public static formatNodeId(type: keyof Tasks) {
-        return `${type}NodeId` as const
-    }
+    public async set(node: Node, state: boolean) {
+        if (state) {
+            const task = await NekoDatabase.rawPlayerTask.create({
+                data: {
+                    nodeId: node.id,
+                    startedAt: new Date(),
+                    playerId: this.player.id
+                }
+            })
 
-    public static formatNodeStartedAt(type: keyof Tasks) {
-        return `${type}NodeStartedAt` as const
-    }
+            this.raw.push(task)
+        } else {
+            await NekoDatabase.rawPlayerTask.delete({
+                where: {
+                    playerId_nodeId: {
+                        nodeId: node.id,
+                        playerId: this.player.id
+                    }
+                }
+            })
 
-    public set(type: keyof Tasks, id?: Nullable<number>) {
-        const nodeStartedStr = PlayerTasks.formatNodeStartedAt(type)
-        const nodeIdStr = PlayerTasks.formatNodeId(type)
-
-        this.raw[nodeIdStr] = id ?? null
-        this.raw[nodeStartedStr] = id ? new Date() : null
-
-        return this.player.save()
+            this.raw.splice(this.raw.findIndex(x => x.nodeId === node.id), 1)
+        }
     }
 
     /**
@@ -74,7 +69,7 @@ export class PlayerTasks {
      * @param type 
      * @returns false if not busy
      */
-    public finish(type: keyof Tasks) {
+    public finish(type: NodeAction) {
         const task = this.get(type)
         return task ? task.node.finish(this.player, task) : Promise.resolve(false as const)
     }

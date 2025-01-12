@@ -1,13 +1,18 @@
-import { RawPlayer, RawPlayerSkills } from "@prisma/client";
+import { RawPlayer } from "@prisma/client";
 import { Player } from "../player/Player.js";
-import { PlayerSkills, Skills } from "../player/PlayerSkills.js";
+import { PlayerSkills, Skills, SkillType } from "../player/PlayerSkills.js";
 import { Util } from "./Util.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
 import { Item } from "../resource/Item.js";
 
+export interface RewardSkillData {
+    type: SkillType
+    xp: number
+}
+
 export interface RewardData {
     items?: (RewardItemData | Item)[]
-    skills?: Partial<Skills>
+    skills?: RewardSkillData[]
     xp?: number
     money?: number
     gems?: number
@@ -24,18 +29,15 @@ export interface RewardOptions {
     player?: Player
     times?: number
     hideIrrelevant?: boolean
-    doNotSave?: boolean
 }
 
 export class Rewards {
     private constructor() {}
 
-    public static async give({ hideIrrelevant = false, player, rewards, doNotSave = false, times = 1 }: RewardOptions): Promise<string[]> {
+    public static async give({ hideIrrelevant = false, player, rewards, times = 1 }: RewardOptions): Promise<string[]> {
         const output = new Array<string>()
 
         if (!rewards || !times) return output
-
-        let save = false
 
         function push(msg: string, relevant: boolean) {
             if (hideIrrelevant && !relevant)
@@ -51,9 +53,6 @@ export class Rewards {
 
             if (result === true)
                 push(`${player!.displayName} is now level ${Util.formatInt(player!.level)}!`, true)
-
-            if (player) 
-                save = true
         }
 
         if (rewards.money) {
@@ -61,9 +60,6 @@ export class Rewards {
             player?.addMoney(money)
 
             push(`$${Util.formatInt(money)}`, false)
-
-            if (player)
-                save = true
         }
 
         if (rewards.gems) {
@@ -71,9 +67,6 @@ export class Rewards {
             player?.addGems(gems)
 
             push(`💎${Util.formatInt(gems)}`, false)
-
-            if (player)
-                save = true
         }
 
         if (rewards.items?.length) {
@@ -98,24 +91,19 @@ export class Rewards {
             }
         }
 
-        if (rewards.skills) {
-            for (const skillName of Util.objectKeys(rewards.skills)) {
-                const skillXp = Math.floor(rewards.skills[skillName]! * times)
-                const result = player?.skills.addXp(skillName, skillXp)
+        if (rewards.skills?.length) {
+            for (const { type: skillName, xp } of rewards.skills) {
+                const skillXp = Math.floor(xp * times)
+                const result = await player?.skills.addXp(skillName, skillXp)
 
-                push(`${Util.formatInt(skillXp)} ${Util.camelToTitle(skillName)} XP`, false)
+                push(`${Util.formatInt(skillXp)} ${Util.camelToTitle(SkillType[skillName])} XP`, false)
                 
                 if (result === true)
-                    push(`${player!.displayName}'s ${Util.camelToTitle(skillName)} is now level ${Util.formatInt(player!.skills.getLevel(skillName))}!`, true)
-
-                if (player)
-                    save = true
+                    push(`${player!.displayName}'s ${Util.camelToTitle(SkillType[skillName])} is now level ${Util.formatInt(player!.skills.get(skillName).level)}!`, true)
             }
         }
 
-        if (save && !doNotSave) {
-            await player!.save()
-        }
+        await player?.save()
         
         return output
     }

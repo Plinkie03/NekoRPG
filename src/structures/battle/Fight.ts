@@ -247,7 +247,7 @@ export class Fight {
 
         for (const player of winners) {
             for (const monster of losers) {
-                this.rewards.ensure(player, () => []).push(...(await monster.loot({ player, doNotSave: true })))
+                this.rewards.ensure(player, () => []).push(...(await monster.loot({ player })))
             }
         }
     }

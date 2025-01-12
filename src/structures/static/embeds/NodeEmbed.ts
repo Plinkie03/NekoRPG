@@ -1,5 +1,5 @@
 import { APIEmbedField, Base, Colors, EmbedBuilder, User } from "discord.js";
-import { Node } from "../../resource/node/Node.js";
+import { Node, NodeAction } from "../../resource/node/Node.js";
 import { BasicEmbed } from "./BasicEmbed.js";
 import { Util } from "../Util.js";
 import { Rewards } from "../Rewards.js";
@@ -19,7 +19,7 @@ export class NodeEmbed {
             value: node.id.toString()
         }, {
             name: "Type",
-            value: Util.camelToTitle(node.type)
+            value: Util.camelToTitle(NodeAction[node.type])
         })
 
         if (node.data.description) {

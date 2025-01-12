@@ -4,6 +4,7 @@ import { BasicEmbed } from "./BasicEmbed.js";
 import { Util } from "../Util.js";
 import { GearType, Item } from "../../resource/Item.js";
 import { Stats } from "../../entity/EntityBaseStats.js";
+import { SkillType } from "../../player/PlayerSkills.js";
 
 export class ProfileEmbed {
     private constructor() { }
@@ -46,8 +47,8 @@ export class ProfileEmbed {
 
         for (const skill of player.skills.toArray()) {
             embed.addFields({
-                name: Util.camelToTitle(skill.name),
-                value: `Level: ${Util.formatInt(skill.level)}\nExp: ${Util.formatInt(skill.xp)} / ${Util.formatInt(skill.reqXp)} (${Util.formatFloat(skill.xp / skill.reqXp)}%)\nMultiplier: ${Util.formatFloat(player.skills.getMultiplier(skill.name))}x`,
+                name: Util.camelToTitle(SkillType[skill.type]),
+                value: `Level: ${Util.formatInt(skill.level)}\nExp: ${Util.formatInt(skill.xp)} / ${Util.formatInt(skill.reqXp)} (${Util.formatFloat(skill.xp / skill.reqXp)}%)\nMultiplier: ${Util.formatFloat(skill.multiplier)}x`,
                 inline: true
             })
         }

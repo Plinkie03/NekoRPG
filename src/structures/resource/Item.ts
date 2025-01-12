@@ -6,7 +6,7 @@ import { Stats } from "../entity/EntityBaseStats.js"
 import { EntitySpell } from "../entity/EntitySpell.js"
 import { Player } from "../player/Player.js"
 import { PlayerInventoryItem } from "../player/PlayerInventoryItem.js"
-import { Skills } from "../player/PlayerSkills.js"
+import { Skills, SkillType } from "../player/PlayerSkills.js"
 import { Formulas } from "../static/Formulas.js"
 import { RarityType } from "../static/Rarity.js"
 import { Requirements } from "../static/Requirements.js"
@@ -26,11 +26,16 @@ export interface ItemData<T extends ItemType = ItemType> extends ResourceData {
     requirements?: RequirementData
 }
 
+export interface RequirementSkillData {
+    type: SkillType
+    level: number
+}
+
 export interface RequirementData {
     items?: RequirementItemData[]
     level?: number
     stats?: Partial<Stats>
-    skills?: Partial<Skills>
+    skills?: RequirementSkillData[]
 }
 
 export interface RequirementItemData {

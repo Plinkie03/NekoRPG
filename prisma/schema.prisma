@@ -23,49 +23,32 @@ model RawPlayer {
   gems     Int     @default(0)
   zoneId   Int     @default(1)
 
-  skills RawPlayerSkills?
-  tasks  RawPlayerTasks?
+  skills RawPlayerSkill[]
+  tasks  RawPlayerTask[]
   items  RawItem[]
   quests RawPlayerQuest[]
 }
 
-model RawPlayerSkills {
-  playerId String @id @unique
+model RawPlayerSkill {
+  playerId String
+  type     Int
 
-  enduranceLevel Int @default(1)
-  enduranceXp    Int @default(0)
-
-  distanceLevel Int @default(1)
-  distanceXp    Int @default(0)
-
-  meleeLevel Int @default(1)
-  meleeXp    Int @default(0)
-
-  defenseLevel Int @default(1)
-  defenseXp    Int @default(0)
-
-  woodcuttingLevel Int @default(1)
-  woodcuttingXp    Int @default(0)
-
-  miningLevel Int @default(1)
-  miningXp    Int @default(0)
-
-  smithingLevel Int @default(1)
-  smithingXp    Int @default(0)
-
-  player RawPlayer @relation(fields: [playerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-}
-
-model RawPlayerTasks {
-  playerId String @id @unique
-
-  miningNodeId        Int?
-  miningNodeStartedAt DateTime?
-
-  woodcuttingNodeId        Int?
-  woodcuttingNodeStartedAt DateTime?
+  level Int @default(1)
+  xp    Int @default(0)
 
   player RawPlayer @relation(fields: [playerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@id([playerId, type])
+}
+
+model RawPlayerTask {
+  playerId  String
+  nodeId    Int
+  startedAt DateTime
+
+  player RawPlayer @relation(fields: [playerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@id([playerId, nodeId])
 }
 
 model RawItem {

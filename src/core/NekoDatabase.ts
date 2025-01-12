@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, RawPlayerQuest, RawPlayerSkills, RawPlayerTasks } from "@prisma/client";
+import { Prisma, PrismaClient, RawPlayerQuest } from "@prisma/client";
 import { Collection, User } from "discord.js";
 import { Player } from "../structures/player/Player.js"
 import { Logger } from "../structures/static/Logger.js";
@@ -38,7 +38,10 @@ class NekoDB extends PrismaClient {
         const fromDb = (await this.getRawPlayer(id)) ?? (await this.createPlayer(id))
         const player = new Player(fromDb)
         
+        await player.skills.ensure()
+        
         this.players.set(player.id, player)
+        
         return player
     }
 
@@ -51,13 +54,7 @@ class NekoDB extends PrismaClient {
     public createPlayer(id: string) {
         return this.rawPlayer.create({
             data: {
-                id,
-                skills: {
-                    create: {}
-                },
-                tasks: {
-                    create: {}
-                }
+                id
             },
             include: PlayerIncludes
         })
@@ -99,24 +96,6 @@ class NekoDB extends PrismaClient {
         })
     }
 
-    public updatePlayerTasks(data: Partial<RawPlayerTasks> & { playerId: string }) {
-        return this.rawPlayerTasks.update({
-            data,
-            where: {
-                playerId: data.playerId
-            }
-        })
-    }
-
-    public updateSkill(data: Partial<RawPlayerSkills> & { playerId: string }) {
-        return this.rawPlayerSkills.update({
-            data,
-            where: {
-                playerId: data.playerId
-            }
-        })
-    }
-
     public updateQuest(data: Partial<RawPlayerQuest> & { uuid: string }) {
         return this.rawPlayerQuest.update({
             data,
@@ -132,24 +111,14 @@ class NekoDB extends PrismaClient {
         })
     }
 
-    public saveFullPlayer(data: PlayerData) {
+    public saveFullPlayer(data: Omit<PlayerData, "tasks">) {
         data = cloneDeep(data)
-        
-        // @ts-ignore
-        delete data.tasks!.playerId
-        
-        // @ts-ignore
-        delete data.skills!.playerId
 
         return this.rawPlayer.update({
             data: {
                 ...data,
-                skills: {
-                    update: data.skills!
-                },
-                tasks: {
-                    update: data.tasks!
-                },
+                skills: undefined,
+                tasks: undefined,
                 quests: undefined,
                 items: undefined
             },

@@ -1,3 +1,4 @@
+import { SkillType } from "../../../structures/player/PlayerSkills.js";
 import { Item, ItemType } from "../../../structures/resource/Item.js";
 import IronSword from "../gear/iron/IronSword.js";
 import BirchLog from "../material/log/BirchLog.js";
@@ -27,9 +28,9 @@ export default new Item<ItemType.Lootbox>({
             ]
         },
         rewards: {
-            skills: {
-                smithing: 50
-            }
+            skills: [
+                { type: SkillType.Smithing, xp: 50 }
+            ]
         }
     }
 })

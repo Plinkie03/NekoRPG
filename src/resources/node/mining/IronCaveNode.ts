@@ -1,3 +1,4 @@
+import { SkillType } from "../../../structures/player/PlayerSkills.js";
 import { MiningNode } from "../../../structures/resource/node/MiningNode.js";
 import BirchLog from "../../item/material/log/BirchLog.js";
 import Coal from "../../item/material/ore/Coal.js";
@@ -12,9 +13,9 @@ export default new MiningNode({
             hardness: 1_500,
             item: IronOre,
             rewards: {
-                skills: {
-                    mining: 8
-                }
+                skills: [
+                    { type: SkillType.Mining, xp: 8 }
+                ]
             }
         }
     ],

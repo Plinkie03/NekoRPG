@@ -1,8 +1,7 @@
-import { Tasks } from "../../player/PlayerTasks.js";
-import { Node } from "./Node.js";
+import { Node, NodeAction } from "./Node.js";
 
 export class MiningNode extends Node {
-    public get type(): keyof Tasks {
-        return "mining"
+    public get type() {
+        return NodeAction.Mining
     }
 }

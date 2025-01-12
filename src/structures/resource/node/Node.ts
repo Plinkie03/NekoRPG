@@ -1,6 +1,6 @@
 import { Player } from "../../player/Player.js"
 import { PlayerInventoryItem } from "../../player/PlayerInventoryItem.js"
-import { PlayerTaskData, PlayerTasks, Tasks } from "../../player/PlayerTasks.js"
+import { PlayerTaskData, PlayerTasks } from "../../player/PlayerTasks.js"
 import { Requirements } from "../../static/Requirements.js"
 import { RewardData, Rewards } from "../../static/Rewards.js"
 import { Time } from "../../static/Time.js"
@@ -76,8 +76,13 @@ export interface ResourceStatsData {
 
 export type SkipFirstArrayArg<T> = T extends [ infer _, ...infer A ] ? A : []
 
+export enum NodeAction {
+    Woodcutting,
+    Mining
+}
+
 export abstract class Node extends Resource<NodeData> {
-    public abstract get type(): keyof Tasks
+    public abstract get type(): NodeAction
 
     public get resources() {
         return this.data.resources
@@ -86,13 +91,13 @@ export abstract class Node extends Resource<NodeData> {
     public async start(player: Player): Promise<NodeStartCollectResponse> {
         if (player.tasks.get(this.type)) return { type: NodeStartCollectResponseType.Busy }
 
-        await player.tasks.set(this.type, this.id)
+        await player.tasks.set(this, true)
 
         return { type: NodeStartCollectResponseType.Success }
     }
 
     public async finish(player: Player, task: PlayerTaskData): Promise<NodeFinishCollectResponse> {
-        await player.tasks.set(this.type, null)
+        await player.tasks.set(this, false)
 
         const results = new Array<ResourceCollectionResultData>()
 

@@ -1,17 +1,15 @@
 import { ButtonInteraction, ChatInputCommandInteraction, Colors } from "discord.js"
-import { Node, NodeFinishCollectResponseType, NodeStartCollectResponseType } from "../../resource/node/Node.js"
+import { Node, NodeAction, NodeFinishCollectResponseType, NodeStartCollectResponseType } from "../../resource/node/Node.js"
 import { Player } from "../../player/Player.js"
 import { BasicEmbed } from "../embeds/BasicEmbed.js"
 import { Util } from "../Util.js"
-import { ActionType } from "../../../commands/action/end.js"
-import { Tasks } from "../../player/PlayerTasks.js"
 import { TimeParser } from "../../../Constants.js"
 
 export class ActionEndResponse {
-    public static async from(i: ChatInputCommandInteraction<'cached'> | ButtonInteraction<'cached'>, player: Player, type: ActionType) {
-        const action = ActionType[type].toLowerCase() as keyof Tasks
+    public static async from(i: ChatInputCommandInteraction<'cached'> | ButtonInteraction<'cached'>, player: Player, type: NodeAction) {
+        const action = NodeAction[type].toLowerCase()
 
-        const response = await player.tasks.finish(action)
+        const response = await player.tasks.finish(type)
 
         const embed = BasicEmbed.from(i, i.user, Colors.Red)
 

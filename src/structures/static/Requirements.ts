@@ -1,6 +1,6 @@
 import { Stats } from "../entity/EntityBaseStats.js";
 import { Player } from "../player/Player.js";
-import { Skills } from "../player/PlayerSkills.js";
+import { Skills, SkillType } from "../player/PlayerSkills.js";
 import { Item, RequirementData, RequirementItemData } from "../resource/Item.js";
 import { Util } from "./Util.js";
 
@@ -35,13 +35,13 @@ export class Requirements {
             }
         }
 
-        if (requirements.skills) {
-            for (const skill of Util.objectKeys(requirements.skills)) {
-                const required = requirements.skills[skill]!
-                const current = player?.skills.getLevel(skill) ?? 0
+        if (requirements.skills?.length) {
+            for (const { level, type: skill } of requirements.skills) {
+                const required = level
+                const current = player?.skills.get(skill).level ?? 0
 
                 if (current < required)
-                    errors.push(`${Util.camelToTitle(skill)} Skill (${Util.formatInt(required)})`)
+                    errors.push(`${Util.camelToTitle(SkillType[skill])} (${Util.formatInt(required)})`)
             }
         }
 

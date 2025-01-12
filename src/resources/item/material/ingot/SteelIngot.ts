@@ -1,3 +1,4 @@
+import { SkillType } from "../../../../structures/player/PlayerSkills.js";
 import { Item, ItemType } from "../../../../structures/resource/Item.js";
 import Coal from "../ore/Coal.js";
 import IronOre from "../ore/IronOre.js";
@@ -20,15 +21,15 @@ export default new Item({
                     item: Coal
                 }
             ],
-            skills: {
-                smithing: 20
-            }
+            skills: [
+                { type: SkillType.Smithing, level: 20 }
+            ]
         },
         chance: 80,
         rewards: {
-            skills: {
-                smithing: 250
-            }
+            skills: [
+                { type: SkillType.Smithing, xp: 250 }
+            ]
         }
     }
 })

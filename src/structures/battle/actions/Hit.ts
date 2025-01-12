@@ -2,7 +2,7 @@ import { Entity, IEntity } from "../../entity/Entity.js";
 import { EntityBaseStats } from "../../entity/EntityBaseStats.js";
 import { EntitySpell } from "../../entity/EntitySpell.js";
 import { Player } from "../../player/Player.js";
-import { Skills } from "../../player/PlayerSkills.js";
+import { Skills, SkillType } from "../../player/PlayerSkills.js";
 import { GearType } from "../../resource/Item.js";
 import { Formulas } from "../../static/Formulas.js";
 import { Util } from "../../static/Util.js";
@@ -121,16 +121,17 @@ export class Hit extends Action {
     private async addSkillPoints(entity: Entity, multipliers: Partial<Skills>) {
         if (!this.damage) return
 
-        if (entity instanceof Player) {
+        // One of the entities must not be a player
+        // In PVP, this shall not be executed
+        if (entity instanceof Player && this.entities.some(x => !(x instanceof Player))) {
             const results = await entity.give({
-                doNotSave: true,
                 hideIrrelevant: true,
                 rewards: {
-                    skills: {
-                        defense: this.damage * (multipliers.defense ?? 0),
-                        melee: this.damage * (multipliers.melee ?? 0),
-                        endurance: this.damage * (multipliers.endurance ?? 0)
-                    }
+                    skills: [
+                        { type: SkillType.Defense, xp: this.damage * (multipliers[SkillType.Defense] ?? 0) },
+                        { type: SkillType.Melee, xp: this.damage * (multipliers[SkillType.Melee] ?? 0) },
+                        { type: SkillType.Endurance, xp: this.damage * (multipliers[SkillType.Endurance] ?? 0) }
+                    ]
                 }
             })
 
@@ -145,13 +146,13 @@ export class Hit extends Action {
         }
 
         await this.addSkillPoints(this.entity, {
-            endurance: 0.75,
-            melee: 1
+            [SkillType.Endurance]: 0.75,
+            [SkillType.Melee]: 1
         })
 
         await this.addSkillPoints(this.defender, {
-            endurance: 1,
-            defense: 0.75
+            [SkillType.Endurance]: 1,
+            [SkillType.Defense]: 0.75
         })
 
         this.defender.damage(this.damage)

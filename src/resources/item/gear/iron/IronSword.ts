@@ -1,3 +1,4 @@
+import { SkillType } from "../../../../structures/player/PlayerSkills.js";
 import { GearType, Item, ItemType, WeaponType } from "../../../../structures/resource/Item.js";
 import Berserk from "../../../passive/Berserk.js";
 import Execution from "../../../passive/Execution.js";
@@ -31,9 +32,9 @@ export default new Item({
             ]
         },
         rewards: {
-            skills: {
-                smithing: 25
-            }
+            skills: [
+                { type: SkillType.Smithing, xp: 25 }
+            ]
         }
     },
     weaponType: WeaponType.Sword

@@ -1,3 +1,4 @@
+import { SkillType } from "../../../structures/player/PlayerSkills.js";
 import { WoodcuttingNode } from "../../../structures/resource/node/WoodcuttingNode.js";
 import BirchLog from "../../item/material/log/BirchLog.js";
 
@@ -10,9 +11,9 @@ export default new WoodcuttingNode({
             hardness: 1e3,
             item: BirchLog,
             rewards: {
-                skills: {
-                    woodcutting: 5
-                }
+                skills: [
+                    { type: SkillType.Woodcutting, xp: 5 }
+                ],
             }
         }
     ],

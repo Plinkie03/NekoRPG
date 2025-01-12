@@ -1,18 +1,29 @@
-import { RawPlayerSkills } from "@prisma/client";
+import { RawPlayerSkill } from "@prisma/client";
 import { Player } from "./Player.js";
 import { Formulas } from "../static/Formulas.js";
 import NekoDatabase from "../../core/NekoDatabase.js";
 import { GearType, WeaponType } from "../resource/Item.js";
+import { Enum } from "../static/Enum.js";
 
-export type Skills = {
-    [P in keyof RawPlayerSkills as P extends `${infer T}Level` ? T : never]: number
+export enum SkillType {
+    Smithing,
+    Mining,
+    Woodcutting,
+    Melee,
+    Endurance,
+    Defense
 }
 
 export interface PlayerSkillData {
-    name: keyof Skills
+    type: SkillType
     xp: number
     level: number
     reqXp: number
+    multiplier: number
+}
+
+export type Skills = {
+    [P in SkillType]: number
 }
 
 export class PlayerSkills {
@@ -21,93 +32,92 @@ export class PlayerSkills {
 
     public constructor(private readonly player: Player) { }
 
-    public getLevel(name: keyof Skills) {
-        return this.player.data.skills![PlayerSkills.formatSkillLevel(name)]
+    public get raw() {
+        return this.player.data.skills
     }
 
-    public setLevel(name: keyof Skills, lv: number) {
-        this.player.data.skills![PlayerSkills.formatSkillLevel(name)] = lv
-    }
-
-    public getMultiplier(name: keyof Skills) {
-        return Formulas.calculateSkillMultiplier(this.getLevel(name))
-    }
-
-    public getXp(name: keyof Skills) {
-        return this.player.data.skills![PlayerSkills.formatSkillXp(name)]
-    }
-
-    public setXp(name: keyof Skills, xp: number) {
-        this.player.data.skills![PlayerSkills.formatSkillXp(name)] = xp
-    }
-
-    public getReqXp(name: keyof Skills) {
-        return Formulas.calculateReqXp(this.getLevel(name), PlayerSkills.DefaultXpReq, PlayerSkills.DefaultXpMultiplier)
-    }
-
-    public getCombatSkillName(): keyof Skills {
+    public getCombatSkillName() {
         const weapon = this.player.gear.equipped[GearType.Weapon]
 
         if (weapon) {
-            return weapon.item.weaponType === WeaponType.Axe ? "melee" :
-                weapon.item.weaponType === WeaponType.Sword ? "melee" :
-                    "distance"
+            return SkillType.Melee
         }
 
-        return "melee"
+        return SkillType.Melee
     }
 
-    public addXp(skill: keyof Skills, xp: number): boolean {
-        let oldLv = this.getLevel(skill), currentXp = this.getXp(skill)
+    public async addXp(type: SkillType, xp: number) {
+        const raw = this.getRaw(type)
+
+        const oldLv = raw.level
 
         while (xp !== 0) {
-            const reqXp = this.getReqXp(skill)
-            const toAdd = xp + currentXp > reqXp ? reqXp - currentXp : xp
+            const reqXp = this.getReqXp(raw.level)
+            const toAdd = xp + raw.xp > reqXp ? reqXp - raw.xp : xp
 
-            currentXp += toAdd
+            raw.xp += toAdd
             xp -= toAdd
 
-            if (currentXp === reqXp) {
-                currentXp = 0
-                this.setLevel(skill, this.getLevel(skill) + 1)
+            if (raw.xp === reqXp) {
+                raw.xp = 0
+                raw.level++
             }
         }
 
-        this.setXp(skill, currentXp)
+        await NekoDatabase.rawPlayerSkill.update({
+            data: raw,
+            where: {
+                playerId_type: {
+                    playerId: this.player.id,
+                    type
+                }
+            }
+        })
 
-        return this.getLevel(skill) !== oldLv
+        return oldLv !== raw.level
     }
 
-    public static formatSkillXp(skill: keyof Skills) {
-        return `${skill}Xp` as const
+    private getMultiplier(lv: number) {
+        return Formulas.calculateSkillMultiplier(lv)
     }
 
-    public static formatSkillLevel(skill: keyof Skills) {
-        return `${skill}Level` as const
+    private getRaw(type: SkillType): RawPlayerSkill {
+        const raw = this.raw.find(x => x.type === type)
+        return raw!
     }
 
-    public get(name: keyof Skills): PlayerSkillData {
+    public get(type: SkillType): PlayerSkillData {
+        const raw = this.getRaw(type)
+
         return {
-            level: this.getLevel(name),
-            name,
-            reqXp: this.getReqXp(name),
-            xp: this.getXp(name)
+            ...raw,
+            multiplier: this.getMultiplier(raw.level),
+            type,
+            reqXp: this.getReqXp(raw.level)
         }
     }
 
-    public toArray() {
-        return Object.values(this.all)
+    private getReqXp(lv: number) {
+        return Formulas.calculateReqXp(lv, PlayerSkills.DefaultXpReq, PlayerSkills.DefaultXpMultiplier)
     }
-    
-    public get all(): Record<keyof Skills, PlayerSkillData> {
-        return {
-            defense: this.get("defense"),
-            distance: this.get("distance"),
-            endurance: this.get("endurance"),
-            melee: this.get("melee"),
-            mining: this.get("mining"),
-            smithing: this.get("smithing"),
-            woodcutting: this.get("woodcutting")
+
+    public toArray() {
+        return Enum.values(SkillType).map(this.get.bind(this))
+    }
+
+    public async ensure() {
+        for (const skill of Enum.values(SkillType)) {
+            const exists = !!this.getRaw(skill)
+            if (!exists) {
+                const data = await NekoDatabase.rawPlayerSkill.create({
+                    data: {
+                        type: skill,
+                        playerId: this.player.id
+                    }
+                })
+
+                this.raw.push(data)
+            }
         }
     }
 }
