@@ -254,7 +254,11 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public get upgrades() {
-        return 1
+        return this.data.upgrades
+    }
+
+    public get upgradeCost() {
+        return 10 ** this.data.upgrades
     }
 
     public async rerollRarity() {
