@@ -2,7 +2,6 @@ import { ButtonInteraction, ChatInputCommandInteraction, ActionRowBuilder, Butto
 import { Player } from "../../../player/Player.js"
 import { Item } from "../../../resource/Item.js"
 import { ItemEmbed } from "../../embeds/ItemEmbed.js"
-import craft from "../../../../interactions/button/info/item/craft.js"
 import bulkCraft from "../../../../interactions/button/info/item/bulkCraft.js"
 import { Util } from "../../Util.js"
 import { Monster } from "../../../monster/Monster.js"
