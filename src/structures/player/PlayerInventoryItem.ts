@@ -1,4 +1,3 @@
-import { RawItem } from "@prisma/client";
 import { PlayerInventory } from "./PlayerInventory.js";
 import { Game } from "../static/Game.js";
 import { Stats } from "../entity/EntityBaseStats.js";
