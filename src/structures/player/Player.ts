@@ -35,6 +35,10 @@ export class Player extends Entity<PlayerData, PlayerBaseStats> {
     public hasMoney(m: number) {
         return this.data.money >= m
     }
+
+    public hasGems(m: number) {
+        return this.data.gems >= m
+    }
     
     public getEquipment(): PlayerInventoryItem[] {
         return this.gear.toArray()

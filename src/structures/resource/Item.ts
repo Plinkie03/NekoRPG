@@ -34,6 +34,8 @@ export interface RequirementSkillData {
 export interface RequirementData {
     items?: RequirementItemData[]
     level?: number
+    money?: number
+    gems?: number
     stats?: Partial<Stats>
     skills?: RequirementSkillData[]
 }
@@ -215,7 +217,7 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         const errors = this.hasCraftRequirements(player, times)
         if (errors !== true) return { type: CraftItemResponseType.MissingRequirements, errors }
 
-        await Requirements.consume(player, this.data.craft.requirements.items!, times)
+        await Requirements.consume(player, this.data.craft.requirements, times)
 
         let success = 0
 

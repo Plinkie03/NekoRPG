@@ -74,7 +74,7 @@ export class Quest extends Resource<QuestData> {
         const errors = this.hasFinishRequirements(player)
         if (errors !== true) return { type: QuestFinishResponseType.MissingFinishRequirements, errors }
 
-        await Requirements.consume(player, this.data.requirements.finish.items)
+        await Requirements.consume(player, this.data.requirements.finish)
 
         await player.quests.update(this.id, false, existing.amount + 1)
 

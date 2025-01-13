@@ -2,6 +2,7 @@ import { Stats } from "../entity/EntityBaseStats.js";
 import { Player } from "../player/Player.js";
 import { Skills, SkillType } from "../player/PlayerSkills.js";
 import { Item, RequirementData, RequirementItemData } from "../resource/Item.js";
+import { RewardData } from "./Rewards.js";
 import { Util } from "./Util.js";
 
 export class Requirements {
@@ -14,6 +15,14 @@ export class Requirements {
 
         if (requirements.level && (!player || player.data.level < requirements.level)) {
             errors.push(`Player Level (${Util.formatInt(requirements.level)})`)
+        }
+
+        if (requirements.money && (!player || !player.hasMoney(requirements.money))) {
+            errors.push(`$${Util.formatInt(requirements.money)}`)
+        }
+
+        if (requirements.gems && (!player || !player.hasGems(requirements.gems))) {
+            errors.push(`💎${Util.formatInt(requirements.gems)}`)
         }
 
         if (requirements.items?.length) {
@@ -48,12 +57,22 @@ export class Requirements {
         return errors.length === 0 ? true : errors
     }
 
-    public static async consume(player: Player, items?: RequirementItemData[], times = 1) {
-        if (!items?.length) return
+    public static async consume(player: Player, requirements?: RequirementData, times = 1) {
+        if (!requirements?.items?.length) return
 
-        for (const reqItem of items) {
+        for (const reqItem of requirements.items) {
             const invItem = player.inventory.getItemById(reqItem.item.id)!
             await invItem.setAmount(invItem.amount - (reqItem.amount * times))
         }
+
+        if (requirements.money) {
+            player.addMoney(-requirements.money)
+        }
+
+        if (requirements.gems) {
+            player.addGems(-requirements.gems)
+        }
+
+        await player.save()
     }
 }
