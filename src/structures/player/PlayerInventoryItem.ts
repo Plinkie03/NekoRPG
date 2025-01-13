@@ -258,7 +258,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public get upgradeCost() {
-        return 10 ** this.data.upgrades
+        return 0 ** this.data.upgrades
     }
 
     /**
@@ -288,8 +288,6 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
                 uuid: this.uuid
             }
         })
-
-
 
         await this.rerollStats()
         await this.rerollPassives()
