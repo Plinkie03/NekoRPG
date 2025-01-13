@@ -258,7 +258,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public get upgradeCost() {
-        return 0 ** this.data.upgrades
+        return 1 ** this.data.upgrades
     }
 
     /**
