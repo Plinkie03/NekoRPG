@@ -29,6 +29,6 @@ export default new DiscordInteractionHandler({
         else
             await item?.equip()
         
-        return DisplayInventoryItemResponse.from(payload.instance, payload.extras, payload.args[1], null)
+        return DisplayInventoryItemResponse.from(payload.instance, payload.extras.player, payload.args[1], null)
     },
 })

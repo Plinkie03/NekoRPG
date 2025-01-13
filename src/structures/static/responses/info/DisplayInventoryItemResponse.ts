@@ -13,12 +13,14 @@ import gear from "../../../../interactions/button/profile/gear.js"
 import open from "../../../../interactions/button/inventory/open.js"
 import { Nullable } from "../../../resource/Item.js"
 import { Util } from "../../Util.js"
+import { Player } from "../../../player/Player.js"
+import upgrade from "../../../../interactions/button/inventory/upgrade.js"
 
 export class DisplayInventoryItemResponse {
     private constructor() {}
 
-    public static async from(input: ButtonInteraction<'cached'>, extras: GlobalExtrasData, uuid: string, backId: Nullable<typeof open.bindedId>) {
-            const invItem = extras.player.inventory.getItemByUUID(uuid)
+    public static async from(input: ButtonInteraction<'cached'>, player: Player, uuid: string, backId: Nullable<typeof open.bindedId>) {
+            const invItem = player.inventory.getItemByUUID(uuid)
             if (!invItem) {
                 await Util.reply(input, {
                     ephemeral: true,
@@ -28,8 +30,6 @@ export class DisplayInventoryItemResponse {
             }
     
             const embed = (await InventoryItemEmbed.from(input, input.user, invItem))
-                .setTitle(invItem.item.simpleName)
-                .setThumbnail(invItem.item.image)
     
             const actionRow = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
@@ -65,7 +65,7 @@ export class DisplayInventoryItemResponse {
                     new ButtonBuilder({
                         custom_id: equip.id(input.user, invItem.uuid),
                         label: !invItem.equipped ? "Equip" : "Unequip",
-                        disabled: reqs !== true || (invItem.item.isSpell() && extras.player.spells.isFull()),
+                        disabled: reqs !== true || (invItem.item.isSpell() && player.spells.isFull()),
                         style: ButtonStyle.Secondary
                     })
                 )
@@ -81,11 +81,24 @@ export class DisplayInventoryItemResponse {
                     })
                 )
             }
+
+            const secondActionRow = new ActionRowBuilder<ButtonBuilder>()
+
+            if (invItem.item.upgradable === true) {
+                secondActionRow.addComponents(
+                    new ButtonBuilder({
+                        custom_id: upgrade.id(input.user, uuid),
+                        disabled: invItem.hasUpgradeRequirements() !== true,
+                        label: "Upgrade",
+                        style: ButtonStyle.Primary
+                    })
+                )
+            }
     
             await Util.reply(input, {
                 embeds: [embed],
                 content: emptyString,
-                components: [actionRow] 
+                components: [actionRow, secondActionRow].filter(x => !!x.components.length) 
             })
     
             return true

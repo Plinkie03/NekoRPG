@@ -343,6 +343,10 @@ export class Item<T extends ItemType = ItemType> extends Resource<ItemInterfaces
         }
     }
 
+    public get upgradable() {
+        return this.isGear()
+    }
+
     public static formatStat(stat: keyof Stats, value: number) {
         return `${Util.camelToTitle(stat)} ${Item.formatStatValue(stat, value)}`
     }

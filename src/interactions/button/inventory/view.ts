@@ -23,6 +23,6 @@ export default new DiscordInteractionHandler({
         }
     ],
     async execute(payload) {
-        return DisplayInventoryItemResponse.from(payload.instance, payload.extras, payload.args[1], null)
+        return DisplayInventoryItemResponse.from(payload.instance, payload.extras.player, payload.args[1], null)
     },
 })

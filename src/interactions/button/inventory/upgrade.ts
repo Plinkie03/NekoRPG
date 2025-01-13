@@ -3,9 +3,10 @@ import { DiscordInteractionHandler, DiscordInteractionType } from "../../../stru
 import { ArgType } from "../../../structures/discord/Shared.js";
 import { Responses } from "../../../structures/static/Responses.js";
 import { DisplayInventoryItemResponse } from "../../../structures/static/responses/info/DisplayInventoryItemResponse.js";
+import { UpgradeItemResponse } from "../../../structures/static/responses/UpgradeItemResponse.js";
 
 export default new DiscordInteractionHandler({
-    id: 4,
+    id: 21,
     ownerOnly: true,
     type: DiscordInteractionType.Button,
     args: [
@@ -23,7 +24,6 @@ export default new DiscordInteractionHandler({
         }
     ],
     async execute(payload) {
-        await payload.extras.player.inventory.getItemByUUID(payload.args[1])?.setLocked()
-        return DisplayInventoryItemResponse.from(payload.instance, payload.extras.player, payload.args[1], null)
+        return UpgradeItemResponse.from(payload.instance, payload.extras.player, payload.args[1])
     },
 })

@@ -9,7 +9,8 @@ export class InventoryItemEmbed {
     public static async from(i: Base, to: User, invItem: PlayerInventoryItem) {
         const client = NekoClient.from(i)
 
-        const embed = await ItemEmbed.from(i, to, invItem)
+        const embed = (await ItemEmbed.from(i, to, invItem))
+            .setTitle(invItem.detailedName())
 
         return embed
     }

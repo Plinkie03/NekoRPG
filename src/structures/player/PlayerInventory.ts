@@ -97,7 +97,7 @@ export class PlayerInventory {
             passives: {
                 create: item.getRandomPassives(rarity.type)
             },
-            multiplier: item.isEquippable() ? Formulas.random(rarity.multiplier[0], rarity.multiplier[1]) : 1,
+            multiplier: item.isEquippable() ? Rarity.getRandomMultiplier(rarity) : 1,
             amount: data.amount ?? 1,
             itemId: data.itemId,
             playerId: this.player.id

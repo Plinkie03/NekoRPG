@@ -6,6 +6,7 @@ import { Rewards } from "../Rewards.js"
 import { Util } from "../Util.js"
 import { BasicEmbed } from "./BasicEmbed.js"
 import { PlayerInventoryItem } from "../../player/PlayerInventoryItem.js"
+import { Requirements } from "../Requirements.js"
 
 export class ItemEmbed {
     private constructor() {}
@@ -62,11 +63,20 @@ export class ItemEmbed {
             })
         }
 
-        if (itm instanceof PlayerInventoryItem && itm.passives.length !== 0) {
-            fields.push({
-                name: Util.plural("Passive", itm.passives.length, undefined, true),
-                value: itm.passives.map(x => `**${x.simpleName}**: ${x.info()}${x.data.cooldown ? ` (CD: ${x.data.cooldown}R)` : ""}`).join("\n")
-            })
+        if (itm instanceof PlayerInventoryItem) {
+            if (item.upgradable) {
+                fields.push({
+                    name: "Upgrade Cost",
+                    value: (Requirements.has(itm["upgradeRequirements"]) as string[]).join("\n")
+                })
+            }
+
+            if (itm.passives.length !== 0) {
+                fields.push({
+                    name: Util.plural("Passive", itm.passives.length, undefined, true),
+                    value: itm.passives.map(x => `**${x.simpleName}**: ${x.info()}${x.data.cooldown ? ` (CD: ${x.data.cooldown}R)` : ""}`).join("\n")
+                })
+            }
         }
 
         const stats = itm.getStats()

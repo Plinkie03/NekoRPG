@@ -1,3 +1,4 @@
+import { Formulas } from "./Formulas.js"
 import { Util } from "./Util.js"
 
 export enum RarityType {
@@ -77,5 +78,9 @@ export class Rarity {
 
     public static get(type: RarityType) {
         return Rarity.MappedRarities.get(type)!
+    }
+
+    public static getRandomMultiplier(rarity: IRarity) {
+        return Formulas.random(rarity.multiplier[0], rarity.multiplier[1])
     }
 }

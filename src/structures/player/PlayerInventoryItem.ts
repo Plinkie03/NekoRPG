@@ -4,9 +4,10 @@ import { Stats } from "../entity/EntityBaseStats.js";
 import { Rarity, RarityType } from "../static/Rarity.js";
 import NekoDatabase, { PlayerItemData } from "../../core/NekoDatabase.js";
 import { PlayerSpells } from "./PlayerSpells.js";
-import { Item, ItemType, LootboxOpenResponseType, Nullable } from "../resource/Item.js";
+import { Item, ItemType, LootboxOpenResponseType, Nullable, RequirementData } from "../resource/Item.js";
 import { Util } from "../static/Util.js";
 import { EntitySpell } from "../entity/EntitySpell.js";
+import { Requirements } from "../static/Requirements.js";
 
 export enum PlayerInventoryItemAmountChangeResponse {
     Destroyed,
@@ -260,23 +261,35 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return 10 ** this.data.upgrades
     }
 
-    public async rerollRarity() {
-        if (!this.entity.hasMoney(this.upgradeCost)) return false
+    /**
+     * 
+     * @returns true = Success | string[] = error | null = not upgradable
+     */
+    public async upgrade() {
+        const errors = this.hasUpgradeRequirements()
+        if (errors !== true) return errors
+
+        await Requirements.consume(this.entity, this.upgradeRequirements)
 
         const reroll = Rarity.getRandom(this.upgrades)
-        
+        const multiplier = Rarity.getRandomMultiplier(this.rarity)
+
+        this.data.upgrades++
+        this.data.rarity = reroll.type
+        this.data.multiplier = multiplier
+
         await NekoDatabase.rawItem.update({
             data: {
-                rarity: reroll.type,
-                upgrades: this.data.upgrades + 1
+                rarity: this.data.rarity,
+                upgrades: this.data.upgrades,
+                multiplier: this.data.multiplier
             },
             where: {
                 uuid: this.uuid
             }
         })
 
-        this.data.upgrades++
-        this.data.rarity = reroll.type
+
 
         await this.rerollStats()
         await this.rerollPassives()
@@ -287,37 +300,41 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     public async rerollPassives() {
         const passives = this.item.getRandomPassives(this.rarity.type)
 
-        await NekoDatabase.$transaction([
+        const [, newPassives ] = await NekoDatabase.$transaction([
             NekoDatabase.rawItemPassive.deleteMany({
                 where: {
                     itemUUID: this.uuid
                 }
             }),
-            NekoDatabase.rawItemPassive.createMany({
+            NekoDatabase.rawItemPassive.createManyAndReturn({
                 data: passives.map(x => ({
                     ...x,
                     itemUUID: this.uuid
                 }))
             })
         ])
+
+        this.data.passives = newPassives
     }
 
     public async rerollStats() {
         const stats = this.item.getRandomStats(this.rarity.type)
-        
-        await NekoDatabase.$transaction([
+
+        const [, newStats ] = await NekoDatabase.$transaction([
             NekoDatabase.rawItemStat.deleteMany({
                 where: {
                     itemUUID: this.uuid
                 }
             }),
-            NekoDatabase.rawItemStat.createMany({
+            NekoDatabase.rawItemStat.createManyAndReturn({
                 data: stats.map(x => ({
                     ...x,
                     itemUUID: this.uuid
                 }))
             })
         ])
+        
+        this.data.stats = newStats
     }
 
     public async unequip(): Promise<boolean> {
@@ -349,11 +366,19 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         return this.manager["player"]
     }
 
+    private get upgradeRequirements(): RequirementData {
+        return { money: this.upgradeCost }
+    }
+
     public hasRequirements() {
         return this.item.hasRequirements(this.entity)
     }
 
     public hasCraftRequirements() {
         return this.item.hasCraftRequirements(this.entity)
+    }
+
+    public hasUpgradeRequirements() {
+        return this.item.upgradable ? Requirements.has(this.upgradeRequirements, this.entity) : null
     }
 }
