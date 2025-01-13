@@ -12,15 +12,21 @@ export default new ItemPassive({
     id: 6,
     name: "Echo of the Past",
     types: [ Hit ],
+    showTag: false,
     gearTypes: [ GearType.Chestplate ],
     info: payload => `Reflect damage back to the target for ${DamageReturnMultiplier * 100}%`,
     criteria: payload => payload.entity === payload.action.as<Hit>().defender,
     execute(payload) {
         const hit = payload.action as Hit
 
+        const dmg = hit.damage * DamageReturnMultiplier
+
+        if (!dmg)
+            return false
+        
         hit.add(
             Hit.from(payload.entity, hit.entity)
-                .setFinalDamage(hit.damage * DamageReturnMultiplier)
+                .setFinalDamage(dmg)
                 .setIgnoreSpecials()
                 .setMessage("Some damage has been reflected back!"),
         )

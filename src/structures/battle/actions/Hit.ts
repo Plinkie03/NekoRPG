@@ -17,6 +17,7 @@ export class Hit extends Action {
     public crit!: boolean
     private customMessage?: string
     private hideAttacker = false
+    private ignoreDefense = false
     private ignoreSpecials = false
     
     public constructor(
@@ -45,6 +46,11 @@ export class Hit extends Action {
 
     public get damage() {
         return this.finalDamage
+    }
+
+    public setIgnoreDefense() {
+        this.ignoreDefense = true
+        return this
     }
 
     public setFinalDamage(n: number) {
@@ -89,7 +95,7 @@ export class Hit extends Action {
             finalDamage *= (1 - this.defender.moddedStats.blockReduction / 100)
         }
 
-        return Math.floor(Math.max(finalDamage - this.defender.moddedStats.defense, 0))
+        return Math.floor(Math.max(finalDamage - (this.ignoreDefense ? 0 : this.defender.moddedStats.defense), 0))
     }
 
     protected get message() {
