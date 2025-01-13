@@ -18,9 +18,9 @@ model RawPlayer {
   username String  @default("Unknown")
   banned   Boolean @default(false)
   level    Int     @default(1)
-  xp       Int     @default(0)
-  money    Int     @default(0)
-  gems     Int     @default(0)
+  xp       Float     @default(0)
+  money    Float   @default(0)
+  gems     Float     @default(0)
   zoneId   Int     @default(1)
 
   skills RawPlayerSkill[]
