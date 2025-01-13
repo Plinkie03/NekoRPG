@@ -87,13 +87,11 @@ export class Hit extends Action {
 
         let finalDamage = Formulas.random(this.entity.moddedStats.minDamage, this.entity.moddedStats.maxDamage) * this.multiplier
 
-        if (this.crit) {
+        if (this.crit) 
             finalDamage *= (this.entity.moddedStats.criticalMultiplier / 100)
-        }
 
-        if (this.blocked) {
+        if (this.blocked) 
             finalDamage *= (1 - this.defender.moddedStats.blockReduction / 100)
-        }
 
         return Math.floor(Math.max(finalDamage - (this.ignoreDefense ? 0 : this.defender.moddedStats.defense), 0))
     }
