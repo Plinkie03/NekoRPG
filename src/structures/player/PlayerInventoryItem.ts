@@ -292,6 +292,9 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         await this.rerollStats()
         await this.rerollPassives()
 
+        if (this.equipped)
+            this.entity["clearCache"]()
+        
         return true
     }
 
