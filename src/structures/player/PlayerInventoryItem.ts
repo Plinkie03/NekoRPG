@@ -278,11 +278,14 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
         this.data.upgrades++
         this.data.rarity = reroll.type
 
+        await this.rerollStats()
+        await this.rerollPassives()
+
         return true
     }
 
     public async rerollPassives() {
-        const passives = await this.item.getRandomPassives(this.rarity.type)
+        const passives = this.item.getRandomPassives(this.rarity.type)
 
         await NekoDatabase.$transaction([
             NekoDatabase.rawItemPassive.deleteMany({
@@ -300,7 +303,7 @@ export class PlayerInventoryItem<T extends ItemType = ItemType> {
     }
 
     public async rerollStats() {
-        const stats = await this.item.getRandomStats(this.rarity.type)
+        const stats = this.item.getRandomStats(this.rarity.type)
         
         await NekoDatabase.$transaction([
             NekoDatabase.rawItemStat.deleteMany({
