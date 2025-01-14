@@ -11,7 +11,7 @@ export default new ItemPassive({
     gearTypes: ItemPassive.OnlyWeapons,
     chance: 10,
     info: payload => `${payload.data.chance}% chance to execute the target [Execution: deal 3x damage]`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().entity,
+    criteria: ItemPassive.attacking,
     execute(payload) {
         const hit = payload.action as Hit | SpellAttack
         

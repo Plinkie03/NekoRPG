@@ -13,7 +13,7 @@ export default new ItemPassive({
     types: ItemPassive.AttackActions,
     gearTypes: ItemPassive.OnlyWeapons,
     info: payload => `When HP falls below ${MinHpPercent * 1e2}%, Strength ${StrengthBuff}x`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().entity && payload.entity.hp / payload.entity.moddedStats.maxHealth <= MinHpPercent,
+    criteria: payload => ItemPassive.attacking(payload) && ItemPassive.attackerUnderHp(payload, MinHpPercent),
     execute(payload) {
         const hit = payload.action as Hit
 

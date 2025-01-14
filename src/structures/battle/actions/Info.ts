@@ -22,4 +22,8 @@ export class Info extends Action {
     protected async execute() {
         
     }
+
+    public static new(entity: Entity, str: string) {
+        return new this(entity, str)
+    }
 }

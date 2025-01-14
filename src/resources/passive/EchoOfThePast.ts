@@ -15,7 +15,7 @@ export default new ItemPassive({
     showTag: false,
     gearTypes: [ GearType.Chestplate ],
     info: payload => `Reflect damage back to the target for ${DamageReturnMultiplier * 100}%`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().defender,
+    criteria: ItemPassive.defending,
     execute(payload) {
         const hit = payload.action as Hit
 

@@ -12,7 +12,7 @@ export default new ItemPassive({
     types: [ Hit ],
     gearTypes: ItemPassive.OnlyWeapons,
     info: payload => `If target is at 100% HP, deal ${Util.formatFloat(DamageMultiplier * 100)}% more damage`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().entity,
+    criteria: ItemPassive.attacking,
     execute(payload) {
         const hit = payload.action as Hit | SpellAttack
         

@@ -17,7 +17,7 @@ export default new ItemPassive({
     types: ItemPassive.AttackActions,
     gearTypes: [GearType.Leggings],
     info: payload => `When your HP falls below ${Util.formatFloat(HpReqPercent * 100)}%, Defense stat is boosted by ${Util.formatFloat(DefenseIncreaseMultiplier * 100)}%`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().defender && payload.entity.hp / payload.entity.moddedStats.maxHealth <= HpReqPercent,
+    criteria: payload => ItemPassive.defending(payload) && ItemPassive.defenderUnderHp(payload, HpReqPercent),
     execute(payload) {
         payload.action.add(
             payload.entity.moddedStats.addFortification({ duration: Duration, multiplier: DefenseIncreaseMultiplier, name: "defense" })

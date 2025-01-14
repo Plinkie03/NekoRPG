@@ -15,7 +15,7 @@ export default new ItemPassive({
     cooldown: 20,
     chance: 15,
     info: payload => `${payload.data.chance}% chance to unleash a storm of thunderbolts (${Quantity}) dealing ${Util.formatFloat(DamageMultiplier * 100)}% of your damage each`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().entity,
+    criteria: ItemPassive.attacking,
     execute(payload) {
         const hit = payload.action as Hit
 

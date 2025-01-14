@@ -15,7 +15,7 @@ export default new ItemPassive({
     gearTypes: ItemPassive.OnlyWeapons,
     cooldown: 5,
     info: payload => `${payload.data.chance}% chance to inflict poison to the target for ${Duration} turns`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().entity,
+    criteria: ItemPassive.attacking,
     execute(payload) {
         const hit = payload.action as Hit
         

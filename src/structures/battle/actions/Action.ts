@@ -3,6 +3,9 @@ import { Nullable } from "../../resource/Item.js";
 import { ItemPassiveBasePayload, ItemPassiveExecutePayload } from "../../resource/ItemPassive.js";
 import { Fight } from "../Fight.js";
 
+export type ClassType = new (...args: any[]) => any
+export type ClassInstance<T> = T extends (...args: any[]) => infer P ? P : never
+
 export abstract class Action {
     private hideDisplay = false
     private appends = new Array<string>()
@@ -87,5 +90,15 @@ export abstract class Action {
         for (const action of this.actions) {
             await action.run(fight)
         }
+    }
+
+    public static tag<T extends ClassType>(clazz: T, tag: string, ...args: ConstructorParameters<T>) {
+        const cls = new clazz(...args)
+        if (!(cls instanceof Action))
+            throw new Error("WTF")
+
+        cls.append(tag)
+
+        return cls as ClassInstance<T>
     }
 }

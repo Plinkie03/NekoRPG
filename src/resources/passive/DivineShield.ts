@@ -16,7 +16,7 @@ export default new ItemPassive({
     types: ItemPassive.AttackActions,
     gearTypes: [ GearType.Chestplate ],
     info: payload => `When hit by an enemy, absorb the damage and stun the target for ${Duration} rounds, lowering their defense by ${DefenseReduction}x`,
-    criteria: payload => payload.entity === payload.action.as<Hit>().defender,
+    criteria: ItemPassive.defending,
     execute(payload) {
         const hit = payload.action as Hit
 
