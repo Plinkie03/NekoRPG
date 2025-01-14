@@ -96,6 +96,10 @@ export class Hit extends Action {
         return Math.floor(Math.max(finalDamage - (this.ignoreDefense ? 0 : this.defender.moddedStats.defense), 0))
     }
 
+    public get fatality() {
+        return this.finalDamage >= this.defender.hp
+    }
+
     protected get message() {
         const output = new Array<string>()
 
