@@ -24,10 +24,6 @@ export class Resource<Data extends ResourceData = ResourceData> {
     public get emoji() {
         return this.data.emoji ?? null
     }
-
-    public get tag() {
-        return `[${this.name.toUpperCase()}]`
-    }
     
     public get simpleName() {
         return `${this.emoji && `${this.emoji} ` || ''}${this.name}`

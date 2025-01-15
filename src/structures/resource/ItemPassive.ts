@@ -42,6 +42,10 @@ export class ItemPassive extends Resource<ItemPassiveData> {
     public canHave(type: GearType) {
         return this.data.gearTypes?.includes(type) ?? true
     }
+    
+    public get tag() {
+        return `[${this.simpleName.toUpperCase()}]`
+    }
 
     public get showTag() {
         return this.data.showTag !== false
