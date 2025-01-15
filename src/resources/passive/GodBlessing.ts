@@ -12,6 +12,7 @@ export default new ItemPassive({
     id: 14,
     name: "God's Blessing",
     cooldown: 10,
+    emoji: "<:godblessing:1329094597691052144>",
     gearTypes: ItemPassive.Jewelry,
     info: passive => `Heals ${HealAmount * 100}% of your Max HP and improves Healing Effect by ${HealRateBuff * 100}% for ${HealRateDuration} rounds`,
     criteria: () => true,

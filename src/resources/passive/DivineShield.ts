@@ -13,6 +13,7 @@ export default new ItemPassive({
     id: 3,
     name: "Divine Shield",
     cooldown: 10,
+    emoji: "<:divine_shield:1329095864169271456>",
     types: ItemPassive.AttackActions,
     gearTypes: [ GearType.Chestplate ],
     info: payload => `When hit by an enemy, absorb the damage and stun the target for ${Duration} rounds, lowering their defense by ${DefenseReduction}x`,

@@ -13,6 +13,7 @@ export default new ItemPassive({
     types: ItemPassive.AttackActions,
     gearTypes: ItemPassive.OnlyWeapons,
     cooldown: 20,
+    emoji: "<:zeus_wrath:1329092551004655707>",
     chance: 15,
     info: payload => `${payload.data.chance}% chance to unleash a storm of thunderbolts (${Quantity}) dealing ${Util.formatFloat(DamageMultiplier * 100)}% of your damage each`,
     criteria: ItemPassive.attacking,

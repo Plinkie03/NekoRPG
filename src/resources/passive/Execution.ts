@@ -9,6 +9,7 @@ export default new ItemPassive({
     name: "Execution",
     types: [ Hit ],
     gearTypes: ItemPassive.OnlyWeapons,
+    emoji: "<:execution:1329095107273555988>",
     chance: 10,
     info: payload => `${payload.data.chance}% chance to execute the target [Execution: deal 3x damage]`,
     criteria: ItemPassive.attacking,

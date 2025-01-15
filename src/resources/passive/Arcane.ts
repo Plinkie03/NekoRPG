@@ -9,6 +9,7 @@ export default new ItemPassive({
     id: 13,
     name: "Arcane",
     types: [ SpellAttack ],
+    emoji: "<:arcane:1329097247559778447>",
     showTag: false,
     gearTypes: [ GearType.Leggings ],
     info: () => `When hit by spells, your damage taken is reduced by ${Reduction * 100}%`,

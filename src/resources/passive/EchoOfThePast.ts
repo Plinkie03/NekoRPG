@@ -12,6 +12,7 @@ export default new ItemPassive({
     id: 6,
     name: "Echo of the Past",
     types: [ Hit ],
+    emoji: "<:echoofthepast:1329095633197334569>",
     showTag: false,
     gearTypes: [ GearType.Chestplate ],
     info: payload => `Reflect damage back to the target for ${DamageReturnMultiplier * 100}%`,

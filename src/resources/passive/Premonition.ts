@@ -10,6 +10,7 @@ export default new ItemPassive({
     id: 8,
     name: "Premonition",
     types: [ Hit ],
+    emoji: "<:premonition:1329093553925914666>",
     gearTypes: ItemPassive.OnlyWeapons,
     info: payload => `If target is at 100% HP, deal ${Util.formatFloat(DamageMultiplier * 100)}% more damage`,
     criteria: ItemPassive.attacking,

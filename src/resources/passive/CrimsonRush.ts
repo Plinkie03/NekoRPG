@@ -10,6 +10,7 @@ const MinHp = 0.4
 
 export default new ItemPassive({
     id: 15,
+    emoji: "<:crimsonrush:1329096088451285045>",
     name: "Crimson Rush",
     gearTypes: [ GearType.Boots ],
     cooldown: 20,

@@ -10,6 +10,7 @@ export default new ItemPassive({
     name: "Justice",
     types: ItemPassive.AttackActions,
     cooldown: 50,
+    emoji: "<:justice:1329094084236935168>",
     gearTypes: [ GearType.Chestplate ],
     info: () => `A hit that causes death resurrects the player for ${HpRecover * 100}% of the HP`,
     criteria: payload => ItemPassive.defending(payload) && (payload.action as Hit).fatality,

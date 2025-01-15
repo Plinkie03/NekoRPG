@@ -12,6 +12,7 @@ export default new ItemPassive({
     name: "Poison Edge",
     chance: 10,
     types: [ Hit ],
+    emoji: "<:poisonedge:1329093712051179652>",
     gearTypes: ItemPassive.OnlyWeapons,
     cooldown: 5,
     info: payload => `${payload.data.chance}% chance to inflict poison to the target for ${Duration} turns`,

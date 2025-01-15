@@ -14,6 +14,7 @@ export default new ItemPassive({
     id: 7,
     name: "Second Wind",
     cooldown: 30,
+    emoji: "<:second_wind:1329092821671477269>",
     types: ItemPassive.AttackActions,
     gearTypes: [GearType.Leggings],
     info: payload => `When your HP falls below ${Util.formatFloat(HpReqPercent * 100)}%, Defense stat is boosted by ${Util.formatFloat(DefenseIncreaseMultiplier * 100)}%`,

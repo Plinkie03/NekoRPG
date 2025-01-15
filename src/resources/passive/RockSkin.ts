@@ -9,6 +9,7 @@ export default new ItemPassive({
     name: "Rock Skin",
     types: ItemPassive.AttackActions,
     gearTypes: [ GearType.Boots ],
+    emoji: "<:rock_skin:1329093184281641022>",
     info: () => `While stunned, your damage taken is reduced by ${Reduction * 100}%`,
     criteria: payload => ItemPassive.defending(payload) && payload.entity.moddedStats.isStunned(),
     execute(payload) {

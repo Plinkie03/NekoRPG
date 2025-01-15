@@ -9,6 +9,7 @@ const StrengthBuff = 2
 
 export default new ItemPassive({
     id: 2,
+    emoji: "<:rage:1329093384517980191>",
     name: "Rage",
     types: ItemPassive.AttackActions,
     gearTypes: ItemPassive.OnlyWeapons,

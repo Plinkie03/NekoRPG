@@ -9,6 +9,7 @@ const MaxMultiplier = 0.3
 export default new ItemPassive({
     id: 1,
     name: "Berserk",
+    emoji: "<:berserk:1329096653478563900>",
     types: ItemPassive.AttackActions,
     showTag: false,
     gearTypes: ItemPassive.OnlyWeapons,
