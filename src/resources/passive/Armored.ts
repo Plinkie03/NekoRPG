@@ -9,6 +9,7 @@ export default new ItemPassive({
     name: "Armored",
     types: [ Hit ],
     gearTypes: [ GearType.Leggings ],
+    showTag: false,
     info: () => `When hit by basic attacks, your damage taken is reduced by ${Reduction * 100}%`,
     criteria: ItemPassive.defending,
     execute(payload) {
