@@ -36,7 +36,7 @@ export class DisplayInventoryItemResponse {
                     new ButtonBuilder({
                         custom_id: backId?.(input.user, uuid) ?? page.id(input.user, invItem.pageNumber ?? 0, ActionType.Stay),
                         label: "Back",
-                        disabled: !invItem.index,
+                        disabled: invItem.index === null,
                         style: ButtonStyle.Primary
                     }),
                     new ButtonBuilder({
