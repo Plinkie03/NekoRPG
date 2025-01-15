@@ -100,7 +100,7 @@ export class EntityModdedStats extends EntityBaseStats {
 
     public addFortification(fort: StatFortification) {
         this.fortifications.push(fort)
-        return new Info(this.entity, `${this.entity.displayName}'s ${Util.camelToTitle(fort.name)} has ${fort.multiplier < 0 ? "decreased" : "increased"} by ${Math.abs(fort.multiplier)}x for ${Util.plural("round", fort.duration)}`)
+        return new Info(this.entity, `${this.entity.displayName}'s ${Util.camelToTitle(fort.name)} has ${fort.multiplier < 0 ? "decreased" : "increased"} by ${Math.abs(fort.multiplier * 100)}% for ${Util.plural("round", fort.duration)}`)
     }
 
     public canCastSpell(spell: EntitySpell) {
@@ -108,7 +108,7 @@ export class EntityModdedStats extends EntityBaseStats {
     }
 
     public canTriggerPassive(payload: ItemPassiveExecutePayload) {
-        return (!payload.passive.data.chance || Util.isChance(payload.passive.data.chance)) && !this.passiveCooldowns.some(x => x.id === payload.passive.id) && payload.passive.data.types.some(x => payload.action instanceof x) && payload.passive.data.criteria(payload)
+        return (!payload.passive.data.chance || Util.isChance(payload.passive.data.chance)) && !this.passiveCooldowns.some(x => x.id === payload.passive.id) && (!payload.passive.data.types?.length || payload.passive.data.types.some(x => payload.action instanceof x)) && payload.passive.data.criteria(payload)
     }
 
     public addPassiveItemCooldown(passive: ItemPassive) {

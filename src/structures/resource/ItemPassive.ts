@@ -20,7 +20,7 @@ export interface ItemPassiveExecutePayload extends ItemPassiveBasePayload {
 
 export interface ItemPassiveData extends ResourceData {
     cooldown?: number
-    types: any[]
+    types?: any[]
     gearTypes?: GearType[]
     chance?: number
     showTag?: boolean
@@ -31,6 +31,7 @@ export interface ItemPassiveData extends ResourceData {
 
 export class ItemPassive extends Resource<ItemPassiveData> {
     public static readonly AttackActions = [ Hit, SpellAttack ]
+    public static readonly Jewelry = [ GearType.Ring, GearType.Necklace ]
     public static readonly NonWeapons = Enum.values(GearType).filter(x => x !== GearType.Weapon)
     public static readonly OnlyWeapons = [ GearType.Weapon ]
 
