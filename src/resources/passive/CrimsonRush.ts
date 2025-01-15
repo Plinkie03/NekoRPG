@@ -16,11 +16,13 @@ export default new ItemPassive({
     info: payload => `When under ${MinHp * 100}% HP, your agility is boosted by ${AgilityBuff * 100}% for ${AgilityDuration} rounds`,
     criteria: payload => ItemPassive.attackerUnderHp(payload, MinHp),
     execute(payload) {
-        payload.entity.moddedStats.addFortification({
-            duration: AgilityDuration,
-            multiplier: AgilityBuff,
-            name: "agility"
-        })
+        payload.action.add(
+            payload.entity.moddedStats.addFortification({
+                duration: AgilityDuration,
+                multiplier: AgilityBuff,
+                name: "agility"
+            })
+        )
 
         return true
     },
