@@ -2,6 +2,64 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.0](https://github.com/Plinkie03/NekoRPG/compare/v1.4.1...v1.5.0) (2025-01-15)
+
+
+### Features
+
+* **Arcane:** New item passive ([d469052](https://github.com/Plinkie03/NekoRPG/commit/d469052f0b2c0fcd2a2c96015c14f9fe5b0913c3))
+* **Armored:** New item passive ([b78a813](https://github.com/Plinkie03/NekoRPG/commit/b78a8131f2d0fe751a958dd8b42b392ff244fd6e))
+* **CrimsonRush:** New item passive ([8cb1844](https://github.com/Plinkie03/NekoRPG/commit/8cb1844f12c6b3377f1156b7539d5af1f4a12716))
+* **GodBlessing:** New item passive ([b622c1d](https://github.com/Plinkie03/NekoRPG/commit/b622c1d8a7c1a27fee980c5eb5cad8d0193143df))
+* **Justice:** New item passive ([9e99f10](https://github.com/Plinkie03/NekoRPG/commit/9e99f1088b7c80f83e912be8487cae322dd225ab))
+* **Passives:** Add Zeus Wrath ([61a8b81](https://github.com/Plinkie03/NekoRPG/commit/61a8b8126eb1fff1663b291010a08b5a2aa9ec4a))
+* **RockSkin:** New item passive ([a09979e](https://github.com/Plinkie03/NekoRPG/commit/a09979e9c9056538df1552d20e412bb37a51740c))
+
+
+### Bug Fixes
+
+* **Actions:** The display was giving out magic numbers instead of the action name ([27ddc36](https://github.com/Plinkie03/NekoRPG/commit/27ddc36718a523440f48d78aa76d8a88a6c8a576))
+* **CrimsonRush:** Info not appended ([2471b34](https://github.com/Plinkie03/NekoRPG/commit/2471b34871db4adcb514e6f11fe1819496d60763))
+* **DisplayInventoryItem:** Not properly working the back button with 0 indices ([e2855ce](https://github.com/Plinkie03/NekoRPG/commit/e2855ce4dd3fc9fb1cfe87d4fa7ebb0e0556dceb))
+* **EchoOfThePast:** Do not trigger if the reflected damage is 0 ([5849d9c](https://github.com/Plinkie03/NekoRPG/commit/5849d9c3b5541fd657969d999e06ef55c9037be6))
+* **Fight:** Do not display summons in win tab ([6e38e72](https://github.com/Plinkie03/NekoRPG/commit/6e38e72c7e245bcbd0999fd3ce9515940be97449))
+* **Hit:** Limit dodge to 50% ([67a8ad9](https://github.com/Plinkie03/NekoRPG/commit/67a8ad9e56aad57fe190a3437a2a52fd35446c47))
+* **Hit:** Not accounting damage reduction ([ba05168](https://github.com/Plinkie03/NekoRPG/commit/ba0516845dce91fc626cfd5c1f4fa7dee2d1b3a0))
+* **IronLeggings:** Same as sprite as chestplate ([4dabff7](https://github.com/Plinkie03/NekoRPG/commit/4dabff7e9c30f426c8f8210c007fb2a8d88572bd))
+* **PlayerInventoryItem#upgradeCost:** made 1 to prevent errors ([f10d38a](https://github.com/Plinkie03/NekoRPG/commit/f10d38a3f3619dfd8b4f59debddcc435b2fe8ef5))
+* **PlayerInventoryItem#upgrade:** Not clearing cache ([05f2309](https://github.com/Plinkie03/NekoRPG/commit/05f2309aaad7a52a2fd181dfa82dc40daac3f964))
+* **PlayerInventoryItem:** Remote redundant awaits ([88ab5be](https://github.com/Plinkie03/NekoRPG/commit/88ab5be6d53139712870d5c6b9e29616c4e58939))
+* **Prisma:** Change some data types to float ([f9fd2e0](https://github.com/Plinkie03/NekoRPG/commit/f9fd2e0a486ea5c731ab7162419ec21b37fd3230))
+* **ProfileProgress:** Exp shown in percent was in a range of 0-1 ([ab9266f](https://github.com/Plinkie03/NekoRPG/commit/ab9266fbdc1ae7c75d7788f012053a280071b1c3))
+* **Resources:** Remove #tag, moved to ItemPassive ([694b0b3](https://github.com/Plinkie03/NekoRPG/commit/694b0b35fc72d3c5460741673128e52c4e0389bf))
+* **SecondWind:** Incorrect description ([9597833](https://github.com/Plinkie03/NekoRPG/commit/9597833313a04e32f565d3ce2e66cde8e9c68244))
+
+
+### Chores
+
+* **Hit:** Add option to ignore target's defense ([c937616](https://github.com/Plinkie03/NekoRPG/commit/c937616fe5393aa72c352af1d3124dc76892c099))
+* **ItemPassive:** Add condition helpers for passives ([c3b7543](https://github.com/Plinkie03/NekoRPG/commit/c3b7543f0e4f2e48d1906d2c6afc65f9dc966267))
+* **ItemPassive:** Add emojis ([046664e](https://github.com/Plinkie03/NekoRPG/commit/046664e4ed2f8b3a899e79b6edbde0cfa5711bab))
+* **Passives:** Nerf execution, no longer triggers on special attacks ([76accd1](https://github.com/Plinkie03/NekoRPG/commit/76accd1d617d59e54324e94320f4d60c9df7eddf))
+* **PlayerBaseStats:** Respect skills ([ab10774](https://github.com/Plinkie03/NekoRPG/commit/ab10774ffda509329fd8d8398d9a19182310a7db))
+* **PlayerInventoryItem#upgradeCost:** Now free for testing ([1166c3f](https://github.com/Plinkie03/NekoRPG/commit/1166c3fd6f358f1eb9303f428e95b1af4dd62746))
+* **PlayerInventoryItem:** Add reroll for passives ([18865a4](https://github.com/Plinkie03/NekoRPG/commit/18865a49e020dfa6148ec1a3ddd5fa9088351fbc))
+* **PlayerInventoryItem:** Add reroll for stats ([678aa66](https://github.com/Plinkie03/NekoRPG/commit/678aa66ca5cad5bd0be108e6c9dbdbe6c569775e))
+* **PlayerInventoryItem:** Add reroll for stats ([3ef8789](https://github.com/Plinkie03/NekoRPG/commit/3ef8789f91b4259e942e811ec4ba702972c0fcb9))
+* **PlayerInventoryItem:** Add reroll for upgrades (% to get better every upgrade) ([5d077a6](https://github.com/Plinkie03/NekoRPG/commit/5d077a671d4851a7ed20842999877c6a1232a0a3))
+* **PlayerInventoryItem:** Fully implement upgrade system ([da46032](https://github.com/Plinkie03/NekoRPG/commit/da46032e555266435953fe273864e7b2f83a66a4))
+* Remove money command ([f32588c](https://github.com/Plinkie03/NekoRPG/commit/f32588cd6beb00717df5dfdf9f7da65f0922d608))
+* **Skills:** Buff XP REQ ([8f0e062](https://github.com/Plinkie03/NekoRPG/commit/8f0e0626b038628f0aefafe5dcce5d5ddff3bdbc))
+* **SlimeQueen:** Buff stats ([820bdd5](https://github.com/Plinkie03/NekoRPG/commit/820bdd5117fb65f206efe3c36f6d749ab10051ed))
+* **Slimes:** Buff stats ([13c0452](https://github.com/Plinkie03/NekoRPG/commit/13c045223f5aee265df65d3d8b32355500104aa9))
+
+
+### Code Refactoring
+
+* **PlayerSkills:** Now saved dynamically ([68257c6](https://github.com/Plinkie03/NekoRPG/commit/68257c6498ebc9609301ada13e923db09a1a7e63))
+* **PlayerTasks:** Now saved dynamically ([1324311](https://github.com/Plinkie03/NekoRPG/commit/1324311122e2cf7a8e44519308307762375ec5ea))
+* **Requirements:** Now can consume money, gems ([4d6f28d](https://github.com/Plinkie03/NekoRPG/commit/4d6f28d740cb82bdbfce65ef8428333299db6274))
+
 ## [1.4.1](https://github.com/Plinkie03/NekoRPG/compare/v1.4.0...v1.4.1) (2025-01-11)
 
 
