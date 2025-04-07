@@ -1,5 +1,5 @@
-import { NekoClient } from "./core/NekoClient.js";
+import { NekoClient } from './core/NekoClient.js';
 
-const client = new NekoClient()
+const client = new NekoClient();
 
-client.login()
+client.login();

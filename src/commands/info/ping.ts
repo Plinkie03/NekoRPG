@@ -1,26 +1,25 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
-import { ArgType } from "../../structures/discord/BaseHandler.js";
-import { Command } from "../../structures/discord/Command.js";
-import test from "../../interactions/buttons/ping/test.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { Command } from '../../structures/discord/Command.js';
+import test from '../../interactions/buttons/ping/test.js';
 
 export default new Command({
-    name: "ping",
+    name: 'ping',
     description: "Shows the bot's ping",
     async execute(ctx) {
         await ctx.interaction.reply({
-            content: "Pong!",
+            content: 'Pong!',
             components: [
                 new ActionRowBuilder<ButtonBuilder>()
                     .addComponents(
                         new ButtonBuilder({
                             custom_id: test.id(),
-                            label: "Test",
-                            style: ButtonStyle.Success
-                        })
-                    )
-            ]
-        })
+                            label: 'Test',
+                            style: ButtonStyle.Success,
+                        }),
+                    ),
+            ],
+        });
 
-        return true
+        return true;
     },
-})
+});

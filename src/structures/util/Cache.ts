@@ -6,7 +6,7 @@ export interface ICacheValue<T> {
 }
 
 export interface ICacheEvents<K, V> {
-    expire: (key: K, value: V) => void;
+    expire: (key: K, value: V) => void | Promise<void>;
 }
 
 export class Cache<K, V> extends TypedEmitter<ICacheEvents<K, V>> {
