@@ -1,7 +1,7 @@
-import { Util } from "../structures/util/Util.js"
+import { Util } from '../structures/util/Util.js';
 
 interface Data {
-    id: number 
+    id: number
     name: string
     desc: string
 }
@@ -9,21 +9,28 @@ interface Data {
 const datas: Data[] = [
     {
         id: 1,
-        desc: "hello",
-        name: "ruben"
+        desc: 'hello',
+        name: 'ruben',
     },
     {
         id: 2,
-        desc: "test",
-        name: "lynn"
+        desc: 'test',
+        name: 'lynn',
     },
     {
         id: 3,
-        desc: "test",
-        name: "pablo"
-    }
-]
+        desc: 'test',
+        name: 'pablo',
+    },
+];
 
 console.log(
-    Util.searchMany(datas, "n", [ "id", "name" ])
-)
+    Util.searchMany(
+        datas,
+        'n',
+        [
+            'id',
+            'name',
+        ],
+    ),
+);

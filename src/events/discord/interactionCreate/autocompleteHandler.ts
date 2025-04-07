@@ -1,12 +1,13 @@
-import { Command } from "../../../structures/discord/Command.js";
-import { DiscordEvent } from "../../../structures/discord/DiscordEvent.js";
+import { Command } from '../../../structures/discord/Command.js';
+import { DiscordEvent } from '../../../structures/discord/DiscordEvent.js';
 
 export default new DiscordEvent({
-    listener: "interactionCreate",
+    listener: 'interactionCreate',
     async execute(interaction) {
-        if (!interaction.inCachedGuild() || !interaction.isAutocomplete())
-            return
+        if (!interaction.inCachedGuild() || !interaction.isAutocomplete()) {
+            return;
+        }
 
-        await Command.handleAutocomplete(this, interaction)
+        await Command.handleAutocomplete(this, interaction);
     },
-})
+});

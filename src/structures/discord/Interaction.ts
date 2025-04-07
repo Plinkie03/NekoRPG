@@ -1,6 +1,6 @@
-import { BaseInteraction, ButtonInteraction, CacheType, ChannelSelectMenuInteraction, ChatInputCommandInteraction, MentionableSelectMenuInteraction, MessageComponentInteraction, ModalSubmitInteraction, RoleSelectMenuInteraction, StringSelectMenuInteraction, UserSelectMenuInteraction } from "discord.js";
-import { ArgType, BaseHandler, IBaseArgData, IBaseHandlerData, IBaseHandlerExecutionData, Nullable, UnwrapArgs } from "./BaseHandler.js";
-import { NekoClient } from "../../core/NekoClient.js";
+import { ButtonInteraction, CacheType, ChannelSelectMenuInteraction, MentionableSelectMenuInteraction, ModalSubmitInteraction, RoleSelectMenuInteraction, StringSelectMenuInteraction, UserSelectMenuInteraction } from 'discord.js';
+import { ArgType, BaseHandler, IBaseArgData, IBaseHandlerData, IBaseHandlerExecutionData, Nullable, UnwrapArgs } from './BaseHandler.js';
+import { NekoClient } from '../../core/NekoClient.js';
 
 export enum InteractionType {
     Button,
@@ -22,30 +22,49 @@ export interface InteractionMappings<T extends CacheType = 'cached'> {
     [InteractionType.StringMenu]: StringSelectMenuInteraction<T>
 }
 
-export interface InteractionArgData extends IBaseArgData {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface InteractionArgData extends IBaseArgData {
+    // TODO: Extend with additional interaction Arg data
+}
 
-export interface InteractionExecutionData<Type extends InteractionType, Args extends [...InteractionArgData[]] = InteractionArgData[]> extends IBaseHandlerExecutionData<InteractionMappings[Type], Args> {}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface InteractionExecutionData<
+    Type extends InteractionType,
+    Args extends [...InteractionArgData[]] = InteractionArgData[]
+> extends IBaseHandlerExecutionData<InteractionMappings[Type], Args> {
+    // TODO: Extend with additional interaction execution fields
+}
 
-export interface InteractionData<Type extends InteractionType, Args extends [...InteractionArgData[]]> extends IBaseHandlerData<Args, InteractionExecutionData<Type, Args>> {
+export interface InteractionData<
+    Type extends InteractionType,
+    Args extends [...InteractionArgData[]]
+> extends IBaseHandlerData<Args, InteractionExecutionData<Type, Args>> {
     id: number
     type: Type
 }
 
-export class Interaction<Type extends InteractionType = InteractionType, Args extends [...InteractionArgData[]] = InteractionArgData[]> extends BaseHandler<InteractionData<Type, Args>> {
-    private static readonly _CustomIdSplits = "_"
+export class Interaction<
+    Type extends InteractionType = InteractionType,
+    Args extends [...InteractionArgData[]] = InteractionArgData[]
+> extends BaseHandler<InteractionData<Type, Args>> {
+    private static readonly _CustomIdSplits = '_';
 
     public id(...args: UnwrapArgs<Args>) {
-        return [this.data.id, ...args].map(x => `${typeof x === "object" && x !== null && "id" in x ? x.id : x}`).join(Interaction._CustomIdSplits)
+        return [this.data.id, ...args].map(x => `${typeof x === 'object' && x !== null && 'id' in x ? x.id : x}`).join(Interaction._CustomIdSplits);
     }
 
-    private async _resolveArgs(interaction: InteractionMappings[keyof InteractionMappings], rawArgs: string[]): Promise<Nullable<UnwrapArgs<Args>>> {
-        const arr = new Array()
-        if (!this.data.args?.length)
-            return <never>arr
+    private async _resolveArgs(
+        interaction: InteractionMappings[keyof InteractionMappings],
+        rawArgs: string[],
+    ): Promise<Nullable<UnwrapArgs<Args>>> {
+        const arr: (string | number | null)[] = [];
+        if (!this.data.args?.length) {
+            return <never>arr;
+        }
 
         for (let i = 0;i < this.data.args.length;i++) {
-            const arg = this.data.args[i]
-            const raw = rawArgs[i]
+            const arg = this.data.args[i];
+            const raw = rawArgs[i];
 
             let value;
 
@@ -53,43 +72,41 @@ export class Interaction<Type extends InteractionType = InteractionType, Args ex
                 case ArgType.Float:
                 case ArgType.Integer:
                 case ArgType.Enum:
-                    value = Number(raw)
-                    break
+                    value = Number(raw);
+                    break;
 
                 case ArgType.String:
-                    value = raw
-                    break
+                    value = raw;
+                    break;
             }
 
-            if ((value === undefined || value === "") && arg.required) {
-                return null
+            if ((value === undefined || value === '') && arg.required) {
+                return null;
             }
 
-            arr.push(value ?? null)
+            arr.push(value ?? null);
         }
 
-        return <never>arr
+        return <never>arr;
     }
 
     public static async handle(client: NekoClient, interaction: InteractionMappings[keyof InteractionMappings]) {
-        const [ id, ...rawArgs ] = interaction.customId.split(Interaction._CustomIdSplits)
+        const [ id, ...rawArgs ] = interaction.customId.split(Interaction._CustomIdSplits);
 
-        const handler = client.interactions.get(Number(id))
-        if (!handler)
-            return
+        const handler = client.interactions.get(Number(id));
+        if (!handler) return;
 
         try {
-            const args = await handler._resolveArgs(interaction, rawArgs)
-            if (!args)
-                return
+            const args = await handler._resolveArgs(interaction, rawArgs);
+            if (!args) return;
 
             await handler.data.execute.call(client, {
                 args,
                 extras: {},
-                interaction
-            })
+                interaction,
+            });
         } catch (error) {
-            
+            console.log('Error:'+error);
         }
     }
 }
