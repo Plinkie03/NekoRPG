@@ -5,7 +5,7 @@ export class Util extends Static {
         iterable: Array<T> | Map<unknown, T>,
         query: string,
         properties: (keyof T)[],
-    ): T[] {
+    ) {
         query = query.toLowerCase();
 
         const results = new Array<T>();
@@ -24,7 +24,7 @@ export class Util extends Static {
 
     public static searchOne<T>(
         ...params: Parameters<typeof Util.searchMany<T>>
-    ): T | null {
+    ) {
         return Util.searchMany(...params)[0] ?? null;
     }
 }

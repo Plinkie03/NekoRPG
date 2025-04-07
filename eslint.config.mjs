@@ -27,7 +27,7 @@ export default defineConfig([
             'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
             quotes: ['error', 'single', { avoidEscape: true }],
             '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-            '@typescript-eslint/explicit-module-boundary-types': 'warn',
+            '@typescript-eslint/explicit-module-boundary-types': 'off',
             '@typescript-eslint/ban-ts-comment': ['error', { 'ts-ignore': 'allow-with-description' }],
             '@typescript-eslint/no-explicit-any': 'error',
         },

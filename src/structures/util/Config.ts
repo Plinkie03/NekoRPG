@@ -5,7 +5,7 @@ import { Static } from './Static.js';
 config();
 
 export class Config extends Static {
-    public static get token(): string {
+    public static get token() {
         return env.BOT_TOKEN as string;
     }
 }
