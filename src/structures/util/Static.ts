@@ -1,3 +1,3 @@
 export abstract class Static {
-    protected constructor() {}
+    protected constructor() {};
 }

@@ -1,3 +1,3 @@
-import { Static } from "./Static.js";
+import { Static } from './Static.js';
 
 export class Logger extends Static {}
