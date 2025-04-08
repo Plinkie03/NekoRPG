@@ -9,7 +9,8 @@
     "bot": "npm run build && node .",
     "db": "npx prisma format && npx prisma generate && npx prisma db push",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "release": "npx commit-and-tag-version"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +31,7 @@
     "@eslint/js": "^9.24.0",
     "@typescript-eslint/eslint-plugin": "^8.29.1",
     "@typescript-eslint/parser": "^8.29.1",
+    "commit-and-tag-version": "^12.5.0",
     "eslint": "^9.24.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-unused-imports": "^4.1.4",
