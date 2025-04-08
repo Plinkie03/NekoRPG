@@ -4,6 +4,15 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
+    {
+        ignores: [
+            'node_modules',
+            'dist',
+            '.qlty',
+            '.git',
+            '.vscode',
+        ],
+    },
     { files: ['**/*.{js,mjs,cjs,ts}'] },
     { files: ['**/*.js'], languageOptions: { sourceType: 'script' } },
     {

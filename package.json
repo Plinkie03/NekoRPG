@@ -7,7 +7,9 @@
     "test": "npm run build && node dist/__tests__/runner",
     "build": "npx tsc --build --clean && npx tsc",
     "bot": "npm run build && node .",
-    "db": "npx prisma format && npx prisma generate && npx prisma db push"
+    "db": "npx prisma format && npx prisma generate && npx prisma db push",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "keywords": [],
   "author": "",
@@ -23,5 +25,14 @@
     "prisma": "^6.5.0",
     "tiny-typed-emitter": "^2.1.0",
     "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.24.0",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "eslint": "^9.24.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "typescript-eslint": "^8.29.1"
   }
 }
