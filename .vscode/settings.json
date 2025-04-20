@@ -1,5 +1,23 @@
 {
   "cSpell.words": [
     "datas"
-  ]
+  ],
+  "multiCommand.commands": [
+    {
+      "command": "multiCommand.saveAndLint",
+      "sequence": [
+        "workbench.action.files.save",
+        {
+          "command": "workbench.action.tasks.runTask",
+          "args": "Lint Fix Current File"
+        }
+      ]
+    }
+  ],
+  "files.exclude": {
+    "**/*.rpyc": true,
+    "**/*.rpa": true,
+    "**/*.rpymc": true,
+    "**/cache/": true
+  }
 }
