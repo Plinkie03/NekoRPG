@@ -3,7 +3,7 @@ import { Entity } from '../base/Entity.js';
 
 export class Player extends Entity {
     public constructor(public readonly data: RawPlayerData) {
-        super();
+        super(data);
     }
 
     public get id(): string {
@@ -11,6 +11,6 @@ export class Player extends Entity {
     }
 
     public get name(): string {
-        return this.data.username;
+        return this.data.name;
     }
 }

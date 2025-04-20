@@ -17,6 +17,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@napi-rs/canvas": "^0.1.69",
     "@prisma/client": "^6.5.0",
     "@types/node": "^22.13.14",
     "chalk": "^5.4.1",

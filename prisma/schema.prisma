@@ -14,12 +14,12 @@ datasource db {
 }
 
 model RawPlayer {
-  id       String  @id @unique
-  username String  @default("Unknown")
-  banned   Boolean @default(false)
-  level    Float   @default(1)
-  money    Float   @default(0)
-  xp       Float   @default(0)
+  id     String  @id @unique
+  name   String  @default("Unknown")
+  banned Boolean @default(false)
+  level  Float   @default(1)
+  money  Float   @default(0)
+  xp     Float   @default(0)
 
   skills RawSkill[]
   items  RawItem[]

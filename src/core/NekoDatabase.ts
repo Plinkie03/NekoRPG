@@ -58,7 +58,7 @@ export const NekoDatabase = new PrismaClient().$extends({
                 }
 
                 const player = await NekoDatabase.rawPlayer._getById(user.id);
-                player.data.username = user.username;
+                player.data.name = user.username;
                 return player;
             },
         },
