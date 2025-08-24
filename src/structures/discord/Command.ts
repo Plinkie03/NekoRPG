@@ -233,8 +233,8 @@ export class Command<Args extends IArgData[] = IArgData[]> {
 		ctx: Parameters<Exclude<IArgData['autocomplete'], undefined>>[0]
 	): ApplicationCommandOptionChoiceData[] {
 		return ctx.extras.player.inventory.searchMany(ctx.query, (item) => ({
-			name: item.name,
-			value: item.id,
+			name: item.simpleName(false),
+			value: item.uuid,
 		}))
 	}
 }

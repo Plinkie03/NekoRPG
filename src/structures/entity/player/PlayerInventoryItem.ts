@@ -85,14 +85,18 @@ export class PlayerInventoryItem<T extends BaseItem = BaseItem> {
 			: null
 	}
 
-	public get name() {
+	public simpleName(emoji = true) {
 		return `${
 			this.item.stackable
 				? ''
 				: `[${RarityType[this.rarity[0]]}(${Formatters.multiplier(
 						this.multiplier
 				  )})] `
-		}${this.item}`
+		}${emoji ? this.item : this.item.name}`
+	}
+
+	public get name() {
+		return this.simpleName()
 	}
 
 	public get id() {
