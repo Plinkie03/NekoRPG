@@ -5,3 +5,5 @@ node_modules
 prisma/generated/
 *.db
 dist
+
+pnpm-lock.yaml
