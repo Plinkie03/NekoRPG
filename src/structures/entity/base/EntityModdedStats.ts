@@ -276,8 +276,6 @@ export abstract class EntityModdedStats<
 				stacks: ailment.stacks,
 			})
 
-			console.log(this.entity.name, this.ailments)
-
 			if (result && ailment.effect.data.cooldown) {
 				this.addEffectCooldown(
 					ailment.effect.id,

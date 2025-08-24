@@ -26,12 +26,12 @@ import {
 	ThumbnailBuilder,
 	underline,
 } from 'discord.js'
-import management from '../../interactions/buttons/inventory/management.js'
+import management from '../../discord/interactions/buttons/inventory/management.js'
 import { randomUUID } from 'crypto'
-import view from '../../interactions/buttons/inventory/view.js'
-import equip from '../../interactions/buttons/inventory/item/equip.js'
-import unequip from '../../interactions/buttons/inventory/item/unequip.js'
-import craft from '../../interactions/buttons/inventory/item/craft.js'
+import view from '../../discord/interactions/buttons/inventory/view.js'
+import equip from '../../discord/interactions/buttons/inventory/item/equip.js'
+import unequip from '../../discord/interactions/buttons/inventory/item/unequip.js'
+import craft from '../../discord/interactions/buttons/inventory/item/craft.js'
 
 export class InventoryManagementResponse {
 	private constructor() {}

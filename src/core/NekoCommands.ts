@@ -17,7 +17,7 @@ import { readdirSync } from 'fs'
 import { join, resolve } from 'path'
 
 export class NekoCommands {
-	private static readonly _Path = join('dist', 'commands')
+	private static readonly _Path = join('dist', 'discord', 'commands')
 
 	private readonly _commands = new Collection<
 		string,

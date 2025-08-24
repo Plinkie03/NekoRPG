@@ -26,8 +26,8 @@ import {
 	TextDisplayBuilder,
 	ThumbnailBuilder,
 } from 'discord.js'
-import chooseAction from '../../interactions/buttons/hunt/choose.js'
-import chooseSpell from '../../interactions/menus/hunt/choose.js'
+import chooseAction from '../../discord/interactions/buttons/hunt/choose.js'
+import chooseSpell from '../../discord/interactions/menus/hunt/choose.js'
 
 export class BattleResponse {
 	private constructor() {}

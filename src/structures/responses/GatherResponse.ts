@@ -13,8 +13,8 @@ import {
 	PrimaryColor,
 	SkillType,
 } from '@nekorpg'
-import choose from '../../interactions/menus/gather/choose.js'
-import perform from '../../interactions/buttons/gather/perform.js'
+import choose from '../../discord/interactions/menus/gather/choose.js'
+import perform from '../../discord/interactions/buttons/gather/perform.js'
 
 export class GatherResponse {
 	private constructor() {}

@@ -3,6 +3,7 @@ import {
 	Battle,
 	BattleOptionType,
 	Enum,
+	Logger,
 	Monster,
 	NekoDatabase,
 	Player,
@@ -32,7 +33,7 @@ NekoDatabase.$connect().then(async () => {
 			}
 
 			const round = battle.getLastRound()!
-			console.log(
+			Logger.info(
 				`=======================ROUND ${
 					battle.rounds.length
 				}=======================\n${round}\n${battle.entities
@@ -45,7 +46,7 @@ NekoDatabase.$connect().then(async () => {
 
 			if (!battle.isActive()) {
 				reader.close()
-				console.log(`${battle.getWinner()!} won the battle`)
+				Logger.info(`${battle.getWinner()!} won the battle`)
 				return
 			}
 		}
@@ -57,7 +58,7 @@ NekoDatabase.$connect().then(async () => {
 		)
 			.map((x) => `- ${BattleOptionType[x]} (${x})`)
 			.join('\n')
-		console.log(`Choose option:\n${options}`)
+		Logger.info(`Choose option:\n${options}`)
 		reader.question('Option chosen: ', (s) => advance(Number(s)))
 	}
 

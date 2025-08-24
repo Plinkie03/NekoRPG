@@ -1,5 +1,6 @@
 import {
 	Identifiable,
+	Logger,
 	Nameable,
 	Resource,
 	SkipFirstElement,
@@ -26,7 +27,7 @@ export class NekoResourceHolder<V extends Nameable> {
 			}
 		}
 
-		console.log(`Loaded ${this._map.size} resources in ${this._path}`)
+		Logger.info(`Loaded ${this._map.size} resources in ${this._path}`)
 	}
 
 	public get(id: number) {

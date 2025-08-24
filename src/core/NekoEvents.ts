@@ -4,7 +4,7 @@ import { readdirSync } from 'fs'
 import { join, resolve } from 'path'
 
 export class NekoEvents {
-	private static readonly _Path = join('dist', 'events')
+	private static readonly _Path = join('dist', 'discord', 'events')
 
 	private readonly _events = new Collection<string, Event[]>()
 

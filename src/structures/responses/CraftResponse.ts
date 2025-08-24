@@ -17,7 +17,7 @@ import {
 	SeparatorSpacingSize,
 	TextDisplayBuilder,
 } from 'discord.js'
-import view from '../../interactions/buttons/inventory/view.js'
+import view from '../../discord/interactions/buttons/inventory/view.js'
 
 export class CraftResponse {
 	private constructor() {}

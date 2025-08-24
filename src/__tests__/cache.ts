@@ -1,6 +1,6 @@
-import { Cache } from '@nekorpg'
+import { Cache, Logger } from '@nekorpg'
 
 const cache = new Cache<string, string>()
 
 cache.set('hello', 'bye')
-cache.on('expire', console.log)
+cache.on('expire', Logger.info)

@@ -1,8 +1,8 @@
-import { Event } from '@nekorpg'
+import { Event, Logger } from '@nekorpg'
 
 export default new Event<'ready'>({
 	async execute(client) {
 		await this.application.commands.set(this.manager.commands.toJSON())
-		console.log(`Registered application commands!`)
+		Logger.success(`Registered application commands!`)
 	},
 })

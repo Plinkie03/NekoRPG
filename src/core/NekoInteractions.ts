@@ -10,7 +10,7 @@ import { readdirSync } from 'fs'
 import { join, resolve } from 'path'
 
 export class NekoInteractions {
-	private static readonly _Path = join('dist', 'interactions')
+	private static readonly _Path = join('dist', 'discord', 'interactions')
 
 	private readonly _interactions = new Collection<number, Interaction>()
 
