@@ -4,6 +4,7 @@ import {
 	Formatters,
 	GearItem,
 	IExtrasData,
+	NoImageFound,
 	PlayerInventoryItem,
 	PrimaryColor,
 	RarityType,
@@ -33,6 +34,7 @@ import equip from '../../discord/interactions/buttons/inventory/item/equip.js'
 import unequip from '../../discord/interactions/buttons/inventory/item/unequip.js'
 import craftInventoryItem from '../../discord/interactions/buttons/inventory/item/craft.js'
 import craftItem from '../../discord/interactions/buttons/wiki/item/craft.js'
+import { inspect } from 'util'
 
 export class InventoryManagementResponse {
 	private constructor() {}
@@ -46,27 +48,23 @@ export class InventoryManagementResponse {
 
 		const container = new ContainerBuilder().setAccentColor(PrimaryColor)
 
-		const section = new SectionBuilder().addTextDisplayComponents(
-			[
-				`# ${item.name}`,
-				item.description
-					? `## ${item.description}`
-					: `No description provided.`,
-				invItem?.stats
-					? `### ${invItem.stats.display()}`
-					: item instanceof GearItem
-					? item.stats.display()
-					: null,
-			]
-				.filter(Boolean)
-				.map((x) => new TextDisplayBuilder().setContent(x!))
-		)
-
-		if (item.emoji) {
-			section.setThumbnailAccessory(
-				new ThumbnailBuilder().setURL(item.url!)
+		const section = new SectionBuilder()
+			.addTextDisplayComponents(
+				[
+					`# ${item.name}`,
+					item.description
+						? `## ${item.description}`
+						: `No description provided.`,
+					invItem?.stats
+						? `### ${invItem.stats.display()}`
+						: item instanceof GearItem
+						? `### ${item.stats.display()}`
+						: null,
+				]
+					.filter(Boolean)
+					.map((x) => new TextDisplayBuilder().setContent(x!))
 			)
-		}
+			.setThumbnailAccessory(new ThumbnailBuilder().setURL(item.url))
 
 		container.addSectionComponents(section)
 

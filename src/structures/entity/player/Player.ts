@@ -47,10 +47,6 @@ export class Player extends Entity<PlayerData> implements ILeveable {
 		return this.data.xp
 	}
 
-	public get level() {
-		return this.data.level
-	}
-
 	public getXpReq() {
 		return Formulas.xpReq(this.level, 100)
 	}

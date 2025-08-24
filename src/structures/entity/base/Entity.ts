@@ -9,7 +9,9 @@ import {
 	Passive,
 } from '@nekorpg'
 
-export interface IEntityData extends IResourceData<number | string> {}
+export interface IEntityData extends IResourceData<number | string> {
+	level: number
+}
 
 export abstract class Entity<
 	T extends IEntityData = IEntityData
@@ -43,10 +45,12 @@ export abstract class Entity<
 		return this.transformation?.name ?? super.name
 	}
 
-	public override get url(): string | null {
-		return this.transformation?.emoji
-			? Resource.getEmojiUrl(this.transformation.emoji)
-			: super.url
+	public override get url(): string {
+		return Resource.getEmojiUrl(this.transformation?.emoji) ?? super.url
+	}
+
+	public get level() {
+		return this.data.level
 	}
 
 	public heal(n: number) {

@@ -11,6 +11,7 @@ import IronIngot from '../items/materials/IronIngot.js'
 export default new Monster({
 	id: 1,
 	name: 'Slime',
+	level: 1,
 	emoji: '<:slime:1406648336672493608>',
 	stats: new StatBuilder().maxHealth(100).melee(10).defense(0),
 	spells: new MonsterSpellBuilder(),

@@ -1,4 +1,4 @@
-import { FileScheme } from '@nekorpg'
+import { FileScheme, NoImageFound, Nullable } from '@nekorpg'
 import { parseEmoji, CDNRoutes, ImageFormat } from 'discord.js'
 import { readdirSync } from 'fs'
 import { join, resolve } from 'path'
@@ -47,10 +47,10 @@ export abstract class Resource<
 	}
 
 	public get url() {
-		return Resource.getEmojiUrl(this.data.emoji)
+		return Resource.getEmojiUrl(this.data.emoji) ?? NoImageFound
 	}
 
-	public static getEmojiUrl(emoji?: string) {
+	public static getEmojiUrl(emoji?: Nullable<string>) {
 		const emojiData = emoji && parseEmoji(emoji)
 		return emojiData
 			? 'https://cdn.discordapp.com' +

@@ -13,6 +13,7 @@ import {
 export interface IMonsterData extends IResourceData<number> {
 	stats: StatBuilder
 	rewards: RewardBuilder
+	level: number
 	passives?: Passive[]
 	spells?: MonsterSpellBuilder
 }

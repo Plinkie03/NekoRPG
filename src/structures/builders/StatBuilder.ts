@@ -157,7 +157,7 @@ export class StatBuilder {
 			const emoji = StatBuilder.Emojis[key]
 
 			output.push(
-				`${emoji ? `${emoji} ` : ''}${
+				`${emoji ?? '(?)'}${
 					EntityBaseStats.isAbsolute(key)
 						? `${
 								data.absolute
