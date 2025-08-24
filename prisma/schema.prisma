@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model RawPlayer {
+  id       String  @id @unique
+  name     String  @default("Unknown")
+  level    Float   @default(1)
+  xp       Float   @default(0)
+  money    Float   @default(0)
+  gems     Float   @default(0)
+  rebirths Float   @default(0)
+  zone     Int     @default(1)
+  banned   Boolean @default(false)
+
+  items  RawItem[]
+  quests RawQuest[]
+  skills RawSkill[]
+}
+
+model RawItem {
+  uuid       String    @id @unique
+  id         Int
+  locked     Boolean?
+  equipped   Boolean?
+  amount     Float
+  rarity     Float?
+  multiplier Float?
+  playerId   String
+  player     RawPlayer @relation(fields: [playerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model RawQuest {
+  uuid     String    @id @unique
+  id       Int
+  count    Float
+  started  Boolean?
+  playerId String
+  player   RawPlayer @relation(fields: [playerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model RawSkill {
+  uuid     String    @id @unique
+  type     Int
+  level    Float
+  xp       Float
+  playerId String
+  player   RawPlayer @relation(fields: [playerId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
