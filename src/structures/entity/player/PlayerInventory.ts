@@ -5,6 +5,8 @@ import {
 	NekoResources,
 	Rarity,
 	Formulas,
+	SkipFirstElement,
+	Util,
 } from '@nekorpg'
 import { randomUUID } from 'crypto'
 import { RawItem } from '../../../../prisma/generated/index.js'
@@ -141,6 +143,26 @@ export class PlayerInventory {
 				item: this._toInventoryItem(raw),
 			}
 		}
+	}
+
+	public searchMany<Output = PlayerInventoryItem>(
+		...params: SkipFirstElement<
+			Parameters<
+				typeof Util.searchMany<number, PlayerInventoryItem, Output>
+			>
+		>
+	) {
+		return Util.searchMany(this.items, ...params)
+	}
+
+	public searchOne<Output = PlayerInventoryItem>(
+		...params: SkipFirstElement<
+			Parameters<
+				typeof Util.searchOne<number, PlayerInventoryItem, Output>
+			>
+		>
+	) {
+		return Util.searchOne(this.items, ...params)
 	}
 
 	private _toInventoryItem(data: RawItem) {

@@ -17,7 +17,8 @@ import {
 	SeparatorSpacingSize,
 	TextDisplayBuilder,
 } from 'discord.js'
-import view from '../../discord/interactions/buttons/inventory/view.js'
+import viewInventoryItem from '../../discord/interactions/buttons/inventory/view.js'
+import viewItem from '../../discord/interactions/buttons/wiki/item/view.js'
 
 export class CraftResponse {
 	private constructor() {}
@@ -100,16 +101,16 @@ export class CraftResponse {
 			flags: MessageFlags.IsComponentsV2,
 			components: [
 				container,
-				...Util.splitComponents(
-					item instanceof PlayerInventoryItem
-						? [
-								new ButtonBuilder()
-									.setLabel('Back')
-									.setCustomId(view.id(item))
-									.setStyle(ButtonStyle.Primary),
-						  ]
-						: []
-				),
+				...Util.splitComponents([
+					new ButtonBuilder()
+						.setLabel('Back')
+						.setCustomId(
+							item instanceof PlayerInventoryItem
+								? viewInventoryItem.id(item)
+								: viewItem.id(item)
+						)
+						.setStyle(ButtonStyle.Primary),
+				]),
 			],
 		})
 

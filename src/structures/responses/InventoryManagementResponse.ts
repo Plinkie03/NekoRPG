@@ -31,7 +31,8 @@ import { randomUUID } from 'crypto'
 import view from '../../discord/interactions/buttons/inventory/view.js'
 import equip from '../../discord/interactions/buttons/inventory/item/equip.js'
 import unequip from '../../discord/interactions/buttons/inventory/item/unequip.js'
-import craft from '../../discord/interactions/buttons/inventory/item/craft.js'
+import craftInventoryItem from '../../discord/interactions/buttons/inventory/item/craft.js'
+import craftItem from '../../discord/interactions/buttons/wiki/item/craft.js'
 
 export class InventoryManagementResponse {
 	private constructor() {}
@@ -69,22 +70,11 @@ export class InventoryManagementResponse {
 
 		container.addSectionComponents(section)
 
-		const buttons = new Array<ButtonBuilder>(
-			new ButtonBuilder()
-				.setLabel('Lock')
-				.setCustomId(randomUUID())
-				.setDisabled(true)
-				.setStyle(ButtonStyle.Secondary),
-			new ButtonBuilder()
-				.setLabel('Delete')
-				.setCustomId(randomUUID())
-				.setDisabled(true)
-				.setStyle(ButtonStyle.Danger)
-		)
+		const buttons = new Array<ButtonBuilder>()
 
 		if (invItem) {
 			if (item.equippable) {
-				buttons.unshift(
+				buttons.push(
 					new ButtonBuilder()
 						.setLabel(invItem.equipped ? 'Unequip' : 'Equip')
 						.setCustomId(
@@ -109,24 +99,43 @@ export class InventoryManagementResponse {
 
 			buttons.push(
 				new ButtonBuilder()
-					.setLabel('Craft')
-					.setDisabled(
-						!item.data.requirements?.craft ||
-							!item.data.requirements.craft.data.requirements.has(
-								ctx.extras.player
-							)
-					)
-					.setCustomId(craft.id(invItem))
-					.setStyle(ButtonStyle.Primary)
+					.setLabel('Lock')
+					.setCustomId(randomUUID())
+					.setDisabled(true)
+					.setStyle(ButtonStyle.Secondary),
+				new ButtonBuilder()
+					.setLabel('Delete')
+					.setCustomId(randomUUID())
+					.setDisabled(true)
+					.setStyle(ButtonStyle.Danger)
 			)
 		}
 
 		buttons.push(
 			new ButtonBuilder()
-				.setLabel('Back')
-				.setCustomId(management.id(1))
+				.setLabel('Craft')
+				.setDisabled(
+					!item.data.requirements?.craft ||
+						item.data.requirements.craft.data.requirements.has(
+							ctx.extras.player
+						) !== true
+				)
+				.setCustomId(
+					invItem
+						? craftInventoryItem.id(invItem)
+						: craftItem.id(item)
+				)
 				.setStyle(ButtonStyle.Primary)
 		)
+
+		if (invItem) {
+			buttons.push(
+				new ButtonBuilder()
+					.setLabel('Back')
+					.setCustomId(management.id(1))
+					.setStyle(ButtonStyle.Primary)
+			)
+		}
 
 		return {
 			components: [container, ...Util.splitComponents(buttons)],

@@ -95,6 +95,10 @@ export class PlayerInventoryItem<T extends BaseItem = BaseItem> {
 		}${this.item}`
 	}
 
+	public get id() {
+		return this.data.id
+	}
+
 	public toString() {
 		return `${this.name}${this.stats ? ` ${this.stats.display()}` : ''}`
 	}

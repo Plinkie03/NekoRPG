@@ -102,7 +102,15 @@ export class NekoCommands {
 		if (!arg) return
 
 		await i.respond(
-			arg.autocomplete?.call(i.client as NekoClient, i, focus.value) ?? []
+			arg.autocomplete?.call(
+				i.client as NekoClient,
+				new DiscordContext({
+					args: [],
+					extras: await Command.getExtras(i),
+					input: i,
+					query: focus.value,
+				})
+			) ?? []
 		)
 	}
 

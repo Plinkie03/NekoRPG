@@ -1,4 +1,5 @@
 import {
+	AutocompleteDiscordContext,
 	BaseItem,
 	DiscordContext,
 	Enum,
@@ -57,8 +58,7 @@ export interface IArgData<
 	description: string
 	autocomplete?: (
 		this: NekoClient,
-		input: AutocompleteInteraction<'cached'>,
-		query: string
+		ctx: AutocompleteDiscordContext
 	) => Nullable<ApplicationCommandOptionChoiceData[]> | undefined
 }
 
@@ -101,7 +101,27 @@ export interface IExtrasData {
 }
 
 export class Command<Args extends IArgData[] = IArgData[]> {
-	public constructor(public readonly data: ICommandData<[...Args]>) {}
+	public constructor(public readonly data: ICommandData<[...Args]>) {
+		if (this.data.args?.length) {
+			for (const arg of this.data.args) {
+				switch (arg.type) {
+					case ArgType.Item: {
+						arg.autocomplete = Command._itemAutocomplete
+						break
+					}
+
+					case ArgType.InventoryItem: {
+						arg.autocomplete = Command._inventoryItemAutocomplete
+						break
+					}
+
+					default: {
+						break
+					}
+				}
+			}
+		}
+	}
 
 	public toJSON(): ApplicationCommandData {
 		return {
@@ -110,6 +130,7 @@ export class Command<Args extends IArgData[] = IArgData[]> {
 			options: this.data.args?.map((x) => ({
 				name: x.name,
 				description: x.description,
+				autocomplete: !!x.autocomplete,
 				required: x.required,
 				choices: x.enum
 					? Enum.values(x.enum).map((x) => ({
@@ -197,5 +218,23 @@ export class Command<Args extends IArgData[] = IArgData[]> {
 		return {
 			player: await NekoDatabase.rawPlayer.get(i.user),
 		}
+	}
+
+	private static _itemAutocomplete(
+		ctx: Parameters<Exclude<IArgData['autocomplete'], undefined>>[0]
+	): ApplicationCommandOptionChoiceData[] {
+		return NekoResources.Items.searchMany(ctx.query, (item) => ({
+			name: item.name,
+			value: item.id,
+		}))
+	}
+
+	private static _inventoryItemAutocomplete(
+		ctx: Parameters<Exclude<IArgData['autocomplete'], undefined>>[0]
+	): ApplicationCommandOptionChoiceData[] {
+		return ctx.extras.player.inventory.searchMany(ctx.query, (item) => ({
+			name: item.name,
+			value: item.id,
+		}))
 	}
 }

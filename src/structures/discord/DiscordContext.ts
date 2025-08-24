@@ -1,5 +1,6 @@
 import { IBaseArgData, IExtrasData, UnwrapArgs } from '@nekorpg'
 import {
+	AutocompleteInteraction,
 	BaseInteraction,
 	ButtonInteraction,
 	ChatInputCommandInteraction,
@@ -13,9 +14,16 @@ export interface IDiscordContextData<
 	Extras extends IExtrasData
 > {
 	input: Exec
+	query?: string
 	args: UnwrapArgs<Args>
 	extras: Extras
 }
+
+export type AutocompleteDiscordContext = DiscordContext<
+	AutocompleteInteraction,
+	[],
+	IExtrasData
+>
 
 export type AnyDiscordContext = DiscordContext<
 	MessageComponentInteraction | ChatInputCommandInteraction,
@@ -40,6 +48,10 @@ export class DiscordContext<
 
 	public get input() {
 		return this.data.input
+	}
+
+	public get query() {
+		return this.data.query!
 	}
 
 	public get extras() {

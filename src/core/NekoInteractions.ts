@@ -27,7 +27,7 @@ export class NekoInteractions {
 
 			if (this._interactions.has(imported.data.id)) {
 				throw new Error(
-					`Interactio id ${imported.data.id} already exists!`
+					`Interaction id ${imported.data.id} already exists!`
 				)
 			}
 
