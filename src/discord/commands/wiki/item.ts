@@ -14,7 +14,7 @@ export default new Command({
 	],
 	async execute(ctx) {
 		await ctx.input.reply({
-			flags: MessageFlags.IsComponentsV2,
+			flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
 			...InventoryManagementResponse.item(ctx, ctx.args[0]),
 		})
 
